@@ -279,10 +279,10 @@ Compute
     \label{fig:Histogram_variance}
 \end{figure}
 
-\noindent\textbf{Inference:}\\
+\noindent\textbf{Histogram of Variance Inference:}\\
 The histogram shows that the feature values are distributed over a wide range indicating good variability among the samples. 
-Most observations are concentrated in the central region, while fewer samples occur at the extreme values. 
-The absence of prominent outliers suggests a well-distributed feature that can contribute effectively to the classification of authentic and forged banknotes.
+Most observations are present in the middle region, while fewer samples are present at the extreme values. 
+Overall the plot is well distributed and can contribute effectively to the classification of authentic and forged banknotes.
 
 \vspace{5mm}
 
@@ -292,9 +292,9 @@ The absence of prominent outliers suggests a well-distributed feature that can c
     \caption{Histogram of Skewness}
     \label{fig:Histogram_skewness}
 \end{figure}
-\noindent\textbf{Inference:}\\
-The skewness feature is distributed across a wide range of both negative and positive values indicating considerable variation in the asymmetry of the banknote images. 
-This distribution suggests that skewness provides meaningful information that can assist the perceptron in distinguishing between different classes.
+\noindent\textbf{Histogram of Skewness Inference:}\\
+The skewness feature values are distributed across both positive and negative values. Most of the skewness values are concentrated on the values between 0 and 5. This shows that the some of the values have skewness close to 0 while the rest has moderate skewness. 
+This variation helps perceptron to classify between authentic and forged banknotes.
 \vspace{5mm}
 
 \begin{figure}[H]
@@ -303,9 +303,9 @@ This distribution suggests that skewness provides meaningful information that ca
     \caption{Histogram of Curtosis}
     \label{fig:Histogram_curtosis}
 \end{figure}
-\noindent\textbf{Inference:}\\
-The curtosis feature is concentrated around lower values with a gradual decrease in frequency toward higher values indicating a right skewed distribution. 
-The presence of a wide range of values suggests that this feature captures variations in image texture and contributes useful information for classification.
+\noindent\textbf{Histogram of Curtosis Inference:}\\
+The histogram shows a right-skewed distribution with a few outliers towards the extreme right. 
+The presence of a wide range of values helps distinguish authentic banknotes from forged ones.
 
 \vspace{5mm}
 
@@ -315,11 +315,10 @@ The presence of a wide range of values suggests that this feature captures varia
     \caption{Histogram of Entropy}
     \label{fig:Histogram_entropy}
 \end{figure}
-\noindent\textbf{Inference:}\\
-The entropy values are primarily concentrated between approximately -2 and 1, with relatively few extreme values. 
-This distribution indicates that most banknote images exhibit similar texture randomness, 
-while the observed variability provides useful information for distinguishing between authentic and forged banknotes.
-
+\noindent\textbf{Histogram of Entropy Inference:}\\
+The histogram shows a left-skewed distribution with very few outliers on the extreme left of the histogram.
+Majority of the entropy values are concentrated in the range of -2 and 1. 
+This variation provides helps the perceptron learn a decision boundary to distinguish between authentic and forged banknotes.
 \vspace{5mm}
 
 \begin{figure}[H]
@@ -328,9 +327,9 @@ while the observed variability provides useful information for distinguishing be
     \caption{Histogram of Class}
     \label{fig:Histogram_class}
 \end{figure}
-\noindent\textbf{Inference:}\\
-The histogram shows that the dataset contains samples from both classes in comparable proportions indicating that the dataset is reasonably balanced. 
-Such a distribution helps reduce class bias during training and allows the perceptron to learn both classes effectively.
+\noindent\textbf{Histogram of Class Inference:}\\
+The histogram shows that the dataset contains samples from both classes in comparable proportions.
+This shows that the dataset is well balanced and helps the perceptron to learn both classes effectively.
 
 \vspace{5mm}
 
@@ -340,10 +339,9 @@ Such a distribution helps reduce class bias during training and allows the perce
     \caption{Correlation Heatmap}
     \label{fig:Correlation_Heatmap}
 \end{figure}
-\noindent\textbf{Inference:}\\
-The heatmap indicates that variance has a strong negative correlation with the class (-0.72) making it the most influential feature for classification. 
-Skewness and curtosis are also strongly negatively correlated (-0.79), suggesting that these features contain related information, while entropy shows only weak correlation with the class.
-
+\noindent\textbf{Correlation Heatmap Inference:}\\
+The heatmap shows that variance is the most important feature for classification as it has the strongest negative correlation with the class with a value of -0.72. 
+Skewness and kurtosis are closely related, while entropy has a weak correlation with the class.
 \vspace{5mm}
 
 \begin{figure}[H]
@@ -352,9 +350,9 @@ Skewness and curtosis are also strongly negatively correlated (-0.79), suggestin
     \caption{skewness vs curtosis}
     \label{fig:skewness_vs_curtosis}
 \end{figure}
-\noindent\textbf{Inference:}\\
-The scatter plot shows a clear negative relationship between skewness and curtosis. 
-Although the two classes overlap in some regions, they form distinguishable clusters, indicating that these features together can effectively assist the perceptron in separating authentic and forged banknotes.
+\noindent\textbf{Skewness vs Curtosis Scatter Plot Inference:}\\
+The scatter plot shows a negative relationship between skewness and curtosis. 
+The two classes overlap in some regions, however these features together can assist the perceptron in separating authentic and forged banknotes.
 \vspace{5mm}
 
 \begin{figure}[H]
@@ -363,35 +361,37 @@ Although the two classes overlap in some regions, they form distinguishable clus
     \caption{skewness vs entropy}
     \label{fig:skewness_vs_entropy}
 \end{figure}
-
+\noindent\textbf{Skewness vs Entropy Scatter Plot Inference:}\\
+The two classes Skewness and Entropy are overlapping in the middle region.
+This shows that a non-linear classifier is required to separate these classes.
+\vspace{5mm}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{variance_vs_skewness.eps}
     \caption{variance vs skewness}
     \label{fig:variance_vs_skewness}
 \end{figure}
-\noindent\textbf{Inference:}\\
-The plot exhibits a nonlinear relationship between skewness and entropy. 
-While there is partial overlap between the two classes, several regions show noticeable separation, suggesting that the combined features provide useful discriminatory information.
-
+\noindent\textbf{Variance vs Skewness Inference:}\\
+In this plot Skewness and Variance help distinguish the two classes well despite having a few overlaps in the middle.
+The distribution of these points suggests that these two features can help separate authentic and forged banknotes.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{variance_vs_curtosis.eps}
     \caption{variance vs curtosis}
     \label{fig:variance_vs_curtosis}
 \end{figure}
-\noindent\textbf{Inference:}\\
-The distribution of samples shows a clear separation between the two classes based on variance and curtosis. 
-The limited overlap between the clusters suggests that these features contribute significantly to the classification performance of the perceptron.
+\noindent\textbf{Variance vs Cusrtosis Inference:}\\
+In this plot, the distribution of samples shows a clear separation between the two classes. 
+The slight overlap between the clusters indicates that these features are useful for classification.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{variance_vs_entropy.eps}
     \caption{variance vs entropy}
     \label{fig:variance_vs_entropy}
 \end{figure}
-\noindent\textbf{Inference:}\\
-The scatter plot demonstrates that variance and entropy provide moderate separation between the two classes. 
-Although some overlap is present, the overall clustering pattern indicates that these features contain useful information for binary classification.
+\noindent\textbf{Variance vs Entropy Inference:}\\
+The scatter plot shows moderate overlapping between the two classes. 
+This shows that Entropy and Variance together helps to distinguish between the two classes effectively.
 
 \begin{figure}[H]
     \centering
@@ -399,36 +399,36 @@ Although some overlap is present, the overall clustering pattern indicates that 
     \caption{curtosis vs entropy}
     \label{fig:curtosis_vs_entropy}
 \end{figure}
-\noindent\textbf{Inference:}\\
-The scatter plot demonstrates that Curtosis and Entropy provide partial non-linear separation between the two classes.
-Although significant overlap exists at central values, distinct clustering at high Curtosis confirms these features hold useful predictive information for binary classification.
+\noindent\textbf{Curtosis vs Entropy Inference:}\\
+The scatter plot shows significant overlap between entropy and curtosis.
+Non-linear decision boundaries are required to separate the classes.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{Boxplots_All_Features.eps}
     \caption{Boxplots Of All Features}
     \label{fig:Boxplots Of All Features}
 \end{figure}
-\noindent\textbf{Inference:}\\
-The boxplots show significant variance in feature scales and spread across the dataset.
-While Skewness exhibits the widest distribution range, notable outliers in Curtosis and Entropy indicate the need for proper feature scaling.
+\noindent\textbf{Boxplots Inference:}\\
+The box plot shows that curtosis contains the most outliers followed by entropy
+The feature values of Variance is well distributed whereas the feature values of skewness follows a wide range of values.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{Training_Error_vs_Epoch.eps}
     \caption{Training Error vs Epoch}
     \label{fig:Training_Error_vs_Epoch}
 \end{figure}
-\noindent\textbf{Inference:}\\
-The plot demonstrates rapid initial learning that plateaus into minor oscillations around 15 misclassified samples.
-Although the error drops sharply in the first 20 epochs, ongoing fluctuations indicate the model reaches its linear optimization limit rather than total zero-error convergence.
+\noindent\textbf{Training error vs Epochs Inference:}\\
+From the plot, we can infer that the model learns quickly at first, then the error fluctuates slightly until the 100th epoch. 
+This shows that the error decreases rapidly at the beginning and then reaches a stable level.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{Weight_Evolution.eps}
     \caption{Weight Evolution}
     \label{fig:Weight_Evolution}
 \end{figure}
-\noindent\textbf{Inference:}\\
-The weight evolution plot highlights that Skewness, Curtosis, and Variance drive the model's decision boundary.
-While these three features receive increasingly strong negative weights, Entropy remains near zero, showing it contributes minimal predictive power.
+\noindent\textbf{Weight Evolution Inference:}\\
+From the plot we can infer that the features Skewness,Curtosis and Variance receive increasing negative weights.
+Entropy receives weight updates almost close to zero.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{Bias_Evolution.eps}
@@ -436,9 +436,8 @@ While these three features receive increasingly strong negative weights, Entropy
     \label{fig:Bias_Evolution}
 \end{figure}
 \noindent\textbf{Inference:}\\
-The bias evolution plot demonstrates steady model optimization and convergence over 100 epochs.
-The downward staircase trajectory indicates controlled parameter adjustments that stabilize cleanly near the final training epochs.
-
+The bias changes steadily during training and becomes stable by the end of 100 epochs.
+This shows that the model gradually converges to a stable solution.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{Confusion_Matrix.eps}
@@ -446,22 +445,22 @@ The downward staircase trajectory indicates controlled parameter adjustments tha
     \label{fig:Confusion_Matrix}
 \end{figure}
 \noindent\textbf{Inference:}\\
-The confusion matrix demonstrates exceptionally high classification performance with near-perfect accuracy across both classes.
-With 149 true negatives, 122 true positives, and zero false negatives, the model achieves 100% recall for Class 1 with only 4 false positives overall.
-\begin{figure}[H]
+The confusion matrix shows that the model classifies most samples correctly with very few errors.
+It correctly identifies all Class 1 samples and makes only a few false positive predictions.\begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{Learning_Rate_Comparison.eps}
     \caption{Learning Rate Comparison}
     \label{fig:Learning_Rate_Comparison}
 \end{figure}
 \noindent\textbf{Inference:}\\
-The comparison plot demonstrates the training behavior across learning rates, with LR = 0.1 driving the active loss curve.
-Although higher learning rates enable fast early convergence, persistent jitter in misclassifications suggests a smaller learning rate or decay schedule could help stabilize final performance.
+All three learning rates produce almost identical error curves during training.
+This suggests that the learning rate has minimal impact on the model's convergence.
 %----------------------------------------------------------
 
+\vspace{25mm}
 \section*{9. Performance Tables}
 
-\textbf{Training Summary}
+\textbf{Training Summary}\\
 
 \begin{tabular}{|p{6cm}|p{7cm}|}
 \hline
@@ -526,9 +525,9 @@ F1-score &0.9839\\
 
 \begin{itemize}
     \item {\textbf{Step function, Sigmoid function comparison}}\\
-    The Step Activation Function produces only binary outputs (0 or 1) based on a threshold, whereas the Sigmoid Activation Function produces continuous values between 0 and 1. The Step function is not differentiable at the threshold and has a zero gradient elsewhere, making it unsuitable for gradient-based optimization methods such as backpropagation. In contrast, the Sigmoid function is smooth and differentiable, allowing efficient weight updates during training. Therefore, deep learning models use differentiable activation functions such as Sigmoid.
+    The Step Activation Function produces only binary outputs (0 or 1) based on a threshold, whereas the Sigmoid Activation Function produces continuous values between 0 and 1. The Step function is not differentiable at the threshold and has a zero gradient elsewhere, making it unsuitable for gradient based optimization methods such as backpropagation. However, the Sigmoid function is smooth and differentiable, allowing efficient weight updates during training. Therefore, deep learning models use differentiable activation functions such as Sigmoid.
     \item {\textbf{Implementation with Scikit-learn's Perceptron.}}\\
-    The perceptron implemented from scratch provides a clear understanding of the perceptron learning algorithm by manually performing weight initialization, forward propagation, and weight updates. Scikit-learn's Perceptron, on the other hand, is a highly optimized implementation that includes additional features such as parameter tuning, regularization, and efficient optimization. Although both implementations produced similar classification performance on the Banknote Authentication dataset, the Scikit-learn model was more efficient and convenient for practical applications.
+    The perceptron implemented from scratch provides a clear understanding of the perceptron learning algorithm by manually performing weight initialization, forward propagation, and weight updates. Whereas Scikit-learn's Perceptron is a highly optimized implementation that includes additional features such as parameter tuning, regularization, and efficient optimization. Although both implementations produced similar classification performance on the Banknote Authentication dataset, the Scikit-learn model was more efficient and convenient for practical applications.
     \item {\textbf{Performing the experiment with different learning rate(0.001, 0.01, 0.1)}}\\
     The training error curves for all three learning rates almost completely overlapped, indicating that the perceptron exhibited similar convergence behavior in each case. This suggests that, for the normalized Banknote Authentication dataset, the learning rate had minimal impact on the convergence pattern and classification performance within the chosen range. Therefore, all three learning rates were found to be suitable for training the perceptron on this dataset.
     \item {\textbf{Why a Single Layer Perceptron cannot solve the XOR problem.}}\\
