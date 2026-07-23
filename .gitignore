@@ -1,7 +1,7 @@
 /.ipynb_checkpoints
 convertTxt.py
 .pytest_cache
-*.pdf
+
 *.eps
 *.aux
 *.fls
