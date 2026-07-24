@@ -1,5 +1,4 @@
-# CS3807 – Deep Learning Laboratory 
-### Academic Year:  2026–27
+# CS3807 – Deep Learning Laboratory (Academic Year:  2026–27)
 
 
 This repository contains Deep Learning laboratory experiments implemented using **Python** and **Jupyter Notebooks (`.ipynb`)**. All notebooks are designed to run seamlessly on **Google Colab**.
