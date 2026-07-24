@@ -6,7 +6,7 @@ This repository contains Deep Learning laboratory experiments implemented using 
 
 
 
-## Running the Notebooks
+## Setup
 
 ### Option 1: Google Colab
 
@@ -51,12 +51,8 @@ Required Python libraries:
 
 ## Experiments
 
-The repository includes the following experiments:
-
-1. Implementation of a Single Layer Perceptron for Binary Classification
-
-2. Implementation of a Multi-Layer Perceptron (MLP) for Multi-Class Image
-Classification
+### **Lab 1** - Implementation of a Single Layer Perceptron for Binary Classification
+### **Lab 2** - Implementation of a Multi-Layer Perceptron (MLP) for Multi-Class Image Classification
 
 
 ## Notes
