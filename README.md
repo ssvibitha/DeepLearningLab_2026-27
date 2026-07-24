@@ -19,7 +19,7 @@ Alternatively, clone this repository directly in Colab:
 !git clone https://github.com/ssvibitha/DeepLearningLab_2026-27.git
 ```
 
-Navigate to the notebook and execute it.
+Navigate to the notebook and run all cells sequentially.
 
 ### Option 2: Local Environment
 
