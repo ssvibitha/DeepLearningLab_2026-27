@@ -2,7 +2,6 @@
 convertTxt.py
 .pytest_cache
 *-eps-to-converted-to.pdf
-*.eps
 *.aux
 *.fls
 *.log
