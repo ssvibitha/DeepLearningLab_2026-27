@@ -171,7 +171,7 @@ Compute
 \noindent\textbf{Source:} Github\\
 \noindent\textbf{Github Repository Link:}
 
-\url{https://github.com/ssvibitha/DeepLearningLab_2026-27.git}
+\url{https://github.com/ssvibitha/DeepLearningLab_2026-27/blob/main/Lab2_MLP/DL_Lab2.ipynb}
 
 
 \section*{7. Hyperparameter Optimization}
@@ -306,7 +306,88 @@ Validation loss decreases initially but hits a minimum around epoch 10 and 15 an
 The optimized model achieved a higher accuracy of 88.25 percent compared to the baseline model's 86.59 percent.
 This indicates that hyperparameter tuning improved the model's classification performance.
 
-\section*{10. Discussion}
+\section*{10. Additional Task}
+Code the perceptron learning algorithm for the XOR gate using Python. Show the weights after each update. Plot the decision boundary after each weight update using Python's built-in packages. Analyze and identify the pattern that prevents the algorithm from converging.
+
+\section{Source Code}
+\url{https://github.com/ssvibitha/DeepLearningLab_2026-27/blob/main/Lab2_MLP/AdditionalTask_2.ipynb}
+
+\section{Plots and Inference}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{MLP_XOR.eps}
+    \caption{Multi-Layer Perceptron Training for XOR Gate}
+    \label{fig:MLPTrainingXOR}
+\end{figure}
+\noindent\textbf{Multi-Layer Perceptron Training for XOR Gate Inference:}
+\vspace{0.3cm}
+\begin{itemize}
+
+    \item The figure shows how the decision boundary changes during the training of a 
+    Multi-Layer Perceptron for XOR gate. As training progresses, the model learns from 
+    errors and adjusts its weights to create a better separation between the classes.
+    \vspace{0.3cm}
+    \item \textbf{Epoch 0: Initial State}
+    \begin{itemize}
+        \item At the beginning of training, the model starts with randomly initialized 
+        weights.
+        \item Since the model has not learned any patterns yet, it predicts the same 
+        class for the entire input space, resulting in a single decision region.
+    \end{itemize}
+    \vspace{0.3cm}
+    \item \textbf{Epoch 500: Initial Boundary Formation}
+    \begin{itemize}
+        \item A basic linear decision boundary starts to appear as the model begins 
+        learning from the data.
+        \item However, the boundary is not sufficient to classify the points correctly 
+        because the given pattern requires a non-linear separation.
+    \end{itemize}
+    \vspace{0.3cm}
+    \item \textbf{Epochs 1000--2500: Learning Non-Linear Patterns}
+    \begin{itemize}
+        \item As training continues, the hidden layers update their weights through 
+        backpropagation.
+        \item The decision boundary starts changing from a straight line into a curved 
+        shape, allowing the model to learn more complex relationships.
+        \item The model begins creating separate regions for correctly classifying the 
+        points:
+        \begin{itemize}
+            \item \textbf{Target = 1:} $(0,1)$ and $(1,0)$
+            \item \textbf{Target = 0:} $(0,0)$ and $(1,1)$
+        \end{itemize}
+    \end{itemize}
+    \vspace{0.3cm}
+    \item \textbf{Epochs 3000--4500: Refinement of Decision Regions}
+    \begin{itemize}
+        \item The model continues adjusting its weights to improve classification 
+        accuracy.
+        \item The decision boundaries become more defined and gradually move to better 
+        separate the two classes.
+        \item The network becomes more confident in classifying each input point 
+        correctly.
+    \end{itemize}
+    \vspace{0.3cm}
+    \item \textbf{Epoch 4858: Final Converged State}
+    \begin{itemize}
+        \item After several training iterations, the model reaches a stable state where 
+        the decision boundaries correctly classify all the input points.
+        \item The points $(0,1)$ and $(1,0)$ are classified as \textbf{Target = 1}, 
+        while $(0,0)$ and $(1,1)$ are classified as \textbf{Target = 0}.
+    \end{itemize}
+    \vspace{0.3cm}
+    \item \textbf{Training Significance}
+    \begin{itemize}
+        \item The movement of the decision boundary across epochs shows how the neural 
+        network learns and improves through repeated weight updates.
+        \item The formation of curved boundaries highlights the ability of hidden layers 
+        to learn non-linear patterns, unlike a Single Layer Perceptron which can only 
+        create linear boundaries.
+        \item The final stable decision regions show that the network has successfully 
+        learned the classification pattern and achieved convergence.
+    \end{itemize}
+
+\end{itemize}
+\section*{11. Discussion}
 
 Answer the following:
 
@@ -336,12 +417,13 @@ Randomized Search tests a random subset of combinations, and finds good results 
 MLP configuration with 3 hidden layers, 128 neurons, tanh activation, RMSprop optimizer, learning rate 0.001, batch size 32, dropout 0.2, and 30 epochs is recommended as it achieved the highest testing accuracy of 88.25 percent.
 \end{enumerate}
 
-\section*{11. Conclusion}
-The experiment successfully trained and evaluated an MLP classifier on the Fashion MNIST dataset.
-Hyperparameter tuning improved the model's accuracy and overall classification performance, resulting in a more effective classifier.
+
+\section*{12. Conclusion}
+The experiment successfully trained and evaluated an MLP classifier on the Fashion MNIST dataset and trained MLP on XOR gate.
+Hyperparameter tuning in training the Fashion MNIST dataset improved the model's accuracy and overall classification performance, resulting in a more effective classifier.
 
 
-\section*{12. References}
+\section*{13. References}
 \begin{enumerate}
 \item Goodfellow et al., \emph{Deep Learning}.
 \item Bishop, \emph{Pattern Recognition and Machine Learning}.
