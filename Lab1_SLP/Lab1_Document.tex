@@ -528,8 +528,156 @@ F1-score &0.9839\\
 \end{table}
 
 %----------------------------------------------------------
+\section*{10. Additional Task}
+Code the perceptron learning algorithm for OR, NOT, and AND gates using Python. Show the weights after each update. Plot the decision boundary after each weight update using Python built-in packages.
+\section*{Source Code}
+\url{https://github.com/ssvibitha/DeepLearningLab_2026-27.git}
 
-\section*{10. Discussion}
+\section*{Plots and Inference}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{AND_Decision_Boundaries.eps}
+    \caption{AND Decision Boundaries}
+    \label{fig:AND_Decision_Boundaries}
+\end{figure}
+\noindent\textbf{AND Decision Boundaries Inference:}\\
+
+\begin{itemize}
+    \item The figure shows the evolution of the decision boundary during the training of a 
+    Single Layer Perceptron (SLP) for the AND gate.
+
+    \item \textbf{Epochs 1--3: Initial Misclassification and Adjustments}
+    \begin{itemize}
+        \item The perceptron starts with incorrect weights, causing the decision boundary to 
+        be either outside the plot range or incorrectly positioned.
+        \item As misclassified points are identified, the weights are updated, causing the 
+        decision boundary to shift.
+        \item These updates help the model gradually move towards separating the Class 0 
+        and Class 1 points.
+    \end{itemize}
+
+    \item \textbf{Epochs 4--6: Boundary Exploration and Corrections}
+    \begin{itemize}
+        \item The decision boundary continues to move and change its orientation as the 
+        perceptron updates its weights.
+        \item Some shifts may temporarily result in incorrect classification as the model 
+        explores different boundary positions.
+        \item These corrections allow the perceptron to learn the relationship between the 
+        input values and their corresponding outputs.
+    \end{itemize}
+
+    \item \textbf{Epochs 7--10: Convergence towards the Final Boundary}
+    \begin{itemize}
+        \item The decision boundary gradually approaches the optimal position as the number 
+        of classification errors decreases.
+        \item Further weight adjustments refine the boundary until the perceptron reaches a 
+        stable state.
+        \item In the final epoch, the boundary correctly separates:
+        \begin{itemize}
+            \item \textbf{Class 1:} $(1,1)$
+            \item \textbf{Class 0:} $(0,0), (0,1), (1,0)$
+        \end{itemize}
+    \end{itemize}
+
+    \item \textbf{Overall Training Significance}
+    \begin{itemize}
+        \item The movement of the decision boundary across epochs provides a clear 
+        visualization of how the perceptron learns through error correction.
+        \item Each weight update improves the model's ability to classify inputs correctly.
+        \item The final stable boundary demonstrates that the SLP has successfully learned 
+        the linear relationship required for the AND gate.
+        \item This visualization helps in understanding concepts such as weight updates, 
+        convergence, and the effect of repeated training iterations.
+    \end{itemize}
+
+\end{itemize}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{OR_Decision_Boundaries.eps}
+    \caption{OR Decision Boundaries}
+    \label{fig:OR_Decision_Boundaries}
+\end{figure}
+\noindent\textbf{OR Decision Boundaries Inference:}\\
+\begin{itemize}
+    \item The figure shows how the decision boundary changes during the training of a 
+    Single Layer Perceptron (SLP) for the OR gate.
+
+    \item \textbf{Epoch 1: Initial State}
+    \begin{itemize}
+        \item At the beginning of training, the perceptron has initial weight values 
+        that are not yet optimized.
+        \item Due to these initial values, the decision boundary is either not visible 
+        within the plot range or does not correctly separate the classes.
+        \item The model evaluates the input points and identifies classification errors 
+        that need to be corrected.
+    \end{itemize}
+
+    \item \textbf{Epochs 2--3: Boundary Adjustment}
+    \begin{itemize}
+        \item As the perceptron updates its weights, the decision boundary begins to 
+        appear and shift.
+        \item The boundary changes its position and direction as the model attempts to 
+        correctly classify all input points.
+        \item Some temporary changes occur because the perceptron is still learning 
+        from errors and adjusting the weights accordingly.
+    \end{itemize}
+
+    \item \textbf{Epoch 4: Final Decision Boundary}
+    \begin{itemize}
+        \item After repeated weight updates, the decision boundary reaches a stable 
+        position.
+        \item The final diagonal boundary successfully separates the two classes:
+            \textbf{Class 0:} $(0,0)$, which lies on one side of the boundary.
+            \textbf{Class 1:} $(0,1), (1,0), (1,1)$, which lie on the opposite side.
+    \end{itemize}
+
+\end{itemize}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{NOT_Gate_Decision_Boundaries.eps}
+    \caption{NOT Decision Boundaries}
+    \label{fig:NOT_Gate_Decision_Boundaries}
+\end{figure}
+\noindent\textbf{NOT Decision Boundaries Inference:}\\
+\begin{itemize}
+
+    \item The figure shows the change in the decision threshold while training a 
+    Single Layer Perceptron for NOT gate.
+
+    \item \textbf{Epoch 1: Initial State}
+    \begin{itemize}
+        \item At the beginning of training, the perceptron starts with initial weight 
+        and bias values that are not suitable for accurate classification.
+        \item Due to these initial values, the decision threshold falls outside the 
+        visible range, so no boundary appears in the plot.
+        \item The model begins by evaluating the input points and identifying where 
+        the predictions need improvement.
+    \end{itemize}
+
+    \item \textbf{Epoch 2: Threshold Update}
+    \begin{itemize}
+        \item After the first weight update, the decision threshold appears in the visible 
+        region at $X = 0$.
+
+        \item However, the threshold is not in the correct position yet, as it overlaps with 
+        the Class 1 point and does not clearly separate the two classes.
+
+        \item The perceptron continues updating its weights and bias to move the threshold 
+        to a better position.
+    \end{itemize}
+
+    \item \textbf{Epoch 3: Final Threshold Position}
+    \begin{itemize}
+        \item After further corrections, the decision threshold shifts to $X = 1$ 
+        and becomes stable.
+        \item The final threshold successfully separates the two classes:
+            \textbf{Class 1:} $X = 0$, placed on the left side of the threshold.
+            
+            \textbf{Class 0:} $X = 1$, placed on the right side of the threshold.
+    \end{itemize}
+
+\end{itemize}
+\section*{11. Discussion}
 
 \begin{itemize}
     \item {\textbf{Step function, Sigmoid function comparison}}\\
@@ -546,12 +694,12 @@ F1-score &0.9839\\
 
 %----------------------------------------------------------
 
-\section*{11. Conclusion}
+\section*{12. Conclusion}
 
 This experiment successfully demonstrated the implementation of a Single Layer Perceptron for binary classification using the Banknote Authentication dataset.
 %----------------------------------------------------------
 
-\section*{12. References}
+\section*{13. References}
 
 \begin{enumerate}
 \item F. Rosenblatt, ``The Perceptron,'' \emph{Psychological Review}, 1958.
