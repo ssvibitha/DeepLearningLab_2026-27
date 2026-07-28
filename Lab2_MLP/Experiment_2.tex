@@ -254,8 +254,8 @@ Training Time& 113.793586 seconds & 153.884540 seconds\\
 \end{figure}
 
 \noindent\textbf{Sample Images Inference:}\\
-The sample images represent different fashion items with distinct shapes and patterns.
-These variations help the model learn and distinguish between different clothing classes.
+The grayscale sample images represent different fashion items along with the category they belong to.
+The wide range of data helps the model learn and distinguish between different clothing categories.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{ClassDistribution.eps}
@@ -264,8 +264,8 @@ These variations help the model learn and distinguish between different clothing
 \end{figure}
 
 \noindent\textbf{Class Distribution Inference:}\\
-The plot shows that there exists 10 different fashion item classes.
-Each class has 6000 samples.
+The plot shows that there exists 10 different fashion item classes namely Tshirt/top, Trouser, Pullover, Dress, Coat, Sandal, Sneaker, Bag, Ankle Boot.
+This plot represents the class disttribution for training set. Each class contains 6000 samples.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{BaselineModelConfusionMatrix.eps}
@@ -315,76 +315,60 @@ Code the perceptron learning algorithm for the XOR gate using Python. Show the w
 \section{Plots and Inference}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{MLP_XOR.eps}
-    \caption{Multi-Layer Perceptron Training for XOR Gate}
-    \label{fig:MLPTrainingXOR}
+    \includegraphics[width=0.8\textwidth]{XOR_Decision_Boundaries.eps}
+    \caption{XOR Decision Boundaries}
+    \label{fig:XOR_Gate_Decision_Boundaries}
 \end{figure}
-\noindent\textbf{Multi-Layer Perceptron Training for XOR Gate Inference:}
-\vspace{0.3cm}
-\begin{itemize}
+\noindent\textbf{XOR Decision Boundaries Inference:}\\
+\begin{itemize}[itemsep=0.25cm]
 
-    \item The figure shows how the decision boundary changes during the training of a 
-    Multi-Layer Perceptron for XOR gate. As training progresses, the model learns from 
-    errors and adjusts its weights to create a better separation between the classes.
-    \vspace{0.3cm}
-    \item \textbf{Epoch 0: Initial State}
+    \item The figure shows the decision boundary at each update while training 
+    XOR using a perceptron.
+
+    \item The XOR inputs belong to two classes:
     \begin{itemize}
-        \item At the beginning of training, the model starts with randomly initialized 
-        weights.
-        \item Since the model has not learned any patterns yet, it predicts the same 
-        class for the entire input space, resulting in a single decision region.
+        \item \textbf{Class 0:} $(0,0)$ and $(1,1)$
+        \item \textbf{Class 1:} $(0,1)$ and $(1,0)$
     \end{itemize}
-    \vspace{0.3cm}
-    \item \textbf{Epoch 500: Initial Boundary Formation}
+
+    \item Across different updates, the decision boundary appears
+    temporarily and keeps shifting or disappearing after further weight updates.
     \begin{itemize}
-        \item A basic linear decision boundary starts to appear as the model begins 
-        learning from the data.
-        \item However, the boundary is not sufficient to classify the points correctly 
-        because the given pattern requires a non-linear separation.
+        \item A decision boundary appears at some updates such as Updates 3, 7, 11, and 15.
+        \item At other updates, the decision boundary disappears because the weights are 
+        updated again.
+        \item This shows that the perceptron is continuously trying to correct 
+        misclassified points but cannot settle on a single boundary.
     \end{itemize}
-    \vspace{0.3cm}
-    \item \textbf{Epochs 1000--2500: Learning Non-Linear Patterns}
+
+    \item The main reason for this behaviour is that XOR is not linearly 
+    separable.
     \begin{itemize}
-        \item As training continues, the hidden layers update their weights through 
-        backpropagation.
-        \item The decision boundary starts changing from a straight line into a curved 
-        shape, allowing the model to learn more complex relationships.
-        \item The model begins creating separate regions for correctly classifying the 
-        points:
-        \begin{itemize}
-            \item \textbf{Target = 1:} $(0,1)$ and $(1,0)$
-            \item \textbf{Target = 0:} $(0,0)$ and $(1,1)$
-        \end{itemize}
+        \item The Class 0 points lie diagonally opposite each other.
+        \item The Class 1 points also lie diagonally opposite each other.
+        \item Therefore, no single straight line can correctly separate the two classes.
     \end{itemize}
-    \vspace{0.3cm}
-    \item \textbf{Epochs 3000--4500: Refinement of Decision Regions}
+
+    \item Whenever the perceptron updates its weights to correctly classify one point, 
+    the new decision boundary may cause another point to become misclassified.
     \begin{itemize}
-        \item The model continues adjusting its weights to improve classification 
-        accuracy.
-        \item The decision boundaries become more defined and gradually move to better 
-        separate the two classes.
-        \item The network becomes more confident in classifying each input point 
-        correctly.
+        \item This results in another weight update.
+        \item The process continues repeatedly, causing the decision boundary to 
+        move back and forth instead of becoming stable.
     \end{itemize}
-    \vspace{0.3cm}
-    \item \textbf{Epoch 4858: Final Converged State}
-    \begin{itemize}
-        \item After several training iterations, the model reaches a stable state where 
-        the decision boundaries correctly classify all the input points.
-        \item The points $(0,1)$ and $(1,0)$ are classified as \textbf{Target = 1}, 
-        while $(0,0)$ and $(1,1)$ are classified as \textbf{Target = 0}.
-    \end{itemize}
-    \vspace{0.3cm}
-    \item \textbf{Training Significance}
-    \begin{itemize}
-        \item The movement of the decision boundary across epochs shows how the neural 
-        network learns and improves through repeated weight updates.
-        \item The formation of curved boundaries highlights the ability of hidden layers 
-        to learn non-linear patterns, unlike a Single Layer Perceptron which can only 
-        create linear boundaries.
-        \item The final stable decision regions show that the network has successfully 
-        learned the classification pattern and achieved convergence.
-    \end{itemize}
+
+    \item The plot shows that there is no stable final decision boundary 
+    even after several updates. The perceptron keeps changing its weights instead 
+    of converging to a solution.
+
+    \item \textbf{Conclusion:}\\
+    The pattern preventing the perceptron from converging is 
+    the repeated movement of the decision boundary caused by continuous 
+    misclassification. Since XOR requires a non-linear decision boundary
+    while a perceptron can learn only a linear decision boundary. Hence the perceptron 
+    cannot successfully classify XOR.
+
+    This demonstrates the limitation of a perceptron and shows that a multi-layer perceptron can help solve the XOR problem.
 
 \end{itemize}
 \section*{11. Discussion}
@@ -394,6 +378,7 @@ Answer the following:
 \begin{enumerate}
 \item \textbf{Which optimization method was used?}\\
 Randomized Search with Cross-Validation is used to find the best hyperparameters.
+\vspace{5mm}
 \item \textbf{Which hyperparameters were selected?}\\
 The selected hyperparameters are
 \begin{itemize}
@@ -406,21 +391,30 @@ The selected hyperparameters are
         \item Epochs: 30
         \item Dropout: 0.2
     \end{itemize}
+\vspace{5mm}
+
 \item \textbf{Did optimization improve performance?}\\
 Yes, after optimization the testing accuracy improved from 86.59 percent to 88.25 percent, along with improved precision, recall, and F1-score.
+\vspace{5mm}
+
 \item \textbf{Which hyperparameter had the greatest impact?}\\
 The optimizer RMSprop and learning rate of 0.001 had the greatest impact helping improve the model's performance.
+\vspace{5mm}
+
 \item \textbf{Compare Grid Search and Randomized Search.}\\
 Grid Search tests every possible combination of hyperparameters. Hence it is more computationally expensive.
 Randomized Search tests a random subset of combinations, and finds good results with less computation.
+\vspace{5mm}
+
 \item \textbf{Recommend the best MLP configuration.}\\
 MLP configuration with 3 hidden layers, 128 neurons, tanh activation, RMSprop optimizer, learning rate 0.001, batch size 32, dropout 0.2, and 30 epochs is recommended as it achieved the highest testing accuracy of 88.25 percent.
 \end{enumerate}
 
 
 \section*{12. Conclusion}
-The experiment successfully trained and evaluated an MLP classifier on the Fashion MNIST dataset and trained MLP on XOR gate.
-Hyperparameter tuning in training the Fashion MNIST dataset improved the model's accuracy and overall classification performance, resulting in a more effective classifier.
+The experiment successfully trained and evaluated an MLP classifier on the Fashion MNIST dataset.
+Hyperparameter tuning in training the Fashion MNIST dataset improved the model's accuracy and overall classification performance resulting in a more effective classifier.
+In addition to this, it was observed that the perceptron does not converge for the XOR gate because its classes cannot be separated using a single linear decision boundary.
 
 
 \section*{13. References}
