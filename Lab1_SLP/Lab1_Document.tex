@@ -631,8 +631,10 @@ Code the perceptron learning algorithm for OR, NOT, and AND gates using Python. 
         \item After repeated weight updates, the decision boundary reaches a stable 
         position.
         \item The final diagonal boundary successfully separates the two classes:
-            \textbf{Class 0:} $(0,0)$, which lies on one side of the boundary.
-            \textbf{Class 1:} $(0,1), (1,0), (1,1)$, which lie on the opposite side.
+        \begin{itemize}
+            \item\textbf{Class 0:} $(0,0)$, which lies on one side of the boundary.
+            \item\textbf{Class 1:} $(0,1), (1,0), (1,1)$, which lie on the opposite side.
+        \end{itemize}
     \end{itemize}
 
 \end{itemize}
@@ -678,9 +680,11 @@ Code the perceptron learning algorithm for OR, NOT, and AND gates using Python. 
         \item After further corrections, the decision threshold shifts to $X = 1$ 
         and becomes stable.
         \item The final threshold successfully separates the two classes:
-            \textbf{Class 1:} $X = 0$, placed on the left side of the threshold.
+        \begin{itemize}
+            \item\textbf{Class 1:} $X = 0$, placed on the left side of the threshold.
             
-            \textbf{Class 0:} $X = 1$, placed on the right side of the threshold.
+            \item\textbf{Class 0:} $X = 1$, placed on the right side of the threshold.
+        \end{itemize}
     \end{itemize}
 
 \end{itemize}
@@ -695,8 +699,8 @@ Code the perceptron learning algorithm for OR, NOT, and AND gates using Python. 
     The perceptron implemented from scratch provides a clear understanding of the perceptron learning algorithm by manually performing weight initialization, forward propagation, and weight updates. Whereas Scikit-learn's Perceptron is a highly optimized implementation that includes additional features such as parameter tuning, regularization, and efficient optimization. Although both implementations produced similar classification performance on the Banknote Authentication dataset, the Scikit-learn model was more efficient and convenient for practical applications.
     \item {\textbf{Performing the experiment with different learning rate(0.001, 0.01, 0.1)}}\\
     The training error curves for all three learning rates almost completely overlapped, indicating that the perceptron exhibited similar convergence behavior in each case. This suggests that, for the normalized Banknote Authentication dataset, the learning rate had minimal impact on the convergence pattern and classification performance within the chosen range. Therefore, all three learning rates were found to be suitable for training the perceptron on this dataset.
-    \item {\textbf{Why a Si ngle Layer Perceptron cannot solve the XOR problem.}}\\
-    A Single Layer Perceptron can only learn linearly separable patterns by constructing a single linear decision boundary. The XOR problem is not linearly separable because no single straight line can correctly separate its output classes. As a result, a Single Layer Perceptron fails to classify XOR inputs correctly. Solving the XOR problem requires a Multilayer Perceptron (MLP) with one or more hidden layers and nonlinear activation functions.
+    \item {\textbf{Why a Single Layer Perceptron cannot solve the XOR problem.}}\\
+    A Single Layer Perceptron can only learn linearly separable patterns by constructing a single linear decision boundary. The XOR problem is not linearly separable because no single straight line can correctly separate its output classes. As a result, a Single Layer Perceptron fails to classify XOR inputs correctly. Solving the XOR problem requires a Multilayer Perceptron with one or more hidden layers and nonlinear activation functions.
     \item {\textbf{Effect of feature normalization on model convergence}}\\
     Feature normalization scales all input features to a similar range before training, preventing features with larger numerical values from dominating the learning process. This results in more stable weight updates, faster convergence, and improved training efficiency. In this experiment, feature normalization helped the perceptron learn a better decision boundary and contributed to achieving higher classification performance compared to training with unnormalized features.
 \end{itemize}
