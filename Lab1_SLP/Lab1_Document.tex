@@ -390,7 +390,9 @@ The distribution of these points suggests that these two features can help separ
 \end{figure}
 \noindent\textbf{Variance vs Cusrtosis Inference:}\\
 In this plot, the distribution of samples shows a clear separation between the two classes. 
-The slight overlap between the clusters indicates that these features are useful for classification.
+The slight overlap between the clusters indicate that this feature helps the model to generalise better. 
+Overall variance and curtosis are well separated.
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{variance_vs_entropy.eps}
@@ -417,7 +419,8 @@ Non-linear decision boundaries are required to separate the classes.
     \label{fig:Boxplots Of All Features}
 \end{figure}
 \noindent\textbf{Boxplots Inference:}\\
-The box plot shows that curtosis contains the most outliers followed by entropy
+The box plot shows the overall distribution of the features in the dataset including variance, skewness, curtosis and entropy.
+From this box plot we can infer that curtosis contains the most outliers followed by entropy.
 The feature values of Variance is well distributed whereas the feature values of skewness follows a wide range of values.
 \begin{figure}[H]
     \centering
@@ -437,6 +440,7 @@ This shows that the error decreases rapidly at the beginning and then reaches a 
 \noindent\textbf{Weight Evolution Inference:}\\
 From the plot we can infer that the features Skewness,Curtosis and Variance receive increasing negative weights.
 Entropy receives weight updates almost close to zero.
+The graph shows that weight updates have reduced steadily with increasing epochs. This shows that the model is improving.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{Bias_Evolution.eps}
@@ -462,10 +466,10 @@ It correctly identifies all Class 1 samples and makes only a few false positive 
 \end{figure}
 \noindent\textbf{Inference:}\\
 All three learning rates produce almost identical error curves during training.
-This suggests that the learning rate has minimal impact on the model's convergence.
+The three curves overlap, indicating that the learning rate has little to no effect on the number of misclassified samples for this dataset.
 %----------------------------------------------------------
 
-\vspace{25mm}
+\vspace{10mm}
 \section*{9. Performance Tables}
 
 \textbf{Training Summary}\\
@@ -546,7 +550,7 @@ Code the perceptron learning algorithm for OR, NOT, and AND gates using Python. 
     \item The figure shows the evolution of the decision boundary during the training of a 
     Single Layer Perceptron (SLP) for the AND gate.
 
-    \item \textbf{Epochs 1--3: Initial Misclassification and Adjustments}
+    \item \textbf{Updates 1--3:}
     \begin{itemize}
         \item The perceptron starts with incorrect weights, causing the decision boundary to 
         be either outside the plot range or incorrectly positioned.
@@ -556,7 +560,7 @@ Code the perceptron learning algorithm for OR, NOT, and AND gates using Python. 
         and Class 1 points.
     \end{itemize}
 
-    \item \textbf{Epochs 4--6: Boundary Exploration and Corrections}
+    \item \textbf{Updates 4--6:}
     \begin{itemize}
         \item The decision boundary continues to move and change its orientation as the 
         perceptron updates its weights.
@@ -566,7 +570,7 @@ Code the perceptron learning algorithm for OR, NOT, and AND gates using Python. 
         input values and their corresponding outputs.
     \end{itemize}
 
-    \item \textbf{Epochs 7--10: Convergence towards the Final Boundary}
+    \item \textbf{Updates 7--10:}
     \begin{itemize}
         \item The decision boundary gradually approaches the optimal position as the number 
         of classification errors decreases.
@@ -602,7 +606,7 @@ Code the perceptron learning algorithm for OR, NOT, and AND gates using Python. 
     \item The figure shows how the decision boundary changes during the training of a 
     Single Layer Perceptron (SLP) for the OR gate.
 
-    \item \textbf{Epoch 1: Initial State}
+    \item \textbf{Update 1:}
     \begin{itemize}
         \item At the beginning of training, the perceptron has initial weight values 
         that are not yet optimized.
@@ -612,7 +616,7 @@ Code the perceptron learning algorithm for OR, NOT, and AND gates using Python. 
         that need to be corrected.
     \end{itemize}
 
-    \item \textbf{Epochs 2--3: Boundary Adjustment}
+    \item \textbf{Updates 2--3:}
     \begin{itemize}
         \item As the perceptron updates its weights, the decision boundary begins to 
         appear and shift.
@@ -622,7 +626,7 @@ Code the perceptron learning algorithm for OR, NOT, and AND gates using Python. 
         from errors and adjusting the weights accordingly.
     \end{itemize}
 
-    \item \textbf{Epoch 4: Final Decision Boundary}
+    \item \textbf{Update 4:}
     \begin{itemize}
         \item After repeated weight updates, the decision boundary reaches a stable 
         position.
@@ -632,6 +636,8 @@ Code the perceptron learning algorithm for OR, NOT, and AND gates using Python. 
     \end{itemize}
 
 \end{itemize}
+\vspace{20mm}
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=1.0\textwidth]{NOT_Gate_Decision_Boundaries.eps}
@@ -644,7 +650,7 @@ Code the perceptron learning algorithm for OR, NOT, and AND gates using Python. 
     \item The figure shows the change in the decision threshold while training a 
     Single Layer Perceptron for NOT gate.
 
-    \item \textbf{Epoch 1: Initial State}
+    \item \textbf{Update 1}
     \begin{itemize}
         \item At the beginning of training, the perceptron starts with initial weight 
         and bias values that are not suitable for accurate classification.
@@ -653,8 +659,9 @@ Code the perceptron learning algorithm for OR, NOT, and AND gates using Python. 
         \item The model begins by evaluating the input points and identifying where 
         the predictions need improvement.
     \end{itemize}
+\vspace{30mm}
 
-    \item \textbf{Epoch 2: Threshold Update}
+    \item \textbf{Update 2}
     \begin{itemize}
         \item After the first weight update, the decision threshold appears in the visible 
         region at $X = 0$.
@@ -666,7 +673,7 @@ Code the perceptron learning algorithm for OR, NOT, and AND gates using Python. 
         to a better position.
     \end{itemize}
 
-    \item \textbf{Epoch 3: Final Threshold Position}
+    \item \textbf{Update 3}
     \begin{itemize}
         \item After further corrections, the decision threshold shifts to $X = 1$ 
         and becomes stable.
@@ -677,6 +684,8 @@ Code the perceptron learning algorithm for OR, NOT, and AND gates using Python. 
     \end{itemize}
 
 \end{itemize}
+\vspace{10mm}
+
 \section*{11. Discussion}
 
 \begin{itemize}
@@ -686,7 +695,7 @@ Code the perceptron learning algorithm for OR, NOT, and AND gates using Python. 
     The perceptron implemented from scratch provides a clear understanding of the perceptron learning algorithm by manually performing weight initialization, forward propagation, and weight updates. Whereas Scikit-learn's Perceptron is a highly optimized implementation that includes additional features such as parameter tuning, regularization, and efficient optimization. Although both implementations produced similar classification performance on the Banknote Authentication dataset, the Scikit-learn model was more efficient and convenient for practical applications.
     \item {\textbf{Performing the experiment with different learning rate(0.001, 0.01, 0.1)}}\\
     The training error curves for all three learning rates almost completely overlapped, indicating that the perceptron exhibited similar convergence behavior in each case. This suggests that, for the normalized Banknote Authentication dataset, the learning rate had minimal impact on the convergence pattern and classification performance within the chosen range. Therefore, all three learning rates were found to be suitable for training the perceptron on this dataset.
-    \item {\textbf{Why a Single Layer Perceptron cannot solve the XOR problem.}}\\
+    \item {\textbf{Why a Si ngle Layer Perceptron cannot solve the XOR problem.}}\\
     A Single Layer Perceptron can only learn linearly separable patterns by constructing a single linear decision boundary. The XOR problem is not linearly separable because no single straight line can correctly separate its output classes. As a result, a Single Layer Perceptron fails to classify XOR inputs correctly. Solving the XOR problem requires a Multilayer Perceptron (MLP) with one or more hidden layers and nonlinear activation functions.
     \item {\textbf{Effect of feature normalization on model convergence}}\\
     Feature normalization scales all input features to a similar range before training, preventing features with larger numerical values from dominating the learning process. This results in more stable weight updates, faster convergence, and improved training efficiency. In this experiment, feature normalization helped the perceptron learn a better decision boundary and contributed to achieving higher classification performance compared to training with unnormalized features.
@@ -695,8 +704,13 @@ Code the perceptron learning algorithm for OR, NOT, and AND gates using Python. 
 %----------------------------------------------------------
 
 \section*{12. Conclusion}
-
 This experiment successfully demonstrated the implementation of a Single Layer Perceptron for binary classification using the Banknote Authentication dataset.
+In addition to this, perceptron learning algorithm was successfully implemented for the OR, NOT, and AND logic gates. 
+The weights and bias were updated iteratively based on classification errors allowing the perceptron to learn the required input-output mappings.
+The decision boundaries after each update helped visualize the learning process and showed how the model gradually separates the two classes.
+It also demonstrated that a Single Layer Perceptron can successfully learn and classify linearly separable patterns by iteratively adjusting its weights based on prediction errors.
+
+
 %----------------------------------------------------------
 
 \section*{13. References}
