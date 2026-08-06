@@ -1,0 +1,446 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,booktabs,array,longtable}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{float}
+\begin{document}
+
+\begin{center}
+\Large\textbf{Shiv Nadar University Chennai}\\
+\end{center}
+
+
+\begin{center}
+\textbf{CS3807 – Deep Learning Laboratory}
+\vspace{2mm}
+
+\textbf{Experiment 3}
+\vspace{2mm}
+
+\textbf{Implementation of Convolutional Neural Networks (CNNs) for Image Classification}
+\end{center}
+
+
+\renewcommand{\arraystretch}{1.4}
+
+\begin{tabular}{|p{3.5cm}|p{8cm}|p{2cm}|}
+\hline
+Degree \& Branch & B.Tech Artificial Intelligence \& Data Science & Semester V\\ \hline
+Subject Code \& Name & CS3807 -- Deep Learning Laboratory & AY: 2026--27\\ \hline
+\end{tabular}
+\vspace{3mm}
+
+\section{Objective}
+To understand the working principle of Convolutional Neural Networks by implementing convolution, pooling, feature map visualization, and image classification using TensorFlow/Keras.
+
+\section{Learning Outcomes}
+Students will be able to:
+\begin{enumerate}[leftmargin=*]
+    \item Explain the convolution operation.
+    \item Compute output dimensions using stride and padding.
+    \item Visualize feature maps.
+    \item Implement max pooling and average pooling.
+    \item Calculate CNN parameters.
+    \item Build a CNN for image classification.
+    \item Evaluate CNN performance.
+\end{enumerate}
+
+\section{Background Theory}
+A Convolutional Neural Network consists of:
+\begin{itemize}
+    \item Convolution Layer
+    \item Activation Layer
+    \item Pooling Layer
+    \item Fully Connected Layer
+\end{itemize}
+
+The convolution operation is:
+\[
+Y(i,j) = \sum_{m}\sum_{n} X(i+m,j+n) K(m,n)
+\]
+where:
+\begin{itemize}[label={}]
+    \item $X$: Input Image
+    \item $K$: Kernel (Filter)
+    \item $Y$: Feature Map
+\end{itemize}
+
+The output feature map size is:
+\[
+\frac{N - F + 2P}{S} + 1
+\]
+where:
+\begin{itemize}[label={}]
+    \item $N$: Input Size
+    \item $F$: Filter Size
+    \item $P$: Padding
+    \item $S$: Stride
+\end{itemize}
+
+\subsection{Common Convolution Kernels}
+A kernel (or filter) is a small matrix that slides over an input image to extract important visual features such as edges, textures, corners, and smooth regions. During convolution, the kernel is multiplied element-wise with the corresponding image pixels, and the results are summed to produce a single value in the output feature map. Different kernels highlight different image characteristics.
+
+\subsubsection*{1. Identity Kernel}
+The identity kernel preserves the original image without modifying its pixel values.
+\[
+\begin{bmatrix}
+0 & 0 & 0 \\
+0 & 1 & 0 \\
+0 & 0 & 0
+\end{bmatrix}
+\]
+\textbf{Purpose:}
+\begin{itemize}
+    \item Preserves the original image.
+    \item Used for understanding the convolution operation.
+\end{itemize}
+
+\subsubsection*{2. Sobel-X Kernel (Vertical Edge Detection)}
+The Sobel-X kernel detects vertical edges by measuring intensity changes along the horizontal direction.
+\[
+\begin{bmatrix}
+-1 & 0 & 1 \\
+-2 & 0 & 2 \\
+-1 & 0 & 1
+\end{bmatrix}
+\]
+\textbf{Applications:}
+\begin{itemize}
+    \item Object detection
+    \item Lane detection
+    \item Face recognition
+\end{itemize}
+
+\subsubsection*{3. Sobel-Y Kernel (Horizontal Edge Detection)}
+The Sobel-Y kernel detects horizontal edges by measuring intensity changes along the vertical direction.
+\[
+\begin{bmatrix}
+-1 & -2 & -1 \\
+0 & 0 & 0 \\
+1 & 2 & 1
+\end{bmatrix}
+\]
+\textbf{Applications:}
+\begin{itemize}
+    \item Text detection
+    \item Boundary extraction
+    \item Medical image analysis
+\end{itemize}
+
+\subsubsection*{4. Laplacian Kernel}
+The Laplacian kernel detects edges in all directions using the second-order derivative of image intensity.
+\[
+\begin{bmatrix}
+0 & -1 & 0 \\
+-1 & 4 & -1 \\
+0 & -1 & 0
+\end{bmatrix}
+\]
+\textbf{Applications:}
+\begin{itemize}
+    \item Edge enhancement
+    \item Satellite image analysis
+    \item Medical imaging
+\end{itemize}
+
+\subsubsection*{5. Sharpening Kernel}
+This kernel enhances fine details by emphasizing high-frequency components.
+\[
+\begin{bmatrix}
+0 & -1 & 0 \\
+-1 & 5 & -1 \\
+0 & -1 & 0
+\end{bmatrix}
+\]
+\textbf{Applications:}
+\begin{itemize}
+    \item Image enhancement
+    \item Optical Character Recognition (OCR)
+    \item Face recognition
+\end{itemize}
+
+\subsubsection*{6. Box Blur Kernel}
+The Box Blur kernel smooths an image by replacing each pixel with the average of its neighboring pixels.
+\[
+\frac{1}{9}
+\begin{bmatrix}
+1 & 1 & 1 \\
+1 & 1 & 1 \\
+1 & 1 & 1
+\end{bmatrix}
+\]
+\textbf{Applications:}
+\begin{itemize}
+    \item Noise removal
+    \item Image smoothing
+    \item Image preprocessing
+\end{itemize}
+
+\subsubsection*{7. Gaussian Blur Kernel}
+Gaussian blur smooths the image while preserving the overall structure better than a simple average filter.
+\[
+\frac{1}{16}
+\begin{bmatrix}
+1 & 2 & 1 \\
+2 & 4 & 2 \\
+1 & 2 & 1
+\end{bmatrix}
+\]
+\textbf{Applications:}
+\begin{itemize}
+    \item Noise reduction
+    \item Computer vision preprocessing
+    \item Feature extraction
+\end{itemize}
+
+\subsubsection*{8. Emboss Kernel}
+The Emboss kernel creates a three-dimensional appearance by emphasizing directional changes in intensity.
+\[
+\begin{bmatrix}
+-2 & -1 & 0 \\
+-1 & 1 & 1 \\
+0 & 1 & 2
+\end{bmatrix}
+\]
+\textbf{Applications:}
+\begin{itemize}
+    \item Texture analysis
+    \item Artistic image effects
+\end{itemize}
+
+\subsubsection*{9. Outline Detection Kernel}
+This kernel highlights object boundaries by emphasizing regions with rapid intensity changes.
+\[
+\begin{bmatrix}
+-1 & -1 & -1 \\
+-1 & 8 & -1 \\
+-1 & -1 & -1
+\end{bmatrix}
+\]
+\textbf{Applications:}
+\begin{itemize}
+    \item Image segmentation
+    \item Boundary detection
+    \item Shape extraction
+\end{itemize}
+
+\subsubsection*{10. Motion Blur Kernel}
+This kernel simulates motion blur along the diagonal direction.
+\[
+\frac{1}{5}
+\begin{bmatrix}
+1 & 0 & 0 & 0 & 0 \\
+0 & 1 & 0 & 0 & 0 \\
+0 & 0 & 1 & 0 & 0 \\
+0 & 0 & 0 & 1 & 0 \\
+0 & 0 & 0 & 0 & 1
+\end{bmatrix}
+\]
+\textbf{Applications:}
+\begin{itemize}
+    \item Motion simulation
+    \item Image restoration
+    \item Video processing
+\end{itemize}
+
+\section{Summary of Common Kernels}
+\begin{table}[h!]
+\centering
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{Kernel} & \textbf{Size} & \textbf{Purpose} & \textbf{Applications} \\ \hline
+Identity & $3\times3$ & Preserve original image & Baseline comparison \\ \hline
+Sobel-X & $3\times3$ & Detect vertical edges & Object detection \\ \hline
+Sobel-Y & $3\times3$ & Detect horizontal edges & Boundary detection \\ \hline
+Laplacian & $3\times3$ & Detect edges in all directions & Medical imaging \\ \hline
+Sharpen & $3\times3$ & Enhance details & Image enhancement \\ \hline
+Box Blur & $3\times3$ & Smooth image & Noise removal \\ \hline
+Gaussian Blur & $3\times3$ & Reduce noise & Computer vision \\ \hline
+Emboss & $3\times3$ & 3D effect & Artistic filtering \\ \hline
+Outline & $3\times3$ & Boundary extraction & Segmentation \\ \hline
+Motion Blur & $5\times5$ & Simulate motion & Video processing \\ \hline
+\end{tabular}
+\end{table}
+
+\section{Numerical Example 1: Convolution}
+Consider the following input image:
+\[
+X = \begin{bmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \\ 7 & 8 & 9 \end{bmatrix}
+\]
+Kernel:
+\[
+K = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}
+\]
+Output:
+\begin{itemize}[label={}]
+    \item \textbf{First position:} $1(1) + 2(0) + 4(0) + 5(1) = 6$
+    \item \textbf{Second position:} $2(1) + 3(0) + 5(0) + 6(1) = 8$
+    \item \textbf{Third position:} $4(1) + 5(0) + 7(0) + 8(1) = 12$
+    \item \textbf{Fourth position:} $5(1) + 6(0) + 8(0) + 9(1) = 14$
+\end{itemize}
+Feature Map:
+\[
+\begin{bmatrix} 6 & 8 \\ 12 & 14 \end{bmatrix}
+\]
+
+\section{Numerical Example 2: Max Pooling}
+Feature map:
+\[
+\begin{bmatrix}
+1 & 5 & 2 & 3 \\
+7 & 8 & 1 & 0 \\
+4 & 6 & 9 & 5 \\
+2 & 3 & 1 & 8
+\end{bmatrix}
+\]
+Using a $2 \times 2$ max pooling filter:
+\begin{itemize}[label={}]
+    \item \textbf{Window 1:} $\begin{bmatrix} 1 & 5 \\ 7 & 8 \end{bmatrix} \rightarrow 8$
+    \item \textbf{Window 2:} $\begin{bmatrix} 2 & 3 \\ 1 & 0 \end{bmatrix} \rightarrow 3$
+    \item \textbf{Window 3:} $\begin{bmatrix} 4 & 6 \\ 2 & 3 \end{bmatrix} \rightarrow 6$
+    \item \textbf{Window 4:} $\begin{bmatrix} 9 & 5 \\ 1 & 8 \end{bmatrix} \rightarrow 9$
+\end{itemize}
+Output:
+\[
+\begin{bmatrix} 8 & 3 \\ 6 & 9 \end{bmatrix}
+\]
+
+\section{Numerical Example 3: Parameter Calculation}
+Suppose:
+\begin{itemize}
+    \item \textbf{Input Image:} $32 \times 32 \times 3$
+    \item \textbf{Convolution Layer:} Filters $= 16$, Kernel $= 3 \times 3$
+\end{itemize}
+Parameters:
+\[
+(3 \times 3 \times 3 + 1) \times 16 = (27 + 1) \times 16 = 448
+\]
+Therefore,
+\[
+\text{Total trainable parameters} = 448.
+\]
+
+\section{Dataset}
+\textbf{Dataset: CIFAR-10}
+\begin{itemize}
+    \item Training Images: 50,000
+    \item Testing Images: 10,000
+    \item Classes: 10
+    \item Image Size: $32 \times 32 \times 3$
+\end{itemize}
+
+\section{Experimental Procedure}
+\begin{description}
+    \item[Task 1] Load CIFAR-10.
+    \begin{itemize}
+        \item Display ten sample images.
+        \item Print dataset dimensions.
+        \item Plot class distribution.
+    \end{itemize}
+
+    \item[Task 2] Implement a convolution layer. Compare:
+    \begin{itemize}
+        \item Kernel $= 3 \times 3$
+        \item Kernel $= 5 \times 5$
+        \item Kernel $= 7 \times 7$
+    \end{itemize}
+    Record feature map sizes.
+
+    \item[Task 3] Study hyperparameters. Compare:
+    \begin{itemize}
+        \item Stride $= 1$
+        \item Stride $= 2$
+        \item Padding $=$ Same
+        \item Padding $=$ Valid
+    \end{itemize}
+    Compute output dimensions.
+
+    \item[Task 4] Visualize feature maps after the first convolution layer. Display at least eight feature maps.
+
+    \item[Task 5] Compare:
+    \begin{itemize}
+        \item Max Pooling
+        \item Average Pooling
+    \end{itemize}
+    Compare output size and accuracy.
+
+    \item[Task 6] Construct the following CNN:
+    \[
+    \text{Input} \rightarrow \text{Conv} \rightarrow \text{ReLU} \rightarrow \text{MaxPool} \rightarrow \text{Conv} \rightarrow \text{ReLU} \rightarrow \text{MaxPool} \rightarrow \text{Flatten} \rightarrow \text{Dense} \rightarrow \text{Softmax}
+    \]
+    Train for:
+    \begin{itemize}
+        \item Optimizer: Adam
+        \item Epochs: 20
+        \item Batch Size: 32
+    \end{itemize}
+
+    \item[Task 7] Evaluate:
+    \begin{itemize}
+        \item Accuracy
+        \item Precision
+        \item Recall
+        \item F1-score
+        \item Confusion Matrix
+        \item Classification Report
+    \end{itemize}
+\end{description}
+
+\section{Mandatory Plots}
+Generate:
+\begin{enumerate}
+    \item Sample Images
+    \item Class Distribution
+    \item Training Accuracy
+    \item Validation Accuracy
+    \item Training Loss
+    \item Validation Loss
+    \item Feature Maps
+    \item Confusion Matrix
+\end{enumerate}
+Write a 2--3 line inference for each plot.
+
+\section{Additional Exercises}
+\begin{enumerate}
+    \item Calculate the output size for a $64 \times 64$ image using a $5 \times 5$ kernel with stride 2 and padding 2.
+    \item Compute the trainable parameters of a convolution layer having 64 filters of size $3 \times 3$ and an RGB input.
+    \item Compare ReLU and Sigmoid activation functions.
+    \item Replace Max Pooling with Average Pooling and compare the results.
+    \item Increase the number of convolution filters from 16 to 64 and analyze the effect on accuracy and computation time.
+\end{enumerate}
+
+\section{Results}
+Record:
+\begin{itemize}
+    \item Training Accuracy
+    \item Testing Accuracy
+    \item Precision
+    \item Recall
+    \item F1-score
+    \item Number of Parameters
+\end{itemize}
+
+\section{Discussion}
+Answer the following:
+\begin{enumerate}
+    \item Why is convolution preferred over fully connected layers for images?
+    \item How does stride affect the feature map size?
+    \item What is the role of padding?
+    \item Why is pooling used?
+    \item How do feature maps represent image characteristics?
+    \item Why do CNNs require fewer parameters than MLPs?
+\end{enumerate}
+
+\section{References}
+\begin{enumerate}
+    \item Goodfellow et al., \textit{Deep Learning}.
+    \item Bishop, \textit{Pattern Recognition and Machine Learning}.
+    \item Haykin, \textit{Neural Networks and Learning Machines}.
+    \item TensorFlow Documentation.
+    \item CIFAR-10 Dataset Documentation.
+\end{enumerate}
+
+\end{document}
