@@ -245,9 +245,9 @@ This kernel simulates motion blur along the diagonal direction.
     \item Image restoration
     \item Video processing
 \end{itemize}
-
+\clearpage
 \section{Summary of Common Kernels}
-\begin{table}[h!]
+\begin{table}[!htbp]
 \centering
 \begin{tabular}{|l|l|l|l|}
 \hline
@@ -322,7 +322,7 @@ Therefore,
 \[
 \text{Total trainable parameters} = 448.
 \]
-
+\clearpage
 \section{Dataset}
 \textbf{Dataset: CIFAR-10}
 \begin{itemize}
@@ -333,52 +333,62 @@ Therefore,
 \end{itemize}
 
 \section{Experimental Procedure}
-\begin{description}
-    \item[Task 1] Load CIFAR-10.
+\begin{itemize}
+    \item \textbf{Task 1: Dataset Exploration}
     \begin{itemize}
+        \item Load CIFAR-10.
         \item Display ten sample images.
         \item Print dataset dimensions.
         \item Plot class distribution.
     \end{itemize}
 
-    \item[Task 2] Implement a convolution layer. Compare:
+    \item \textbf{Task 2: Convolution Layer}
     \begin{itemize}
-        \item Kernel $= 3 \times 3$
-        \item Kernel $= 5 \times 5$
-        \item Kernel $= 7 \times 7$
+        \item Implement a convolution layer.
+        \item Compare kernel sizes $3 \times 3$, $5 \times 5$, and $7 \times 7$.
+        \item Record feature map sizes.
     \end{itemize}
-    Record feature map sizes.
 
-    \item[Task 3] Study hyperparameters. Compare:
+    \item \textbf{Task 3: Hyperparameter Study}
     \begin{itemize}
-        \item Stride $= 1$
-        \item Stride $= 2$
-        \item Padding $=$ Same
-        \item Padding $=$ Valid
+        \item Compare stride $= 1$ and stride $= 2$.
+        \item Compare padding $=$ Same and padding $=$ Valid.
+        \item Compute output dimensions.
     \end{itemize}
-    Compute output dimensions.
 
-    \item[Task 4] Visualize feature maps after the first convolution layer. Display at least eight feature maps.
-
-    \item[Task 5] Compare:
+    \item \textbf{Task 4: Feature Map Visualization}
     \begin{itemize}
-        \item Max Pooling
-        \item Average Pooling
+        \item Visualize feature maps after the first convolution layer.
+        \item Display at least eight feature maps.
     \end{itemize}
-    Compare output size and accuracy.
 
-    \item[Task 6] Construct the following CNN:
+    \item \textbf{Task 5: Pooling Comparison}
+    \begin{itemize}
+        \item Compare Max Pooling.
+        \item Compare Average Pooling.
+        \item Compare output size and accuracy.
+    \end{itemize}
+
+    \item \textbf{Task 6: CNN Construction}
+    \begin{itemize}
+        \item Construct the following CNN:
+    \end{itemize}
     \[
-    \text{Input} \rightarrow \text{Conv} \rightarrow \text{ReLU} \rightarrow \text{MaxPool} \rightarrow \text{Conv} \rightarrow \text{ReLU} \rightarrow \text{MaxPool} \rightarrow \text{Flatten} \rightarrow \text{Dense} \rightarrow \text{Softmax}
+    \text{Input} \rightarrow \text{Conv} \rightarrow \text{ReLU}
+    \rightarrow \text{MaxPool} \rightarrow \text{Conv}
+    \rightarrow \text{ReLU} \rightarrow \text{MaxPool}
+    \rightarrow \text{Flatten} \rightarrow \text{Dense}
+    \rightarrow \text{Softmax}
     \]
-    Train for:
+
+    \textbf{Training Configuration}
     \begin{itemize}
         \item Optimizer: Adam
         \item Epochs: 20
         \item Batch Size: 32
     \end{itemize}
 
-    \item[Task 7] Evaluate:
+    \item \textbf{Task 7: Model Evaluation}
     \begin{itemize}
         \item Accuracy
         \item Precision
@@ -387,22 +397,94 @@ Therefore,
         \item Confusion Matrix
         \item Classification Report
     \end{itemize}
-\end{description}
+\end{itemize}
 
-\section{Mandatory Plots}
-Generate:
+\section{Source Code}
+\noindent\textbf{Source:} Github\\
+\noindent\textbf{Github Repository Link:}
+
+\url{https://github.com/ssvibitha/DeepLearningLab_2026-27/blob/main/Lab3_CNN/DL_Lab3.ipynb}
+
+\section{Plots and Inference}
 \begin{enumerate}
-    \item Sample Images
-    \item Class Distribution
-    \item Training Accuracy
-    \item Validation Accuracy
-    \item Training Loss
-    \item Validation Loss
-    \item Feature Maps
-    \item Confusion Matrix
+    \item\textbf{Sample Images}
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Images/SampleImages.png}
+    \caption{Sample Images}
+    \label{fig:SampleImages}
+\end{figure}
+\noindent\textbf{Inference:}\\
+The figures show sample images from the CIFAR-10 dataset. The images belong to 10 different categories such as Airplane, Automobile, Bird, Cat, Deer, Dog, Frog, Horse, Ship and Truck.
+Each image is 32 × 32 pixels and contains three color channels (RGB).
+    \item\textbf{Class Distribution}
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Images/ClassDistribution.png}
+    \caption{Class Distribution}
+    \label{fig:ClassDistribution}
+\end{figure}
+\noindent\textbf{Inference:}\\
+The histogram shows the class distribution of the CIFAR-10 dataset. 
+The dataset consists of images across 10 different classes such as Airplane, Automobile, Bird, Cat, Deer, Dog, Frog, Horse, Ship and Truck.
+In the training set, each class contains 5000 images each. Overall the training set contains 50000 images spanning across 10 different classes.
+\newpage
+\item\textbf{Training and Validation Accuracy}
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Images/AccuracyCurve.png}
+    \caption{Accuracy Curve}
+    \label{fig:AccuracyCurve}
+\end{figure}
+\noindent\textbf{Inference:}\\
+The plot shows the training and validation accuracy curves for 20 epochs. 
+The training accuracy steadily increases from around 50 percent to over 95 percent as the number of epochs increases.
+Validation accuracy improves from 60 percent and reaches around 70 percent in the 7th epoch. Then it remains stable for the rest of the epochs.
+A noticeable gap develops between training and validation accuracy after a few epochs.
+This indicates that the model is overfitting the training data.
+Further training improves training accuracy but does not significantly improve validation performance.
+\newpage
+    \item\textbf{Training and Validation Loss}
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Images/LossCurve.png}
+    \caption{LossCurve}
+    \label{fig:LossCurve}
+\end{figure}
+\noindent\textbf{Inference:}\\
+The plot shows the training and validation loss for 20 epochs.
+Training loss continuously decreases throughout the epochs. This indicates that the model learns the training data effectively.
+Validation loss decreases initially and reaches its minimum around 4–6 epochs. 
+Afterwards validation loss steadily increases while training loss continues to decrease.
+The increasing gap between the accuracy and validation loss curves shows that the model is overfitting.
+\newpage
+\item \textbf{Feature Maps}
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Images/FeatureMaps.png}
+    \caption{Feature Maps}
+    \label{fig:FeatureMaps}
+\end{figure}
+\noindent\textbf{Inference:}\\
+The plot shows what each of the 16 filters learns after the first convolutional layer.
+The feature maps show that different filters detect various aspects of the image, such as edges, textures, contours, and color patterns.
+Some filters produce strong activations, while others show weaker or minimal responses.
+This indicates that the first convolutional layer effectively extracts features from the input images.
+\newpage
+    \item\textbf{Confusion Matrix}
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Images/ConfusionMatrix.png}
+    \caption{Confusion Matrix}
+    \label{fig:ConfusionMatrix}
+\end{figure}
+\noindent\textbf{Inference:}\\
+The figure shows the confusion matrix of the model's predictions.
+The model performs relatively well for classes such as Ship, Frog, Horse, and Truck, which have a high number of correct predictions.
+From the figure, 100 Automobile images were misclassified as Truck, while 164 Dog images were misclassified as Cat. Additionally, 86 Truck images were misclassified as Automobile.
+Overall, the confusion matrix shows that the model can distinguish most classes but struggles with visually similar classes such as Dog and Cat, Automobile and Truck.
 \end{enumerate}
-Write a 2--3 line inference for each plot.
-
+\newpage
 \section{Additional Exercises}
 \begin{enumerate}
     \item Calculate the output size for a $64 \times 64$ image using a $5 \times 5$ kernel with stride 2 and padding 2.
@@ -413,25 +495,93 @@ Write a 2--3 line inference for each plot.
 \end{enumerate}
 
 \section{Results}
-Record:
-\begin{itemize}
-    \item Training Accuracy
-    \item Testing Accuracy
-    \item Precision
-    \item Recall
-    \item F1-score
-    \item Number of Parameters
-\end{itemize}
+
+\begin{table}[H]
+    \centering
+    
+    \label{tab:results}
+    \begin{tabular}{|l|c|}
+        \hline
+        \textbf{Metric} & \textbf{Value} \\
+        \hline
+        Training Accuracy & 95.88\% \\
+        \hline
+        Testing Accuracy & 67.01\% \\
+        \hline
+        Precision & 67.34\% \\
+        \hline
+        Recall & 67.01\% \\
+        \hline
+        F1-score & 66.92\% \\
+        \hline
+        Number of Parameters & 545,098 \\
+        \hline
+    \end{tabular}
+    \caption{Model Performance Results}
+\end{table}
 
 \section{Discussion}
 Answer the following:
 \begin{enumerate}
-    \item Why is convolution preferred over fully connected layers for images?
-    \item How does stride affect the feature map size?
-    \item What is the role of padding?
-    \item Why is pooling used?
-    \item How do feature maps represent image characteristics?
-    \item Why do CNNs require fewer parameters than MLPs?
+    \item \textbf{Why is convolution preferred over fully connected layers for images?}
+    
+    \vspace{5mm}
+
+    Convolution preserves the spatial structure of an image and detects local features such as edges, textures, contours, and patterns. 
+    It uses shared weights, so the same filter can detect the same feature across different parts of the image, providing translation invariance. 
+    This makes convolutional layers more efficient and require fewer parameters than fully connected layer
+    
+    \vspace{3mm}
+
+    \item \textbf{How does stride affect the feature map size?}
+    
+    \vspace{5mm}
+
+    Stride determines how many pixels the filter moves at each step while scanning an image. 
+    Smaller stride means the filter moves in smaller steps and examines more regions producing a larger feature map with more detailed information. 
+    A larger stride means the filter moves farther at each step so fewer regions are examined, resulting in a smaller feature map and lower computational cost.
+    
+    \vspace{3mm}
+
+    \item \textbf{What is the role of padding?}
+    
+    \vspace{5mm}
+
+    Padding adds extra pixels around the edges of an image before applying convolution. 
+    It allows the filter to cover the border and corner pixels properly, which might otherwise be used fewer times than the pixels in the center. 
+    Padding also helps preserve the spatial dimensions of the feature map and allows the network to retain more information from the edges of the image.  
+
+    \vspace{3mm}
+
+    \item \textbf{Why is pooling used?}
+    
+    \vspace{5mm}
+
+    Pooling is used to reduce the spatial dimensions of feature maps while keeping the most important information. 
+    For example, max pooling selects the maximum value from a small region, which helps preserve strong features such as edges and textures. 
+    This reduces the number of computations and parameters in subsequent layers making the CNN faster and less prone to overfitting. 
+    Pooling also makes the model less sensitive to small shifts or changes in the position of features in an image.
+    
+    \vspace{3mm}
+    
+    \item \textbf{How do feature maps represent image characteristics?}
+    
+    \vspace{5mm}
+
+    Feature maps show the features detected by convolutional filters at different locations in an image. 
+    Early layers usually detect simple features like edges and textures, while deeper layers detect more complex patterns.
+
+    \vspace{3mm}
+    \item \textbf{Why do CNNs require fewer parameters than MLPs?}
+
+    \vspace{5mm}
+
+    CNNs use local connections and shared filter weights instead of connecting every neuron to every pixel. 
+    A convolutional filter only looks at a small region of the image at a time instead of the entire image. 
+    The same filter is reused across different locations, so the same set of weights can detect a feature such as an edge anywhere in the image. 
+    Therefore, CNNs need far fewer trainable parameters than MLPs, where each neuron is connected to every input pixel with separate weights.
+
+    \vspace{3mm}
 \end{enumerate}
 
 \section{References}
@@ -442,5 +592,6 @@ Answer the following:
     \item TensorFlow Documentation.
     \item CIFAR-10 Dataset Documentation.
 \end{enumerate}
+
 
 \end{document}
