@@ -1,0 +1,558 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,booktabs,array,longtable}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows, positioning}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{float}
+
+\begin{document}
+
+\begin{center}
+\Large\textbf{Shiv Nadar University Chennai}\\
+\end{center}
+
+\begin{center}
+\textbf{CS3807 – Deep Learning Laboratory}
+\vspace{2mm}
+
+\textbf{Experiment 4}
+\vspace{2mm}
+
+\textbf{Comparative Study of Deep Convolutional Neural Network Architectures Using Transfer Learning}
+\end{center}
+
+\renewcommand{\arraystretch}{1.4}
+
+\begin{tabular}{|p{3.5cm}|p{8cm}|p{2cm}|}
+\hline
+Degree \& Branch & B.Tech Artificial Intelligence \& Data Science & Semester V\\ \hline
+Subject Code \& Name & CS3807 -- Deep Learning Laboratory & AY: 2026--27\\ \hline
+\end{tabular}
+\vspace{3mm}
+
+\section{Objective}
+The objectives of this experiment are:
+\begin{itemize}[leftmargin=*]
+    \item Study the evolution of deep CNN architectures.
+    \item Compare LeNet-5, AlexNet, VGG16, GoogleNet, and ResNet.
+    \item Understand transfer learning.
+    \item Fine tune pretrained CNN models.
+    \item Compare classification performance of different architectures.
+\end{itemize}
+
+\section{Learning Outcomes}
+After completing this experiment students will be able to:
+\begin{enumerate}[leftmargin=*]
+    \item Explain modern CNN architectures.
+    \item Differentiate LeNet, AlexNet, VGG16, GoogleNet, and ResNet.
+    \item Implement transfer learning.
+    \item Fine tune pretrained CNN models.
+    \item Compare CNN architectures using performance metrics.
+\end{enumerate}
+
+\section{Introduction}
+Deep Convolutional Neural Networks have become the dominant models for computer vision applications because they automatically learn hierarchical features from images. The evolution of CNNs has focused on improving classification accuracy while reducing computational complexity and training difficulties.
+
+The progression of CNN architectures began with LeNet-5 and has evolved through AlexNet, VGGNet, GoogleNet, and ResNet. Each architecture introduced important innovations that significantly improved image classification performance.
+
+\section{Evolution of CNN Architectures}
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|p{8cm}|}
+\hline
+\textbf{Model} & \textbf{Year} & \textbf{Major Contribution} \\ \hline
+LeNet-5 & 1998 & First practical convolutional neural network \\ \hline
+AlexNet & 2012 & ReLU activation, Dropout and GPU training \\ \hline
+VGG16 & 2014 & Uniform $3 \times 3$ convolution filters \\ \hline
+GoogleNet & 2014 & Inception modules for multi-scale feature extraction \\ \hline
+ResNet & 2015 & Residual learning using skip connections \\ \hline
+\end{tabular}
+\end{table}
+
+\section{LeNet-5}
+LeNet-5 was proposed by Yann LeCun in 1998 for handwritten digit recognition. It consists of two convolution layers, two average pooling layers, and fully connected layers. It demonstrated that convolutional networks could automatically learn image features without handcrafted feature extraction.
+
+\paragraph{Advantages}
+\begin{itemize}[leftmargin=*]
+    \item Small number of parameters
+    \item Fast training
+    \item Suitable for OCR
+\end{itemize}
+
+\section{AlexNet}
+AlexNet won the ImageNet Challenge in 2012 by reducing the classification error significantly. It introduced ReLU activation, Dropout regularization, and GPU training.
+
+\paragraph{Major Innovations}
+\begin{itemize}[leftmargin=*]
+    \item ReLU activation
+    \item Dropout
+    \item GPU implementation
+    \item Data augmentation
+\end{itemize}
+
+\section{VGG16}
+VGG16 demonstrated that using multiple small $3 \times 3$ convolution filters could outperform larger filters while increasing network depth.
+
+\paragraph{Advantages}
+\begin{itemize}[leftmargin=*]
+    \item Excellent feature extraction
+    \item Simple architecture
+    \item High classification accuracy
+\end{itemize}
+
+\section{Comparison of Architectures}
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|p{6cm}|}
+\hline
+\textbf{Architecture} & \textbf{Depth} & \textbf{Parameters} & \textbf{Main Contribution} \\ \hline
+LeNet-5 & 7 & 60K & First CNN \\ \hline
+AlexNet & 8 & 61M & ReLU + Dropout \\ \hline
+VGG16 & 16 & 138M & Deep $3 \times 3$ filters \\ \hline
+GoogleNet & 22 & 6.8M & Inception Modules \\ \hline
+ResNet50 & 50 & 25.6M & Residual Learning \\ \hline
+\end{tabular}
+\end{table}
+
+\section{GoogleNet (Inception Network)}
+GoogleNet, proposed by Szegedy et al. in 2014, introduced the Inception Module, which performs multiple convolution operations in parallel using different filter sizes. Instead of using only a single kernel size, GoogleNet simultaneously applies $1 \times 1$, $3 \times 3$, $5 \times 5$ convolutions and max pooling. The outputs are concatenated to obtain multi-scale feature representations.
+
+The use of $1 \times 1$ convolutions before larger kernels reduces the number of trainable parameters and computational complexity.
+
+\paragraph{Advantages}
+\begin{itemize}[leftmargin=*]
+    \item Multi-scale feature extraction.
+    \item Fewer parameters than VGG16.
+    \item High computational efficiency.
+    \item Better classification performance.
+\end{itemize}
+\newpage
+\section{ResNet}
+Increasing CNN depth often causes the vanishing gradient problem, making optimization difficult. ResNet solves this issue using skip (residual) connections, allowing gradients to flow directly through the network.
+
+Instead of learning 
+\[
+H(x)
+\], 
+
+ResNet learns:
+\[
+F(x) = H(x) - x
+\]
+
+thus,
+\[
+\text{Output} = F(x) + x
+\]
+where:
+\begin{itemize}[leftmargin=*]
+    \item $F(x) = \text{Residual Mapping}$
+    \item $x = \text{Identity Mapping}$
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=1.5cm, auto, >=stealth']
+    % Fixed: Added (input) node name before the label
+    \node [draw, rectangle] (input) {Input};
+    \node [draw, rectangle, right of=input, node distance=2cm] (conv1) {Conv};
+    \node [draw, rectangle, right of=conv1, node distance=2cm] (conv2) {Conv};
+    \node [draw, circle, right of=conv2, node distance=2cm] (add) {$+$};
+    \node [right of=add, node distance=1.5cm] (output) {Output};
+
+    % Straight flow connections
+    \draw[->] (input) -- (conv1);
+    \draw[->] (conv1) -- (conv2);
+    \draw[->] (conv2) -- (add);
+    \draw[->] (add) -- (output);
+    
+    % Fixed: Identity connection pathing
+    \draw[->] (input) |- ++(0,1.2) -| node[near start, above] {Identity Connection} (add);
+\end{tikzpicture}
+\caption{Residual Block in ResNet}
+\label{fig:residual_block}
+\end{figure}
+
+\paragraph{Advantages}
+\begin{itemize}[leftmargin=*]
+    \item Eliminates vanishing gradients.
+    \item Enables very deep neural networks.
+    \item Faster convergence.
+    \item High ImageNet accuracy.
+\end{itemize}
+
+\section{Dilated Convolution}
+Dilated convolution (also called atrous convolution) increases the receptive field without increasing the number of parameters. The dilation rate determines the spacing between kernel elements.
+
+For a standard convolution:
+\[
+D = 1
+\]
+For dilated convolution:
+\[
+D > 1
+\]
+
+\paragraph{Example}
+\[
+\begin{bmatrix}
+1 & 0 & 2 \\
+0 & 3 & 0 \\
+4 & 0 & 5
+\end{bmatrix}
+\]
+where zeros indicate inserted gaps.
+
+\paragraph{Applications}
+\begin{itemize}[leftmargin=*]
+    \item Semantic segmentation
+    \item Medical image analysis
+    \item Satellite imagery
+    \item Object localization
+\end{itemize}
+
+\section{Transpose Convolution}
+Transpose convolution increases the spatial dimensions of feature maps. Unlike pooling, which reduces image size, transpose convolution performs learnable upsampling.
+
+\paragraph{Applications}
+\begin{itemize}[leftmargin=*]
+    \item Image Super Resolution
+    \item Autoencoders
+    \item GANs
+    \item Image Generation
+    \item Semantic Segmentation
+\end{itemize}
+
+\section{Transfer Learning}
+Transfer Learning utilizes a pretrained CNN model that has already learned general image features from a large dataset such as ImageNet.
+
+Instead of training from scratch:
+\begin{enumerate}[leftmargin=*]
+    \item Load a pretrained model.
+    \item Remove the original classifier.
+    \item Freeze convolution layers.
+    \item Add new Dense layers.
+    \item Train the classifier.
+    \item Fine tune selected convolution layers.
+\end{enumerate}
+
+\begin{figure}[H]
+\begin{tikzpicture}[node distance=3cm, auto, >=stealth', block/.style={draw, rectangle, align=center, minimum height=1.2cm, text width=2.1cm, font=\small}]
+    \node [block] (b1) {ImageNet\\Pretrained Model};
+    \node [block, right of=b1] (b2) {Remove\\Classifier};
+    \node [block, right of=b2] (b3) {Freeze\\Layers};
+    \node [block, right of=b3] (b4) {Add Dense\\Layers};
+    \node [block, right of=b4] (b5) {Fine Tune};
+    \node [block, right of=b5] (out) {Prediction};
+
+    \draw[->] (b1.east) -- (b2.west);
+    \draw[->] (b2.east) -- (b3.west);
+    \draw[->] (b3.east) -- (b4.west);
+    \draw[->] (b4.east) -- (b5.west);
+    \draw[->] (b5.east) -- (out.west);
+\end{tikzpicture}
+\caption{Transfer Learning Workflow}
+\label{fig:transfer_learning}
+\end{figure}
+
+\paragraph{Advantages}
+\begin{itemize}[leftmargin=*]
+    \item Faster convergence.
+    \item Higher accuracy on small datasets.
+    \item Reduced training time.
+    \item Lower computational cost.
+\end{itemize}
+
+\section{Dataset}
+\textbf{Dataset: CIFAR-10}
+\begin{itemize}[leftmargin=*]
+    \item Training Images: 50,000
+    \item Testing Images: 10,000
+    \item Number of Classes: 10
+    \item Image Size: $32 \times 32 \times 3$
+    \item Classes: Airplane, Automobile, Bird, Cat, Deer, Dog, Frog, Horse, Ship, and Truck.
+\end{itemize}
+
+\section{Experimental Procedure}
+\paragraph{Task 1: Dataset Preparation}
+\begin{enumerate}
+    \item Load the CIFAR-10 dataset using TensorFlow/Keras.
+    \item Normalize the pixel values to the range $[0, 1]$.
+    \item Display ten sample images.
+    \item Print the dimensions of the training and testing datasets.
+\end{enumerate}
+
+\paragraph{Task 2: Transfer Learning}\hfill\\
+Load any one of the following pretrained CNN models:
+\begin{itemize}
+    \item VGG16
+    \item ResNet50
+    \item MobileNetV2
+    \item EfficientNetB0 (Optional)
+\end{itemize}
+Perform the following steps:
+\begin{enumerate}
+    \item Load pretrained ImageNet weights.
+    \item Remove the original classification layer.
+    \item Freeze the convolutional base.
+    \item Add a Global Average Pooling layer.
+    \item Add a Dense layer with ReLU activation.
+    \item Add the output layer with Softmax activation.
+\end{enumerate}
+
+\paragraph{Task 3: Model Training}\hfill\\
+Train the model using:
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Hyperparameter} & \textbf{Value} \\ \hline
+Optimizer & Adam \\ \hline
+Learning Rate & 0.001 \\ \hline
+Batch Size & 32 \\ \hline
+Epochs & 10–20 \\ \hline
+Loss Function & Categorical Cross Entropy \\ \hline
+Evaluation Metric & Accuracy \\ \hline
+\end{tabular}
+\end{table}
+
+\paragraph{Task 4: Fine Tuning}
+\begin{enumerate}
+    \item Unfreeze the last convolution block.
+    \item Train for another 5–10 epochs.
+    \item Compare the classification accuracy before and after fine-tuning.
+\end{enumerate}
+
+\paragraph{Task 5: Model Evaluation}\hfill\\
+Evaluate the trained model using:
+\begin{itemize}
+    \item Accuracy
+    \item Precision
+    \item Recall
+    \item F1-score
+    \item Confusion Matrix
+    \item Classification Report
+\end{itemize}
+
+\section{Hyperparameter Study}
+Compare the performance using different settings.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Hyperparameter} & \textbf{Values} \\ \hline
+Learning Rate & 0.001, 0.0001 \\ \hline
+Batch Size & 16, 32, 64 \\ \hline
+Epochs & 10, 20 \\ \hline
+Optimizer & Adam, SGD \\ \hline
+Dense Units & 128, 256 \\ \hline
+Frozen Layers & All, Partial \\ \hline
+\end{tabular}
+\end{table}
+
+\section{Source Code}
+\noindent\textbf{Source:} Github\\
+\noindent\textbf{Github Repository Link:}
+
+\url{https://github.com/ssvibitha/DeepLearningLab_2026-27/blob/main/Lab4_TransferLearning/DL_Lab4.ipynb}
+
+
+\section{Plots and Inference}
+\begin{enumerate}
+    \item\textbf{Sample CIFAR-10 images}
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{Images/SampleImages.png}
+        \caption{Sample Images}
+        \label{fig:SampleImages}
+    \end{figure}
+    \noindent\textbf{Inference:}\\
+    The
+    
+    \item\textbf{Training and Validation Accuracy}
+            \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.8\textwidth]{Images/SampleImages.png}
+            \caption{Sample Images}
+            \label{fig:SampleImages}
+        \end{figure}
+        \noindent\textbf{Inference:}\\
+    The
+    
+    \item\textbf{Training and Validation Loss}
+            \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.8\textwidth]{Images/SampleImages.png}
+            \caption{Sample Images}
+            \label{fig:SampleImages}
+        \end{figure}
+        \noindent\textbf{Inference:}\\
+    The
+
+    \item\textbf{Confusion Matrix}
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{Images/SampleImages.png}
+        \caption{Sample Images}
+        \label{fig:SampleImages}
+    \end{figure}
+    \noindent\textbf{Inference:}\\
+    The
+    
+    \item\textbf{Misclassified Images}
+            \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.8\textwidth]{Images/SampleImages.png}
+            \caption{Sample Images}
+            \label{fig:SampleImages}
+        \end{figure}
+        \noindent\textbf{Inference:}\\
+    The
+
+\end{enumerate}
+
+\section{Results}
+
+\subsection{Performance Metrics}
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|p{6cm}|}
+\hline
+\textbf{Metric} & \textbf{Value} \\ \hline
+Training Accuracy & \\ \hline
+Testing Accuracy & \\ \hline
+Precision & \\ \hline
+Recall & \\ \hline
+F1-score & \\ \hline
+Training Time & \\ \hline
+Total Parameters & \\ \hline
+\end{tabular}
+\end{table}
+
+\subsection{Comparison of CNN Architectures}
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{Model} & \textbf{Parameters} & \textbf{Accuracy (\%)} & \textbf{Training Time} \\ \hline
+LeNet-5 & & & \\ \hline
+AlexNet & & & \\ \hline
+VGG16 & & & \\ \hline
+GoogleNet & & & \\ \hline
+ResNet50 & & & \\ \hline
+\end{tabular}
+\end{table}
+
+\section{Discussion Questions}
+Answer the following questions:
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Why is AlexNet considered a breakthrough in deep learning?}
+    
+    \vspace{5mm}
+    
+    ans
+    
+    \vspace{3mm}
+    
+    \item \textbf{Why does VGG16 use only $3 \times 3$ convolution filters?}
+    
+    \vspace{5mm}
+    
+    ans
+    
+    \vspace{3mm}
+    
+    \item \textbf{Explain the advantages of the Inception module.}
+    
+    \vspace{5mm}
+    
+    ans
+    
+    \vspace{3mm}
+    
+    \item \textbf{What is the purpose of residual learning?}
+    
+    \vspace{5mm}
+    
+    ans
+    
+    \vspace{3mm}
+    
+    \item \textbf{Differentiate LeNet and ResNet.}
+    
+    \vspace{5mm}
+    
+    ans
+    
+    \vspace{3mm}
+    
+    \item \textbf{What is Transfer Learning?}
+    
+    \vspace{5mm}
+    
+    ans
+    
+    \vspace{3mm}
+    
+    \item \textbf{Why is fine tuning required?}
+    
+    \vspace{5mm}
+    
+    ans
+    
+    \vspace{3mm}
+    
+    \item \textbf{Explain the difference between dilated convolution and transpose convolution.}
+    
+    \vspace{5mm}
+    
+    ans
+    
+    \vspace{3mm}
+    
+    \item \textbf{Why do pretrained models converge faster?}
+    
+    \vspace{5mm}
+    
+    ans
+    
+    \vspace{3mm}
+    
+    \item \textbf{Compare the computational complexity of LeNet and ResNet.}
+    
+    \vspace{5mm}
+    
+    ans
+    
+    \vspace{3mm}
+    
+\end{enumerate}
+
+\section{Additional Exercises}
+\begin{enumerate}[leftmargin=*]
+    \item Implement transfer learning using VGG16.
+    \item Repeat the experiment using ResNet50.
+    \item Compare Adam and SGD optimizers.
+    \item Compare training with frozen layers and fine tuning.
+    \item Evaluate the model using Precision, Recall and F1-score.
+    \item Compare the performance of LeNet, AlexNet and ResNet.
+\end{enumerate}
+
+\section{References}
+\begin{enumerate}[leftmargin=*]
+    \item Yann LeCun, Leon Bottou, Yoshua Bengio and Patrick Haffner, \textit{Gradient-Based Learning Applied to Document Recognition}, Proceedings of the IEEE, 1998.
+    \item Alex Krizhevsky, Ilya Sutskever and Geoffrey Hinton, \textit{ImageNet Classification with Deep Convolutional Neural Networks}, NeurIPS, 2012.
+    \item Karen Simonyan and Andrew Zisserman, \textit{Very Deep Convolutional Networks for Large-Scale Image Recognition}, ICLR, 2015.
+    \item Christian Szegedy et al., \textit{Going Deeper with Convolutions}, CVPR, 2015.
+    \item Kaiming He, Xiangyu Zhang, Shaoqing Ren and Jian Sun, \textit{Deep Residual Learning for Image Recognition}, CVPR, 2016.
+    \item Ian Goodfellow, Yoshua Bengio and Aaron Courville, \textit{Deep Learning}, MIT Press, 2016.
+    \item TensorFlow Documentation: \url{https://www.tensorflow.org}
+    \item Keras Documentation: \url{https://keras.io}
+\end{enumerate}
+
+\end{document}
