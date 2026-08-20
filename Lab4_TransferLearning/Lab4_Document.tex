@@ -372,50 +372,78 @@ Frozen Layers & All, Partial \\ \hline
         \label{fig:SampleImages}
     \end{figure}
     \noindent\textbf{Inference:}\\
-    The
+    The figures show sample images from the CIFAR-10 dataset. 
+    The images belong to 10 different categories such as Airplane, Automobile, Bird, Cat, Deer, Dog, Frog, Horse, Ship and Truck.
+    Each image is 32 x 32 pixels and contains three color channels (RGB)
+    
     
     \item\textbf{Training and Validation Accuracy}
             \begin{figure}[H]
             \centering
-            \includegraphics[width=0.8\textwidth]{Images/SampleImages.png}
-            \caption{Sample Images}
-            \label{fig:SampleImages}
+            \includegraphics[width=0.9\textwidth]{Images/TrainValAccuracy.png}
+            \caption{Training and Validation Accuracy}
+            \label{fig:TrainValAccuracy}
         \end{figure}
         \noindent\textbf{Inference:}\\
-    The
+    Training accuracy increases smoothly from approximately 76 percent at Epoch 0 to over 92 percent by Epoch 9. 
+    This shows that the model effectively fits the training data with subsequent epochs.
+
+    Validation accuracy rises initially from around 80 percent and reaches its peak at approximately 82.5 percent around Epoch 3–4,.
+    After Epoch 4, the validation accuracy stabilizes.
+
+    After Epoch 4, training accuracy continues to rise while validation accuracy drops slightly and stabilizes. This shows that the model is overfititng.
     
+    \clearpage
     \item\textbf{Training and Validation Loss}
             \begin{figure}[H]
             \centering
-            \includegraphics[width=0.8\textwidth]{Images/SampleImages.png}
-            \caption{Sample Images}
-            \label{fig:SampleImages}
+            \includegraphics[width=0.9\textwidth]{Images/TrainValLoss.png}
+            \caption{Training and Validation Loss}
+            \label{fig:TrainValLoss}
         \end{figure}
         \noindent\textbf{Inference:}\\
-    The
+    The training loss sharply decreases from 75 percent to around 0.5 percent within the first 2 epochs. 
+    Then it steadily decreases for subsequent epochs.
 
+    Validation loss decreases initially reaching its lowest point with value about 50 percent around Epoch 2.
+    Then the validation loss increases.
+
+    The gap between training and validation loss curves suggests that the model is learning the training data well but has limited generalization to unseen data.
+
+
+    \clearpage
     \item\textbf{Confusion Matrix}
         \begin{figure}[H]
         \centering
-        \includegraphics[width=0.8\textwidth]{Images/SampleImages.png}
-        \caption{Sample Images}
-        \label{fig:SampleImages}
+        \includegraphics[width=0.9\textwidth]{Images/ConfusionMatrix.png}
+        \caption{Confusion Matrix}
+        \label{fig:ConfusionMatrix}
     \end{figure}
     \noindent\textbf{Inference:}\\
-    The
-    
+    The confusion matrix shows that all the classes have been correctly classified most of the time.
+    However 115 Dog images have been incorrecly classified as Cat. Also 67 Cat images have been incorrectly classified as Dog.
+    In addition, 43 Airplane images have been misclassified as Ship. Also 34 images of Automobile has been misclassified as Truck. 
+    Moreover 36 Deer images has been misclassified as Horse.
+
+    This shows that the model has been able to predict most of the classses very well. 
+    However there is some misclassification among similar classes such as Dog and Cat, Deer and Horse, Automobile and Truck.
+
+    \clearpage
     \item\textbf{Misclassified Images}
             \begin{figure}[H]
             \centering
-            \includegraphics[width=0.8\textwidth]{Images/SampleImages.png}
-            \caption{Sample Images}
-            \label{fig:SampleImages}
+            \includegraphics[width=0.9\textwidth]{Images/MisclassifiedImages.png}
+            \caption{Misclassified Images}
+            \label{fig:MisclassifiedImages}
         \end{figure}
         \noindent\textbf{Inference:}\\
-    The
-
+    The figure shows some of the images that has been misclassified by the model.
+    From this figure we can see that Deer image has been misclassified as Dog and Horse. 
+    Similarly Frog image has been misclassified as Dog and Ship.
+    
 \end{enumerate}
 
+\clearpage
 \section{Results}
 
 \subsection{Performance Metrics}
@@ -424,13 +452,13 @@ Frozen Layers & All, Partial \\ \hline
 \begin{tabular}{|l|p{6cm}|}
 \hline
 \textbf{Metric} & \textbf{Value} \\ \hline
-Training Accuracy & \\ \hline
-Testing Accuracy & \\ \hline
-Precision & \\ \hline
-Recall & \\ \hline
-F1-score & \\ \hline
-Training Time & \\ \hline
-Total Parameters & \\ \hline
+Training Accuracy &  0.9406 \\ \hline
+Testing Accuracy & 0.9105 \\ \hline
+Precision &  0.9124063566237557 \\ \hline
+Recall & 0.9105 \\ \hline
+F1-score &  0.9107742104848716 \\ \hline
+Training Time & 769.273529291153 seconds\\ \hline
+Total Parameters & 29,074,400 \\ \hline
 \end{tabular}
 \end{table}
 
@@ -440,14 +468,44 @@ Total Parameters & \\ \hline
 \begin{tabular}{|l|l|l|l|}
 \hline
 \textbf{Model} & \textbf{Parameters} & \textbf{Accuracy (\%)} & \textbf{Training Time} \\ \hline
-LeNet-5 & & & \\ \hline
-AlexNet & & & \\ \hline
-VGG16 & & & \\ \hline
-GoogleNet & & & \\ \hline
-ResNet50 & & & \\ \hline
+LeNet-5 & 83,126 & 54.45 & 77.5 seconds\\ \hline
+AlexNet & 36,925,322 & 71.19	& 343.1 seconds\\ \hline
+VGG16 & 29,074,400 & 0.9105 & 769.3 seconds \\ \hline
+GoogleNet & 22,066,346 & 69.58 & 296.1 seconds \\ \hline
+ResNet50 & 23,851,274 & 86.38 & 392.7 seconds\\ \hline
 \end{tabular}
 \end{table}
 
+\subsection{Hyperparameter Study}
+\begin{table}[H]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|l|l|l|l|l|l|}
+\hline
+\textbf{Learning Rate} & \textbf{Batch Size} & \textbf{Epochs} & \textbf{Optimizer} &
+\textbf{Dense Units} & \textbf{Frozen} & \textbf{Validation Accuracy} & \textbf{Time (sec)} \\
+\hline
+0.001 & 32 & 10 & Adam & 128 & All & 0.8216 & 769.60 \\
+\hline
+0.0001 & 32 & 10 & Adam & 128 & All & 0.8197 & 776.33 \\
+\hline
+0.001 & 16 & 10 & Adam & 128 & All & 0.8195 & 772.22 \\
+\hline
+0.001 & 64 & 10 & Adam & 128 & All & 0.8219 & 711.69 \\
+\hline
+0.001 & 32 & 20 & Adam & 128 & All & 0.8248 & 1527.30 \\
+\hline
+0.001 & 32 & 10 & SGD & 128 & All & 0.8018 & 767.58 \\
+\hline
+0.001 & 32 & 10 & Adam & 256 & All & 0.8230 & 767.40 \\
+\hline
+0.001 & 32 & 10 & Adam & 128 & Partial & 0.1000 & 1001.75 \\
+\hline
+\end{tabular}%
+}
+\end{table}
+
+\clearpage
 \section{Discussion Questions}
 Answer the following questions:
 \begin{enumerate}[leftmargin=*]
@@ -455,7 +513,8 @@ Answer the following questions:
     
     \vspace{5mm}
     
-    ans
+    AlexNet was a major breakthrough because it demonstrated that a deep convolutional neural network (CNN) could achieve better performance on large-scale image classification.
+    It used techniques like ReLU, dropout, data augmentation, and GPUs for faster training.
     
     \vspace{3mm}
     
@@ -463,7 +522,12 @@ Answer the following questions:
     
     \vspace{5mm}
     
-    ans
+    VGG16 uses 3 x 3 convolution filters because they require fewer parameters and computations than larger filters.
+    Stacking two 3 x 3 filters gives an effective 5 x 5 receptive field, wheras stacking three 3x3 filters gives a 7 x 7 receptive field.
+    This allows the network to capture larger patterns without using large filters directly.
+    Each convolution is followed by ReLU, providing more nonlinearities and helping the network learn complex features.
+    Using small filters also allows VGG16 to build a deeper network.
+    Thus, 3 x 3 filters provide better feature learning with fewer parameters and greater depth.
     
     \vspace{3mm}
     
@@ -471,7 +535,11 @@ Answer the following questions:
     
     \vspace{5mm}
     
-    ans
+    The Inception module processes an image using different operations like 1x1, 3x3, 5x5 convolutions and pooling in parallel.
+    It can capture features at different scales, from small details to larger patterns.
+    The outputs of these branches are combined to create a richer feature representation.
+    Using 1x1 convolutions reduce the number of channels which lowers computational cost.
+    Thus, Inception provides better feature extraction and computational efficiency.
     
     \vspace{3mm}
     
@@ -479,7 +547,12 @@ Answer the following questions:
     
     \vspace{5mm}
     
-    ans
+    The main purpose of residual learning is to make very deep neural networks easier and more effective to train.
+    Instead of learning the entire transformation, the network learns only the difference (residual) between the input and the desired output.
+    Skip connections allow the original input to directly reach later layers, helping information and gradients flow smoothly.
+    This helps prevent problems such as vanishing gradients and degradation, where adding more layers can actually reduce performance.
+    It also makes the network easier to optimize because the layers only need to learn the necessary changes.
+    Residual learning allows models like ResNet to become very deep while still maintaining good performance.
     
     \vspace{3mm}
     
@@ -487,7 +560,11 @@ Answer the following questions:
     
     \vspace{5mm}
     
-    ans
+    LeNet is a simple and shallow CNN mainly designed for handwritten digit recognition.
+    On the other hand, ResNet is a much deeper CNN designed for complex image classification tasks.
+    LeNet does not use skip connections, while ResNet can skip connections.
+    LeNet has fewer parameters and requires less computation.
+    Whereas, ResNet can have 18, 34, 50, 101, or 152 layers, making it much more powerful but computationally expensive.
     
     \vspace{3mm}
     
@@ -495,15 +572,23 @@ Answer the following questions:
     
     \vspace{5mm}
     
-    ans
-    
+    Transfer Learning is the process of using a model already trained on a large dataset for a new similar task.
+    The pretrained model already knows useful features such as edges, textures, and shapes.
+    These learned features are used instead of training a model from scratch.
+    Here, the final classification layer is replaced according to the new task.
+    It helps reduce training time, data requirements, and computational cost.
+        
     \vspace{3mm}
     
     \item \textbf{Why is fine tuning required?}
     
     \vspace{5mm}
     
-    ans
+    Fine-tuning is used to adapt a pretrained model to a new task.
+    A pretrained model already knows general features like edges, shapes, and textures, but it may not understand the specific features of the new task.
+    Here we unfreeze some of the deeper layers and train them with the new data.
+    A small learning rate is usually used so that the useful features already learned are not lost.
+    This helps the model achieve better accuracy with less training time.
     
     \vspace{3mm}
     
@@ -511,7 +596,10 @@ Answer the following questions:
     
     \vspace{5mm}
     
-    ans
+    Dilated convolution increases the receptive field by adding gaps between kernel elements.
+    It captures information from a larger area without greatly increasing the number of parameters.
+    Transpose convolution is mainly used to increase the spatial size of feature maps.
+    Dilated convolution is commonly used in segmentation, while transpose convolution is used in decoders and image generation.
     
     \vspace{3mm}
     
@@ -519,7 +607,11 @@ Answer the following questions:
     
     \vspace{5mm}
     
-    ans
+    Pretrained models start with already learned weights instead of random weights.
+    They already know useful features such as edges, textures, shapes, and patterns.
+    Therefore, the model does not need to learn these features from the beginning.
+    It only needs to adapt the existing features to the new dataset or task.
+    As a result, pretrained models generally require fewer epochs and less training time to achieve good performance.
     
     \vspace{3mm}
     
@@ -527,12 +619,16 @@ Answer the following questions:
     
     \vspace{5mm}
     
-    ans
-    
+    LeNet is a small and simple CNN with fewer layers and parameters so it requires less computation.
+    ResNet is much deeper and has many more layers and parameters so it needs more computational power.
+    As a result, ResNet requires more mathematical calculations, memory, and training time than LeNet.
+    LeNet is lightweight and fast. Hence it can run easily on basic hardware. 
+    However ResNet is computationally expensive and works better with a GPU.    
     \vspace{3mm}
     
 \end{enumerate}
 
+\clearpage
 \section{Additional Exercises}
 \begin{enumerate}[leftmargin=*]
     \item Implement transfer learning using VGG16.
