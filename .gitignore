@@ -1,7 +1,8 @@
 /.ipynb_checkpoints
 convertTxt.py
 .pytest_cache
-*-eps-to-converted-to.pdf
+*-eps-converted-to.pdf
+Lab1_SLP/Images/*-eps-converted-to.pdf
 *.aux
 *.fls
 *.log
