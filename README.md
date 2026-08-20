@@ -51,9 +51,9 @@ Required Python libraries:
 ## Experiments
 
 ### [**Lab 1** - Implementation of a Single Layer Perceptron for Binary Classification](./Lab1_SLP)
-### **Lab 2** - Implementation of a Multi-Layer Perceptron (MLP) for Multi-Class Image Classification
-### **Lab 3** - Implementation of Convolutional Neural Networks (CNNs) for Image Classification
-### **Lab 4** - Comparative Study of Deep Convolutional Neural Network Architectures Using Transfer Learning
+### [**Lab 2** - Implementation of a Multi-Layer Perceptron (MLP) for Multi-Class Image Classification](./Lab2_MLP)
+### [**Lab 3** - Implementation of Convolutional Neural Networks (CNNs) for Image Classification](./Lab3_CNN)
+### [**Lab 4** - Comparative Study of Deep Convolutional Neural Network Architectures Using Transfer Learning](./Lab4_TransferLearning)
 
 ## Notes
 
