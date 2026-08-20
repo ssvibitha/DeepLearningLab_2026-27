@@ -5,10 +5,11 @@ This repository contains the implementation of **Single Layer Perceptron for Bin
 
 ## Contents
 
-- `Lab1.ipynb` – Google Colab compatible Jupyter Notebook
+- `Lab1.ipynb` – Google Colab compatible Jupyter Notebook for Lab1
+- `Additional_Task1.ipynb` - Google Colab compatible Jupyter Notebook for Additional Task1
 - `Lab1_Document.pdf` – Lab 1 Report
 - `Lab1_Document.tex` - Lab 1 Report (Latex file)
-- `plots.eps` - Plots and visualisation (.eps files)
+- `/Images` - Folder containing plots and visualisation (.eps files)
 
 ## Objective
 
