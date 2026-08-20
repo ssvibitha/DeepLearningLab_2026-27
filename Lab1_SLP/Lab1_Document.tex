@@ -278,11 +278,11 @@ Compute
 
 %----------------------------------------------------------
 \section*{8. Generated Plots with Interpretation}
-
-
+\begin{enumerate}
+\item\textbf{Histogram of Variance}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{Histogram_variance.eps}
+    \includegraphics[width=0.5\textwidth]{Images/Histogram_variance.eps}
     \caption{Histogram of Variance}
     \label{fig:Histogram_variance}
 \end{figure}
@@ -293,10 +293,11 @@ Most observations are present in the middle region, while fewer samples are pres
 Overall the plot is well distributed and can contribute effectively to the classification of authentic and forged banknotes.
 
 \vspace{5mm}
-
+\clearpage
+\item\textbf{Histogram of Skewness}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{Histogram_skewness.eps}
+    \includegraphics[width=0.5\textwidth]{Images/Histogram_skewness.eps}
     \caption{Histogram of Skewness}
     \label{fig:Histogram_skewness}
 \end{figure}
@@ -305,9 +306,11 @@ The skewness feature values are distributed across both positive and negative va
 This variation helps perceptron to classify between authentic and forged banknotes.
 \vspace{5mm}
 
+\item\textbf{Histogram of Curtosis}
+
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{Histogram_curtosis.eps}
+    \includegraphics[width=0.5\textwidth]{Images/Histogram_curtosis.eps}
     \caption{Histogram of Curtosis}
     \label{fig:Histogram_curtosis}
 \end{figure}
@@ -316,10 +319,11 @@ The histogram shows a right-skewed distribution with a few outliers towards the 
 The presence of a wide range of values helps distinguish authentic banknotes from forged ones.
 
 \vspace{5mm}
+\item\textbf{Histogram of Entropy}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{Histogram_entropy.eps}
+    \includegraphics[width=0.5\textwidth]{Images/Histogram_entropy.eps}
     \caption{Histogram of Entropy}
     \label{fig:Histogram_entropy}
 \end{figure}
@@ -329,9 +333,11 @@ Majority of the entropy values are concentrated in the range of -2 and 1.
 This variation provides helps the perceptron learn a decision boundary to distinguish between authentic and forged banknotes.
 \vspace{5mm}
 
+\item\textbf{Histogram of Class}
+
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{Histogram_class.eps}
+    \includegraphics[width=0.5\textwidth]{Images/Histogram_class.eps}
     \caption{Histogram of Class}
     \label{fig:Histogram_class}
 \end{figure}
@@ -341,9 +347,11 @@ This shows that the dataset is well balanced and helps the perceptron to learn b
 
 \vspace{5mm}
 
+\item\textbf{Correlation Heatmap}
+
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{Correlation_Heatmap.eps}
+    \includegraphics[width=0.5\textwidth]{Images/Correlation_Heatmap.eps}
     \caption{Correlation Heatmap}
     \label{fig:Correlation_Heatmap}
 \end{figure}
@@ -352,9 +360,11 @@ The heatmap shows that variance is the most important feature for classification
 Skewness and kurtosis are closely related, while entropy has a weak correlation with the class.
 \vspace{5mm}
 
+\item\textbf{Skewness vs Curtosis}
+
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{skewness_vs_curtosis.eps}
+    \includegraphics[width=0.5\textwidth]{Images/skewness_vs_curtosis.eps}
     \caption{skewness vs curtosis}
     \label{fig:skewness_vs_curtosis}
 \end{figure}
@@ -362,10 +372,12 @@ Skewness and kurtosis are closely related, while entropy has a weak correlation 
 The scatter plot shows a negative relationship between skewness and curtosis. 
 The two classes overlap in some regions, however these features together can assist the perceptron in separating authentic and forged banknotes.
 \vspace{5mm}
+\clearpage
+\item\textbf{Skewness vs Entropy}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{skewness_vs_entropy.eps}
+    \includegraphics[width=0.5\textwidth]{Images/skewness_vs_entropy.eps}
     \caption{skewness vs entropy}
     \label{fig:skewness_vs_entropy}
 \end{figure}
@@ -373,18 +385,24 @@ The two classes overlap in some regions, however these features together can ass
 The two classes Skewness and Entropy are overlapping in the middle region.
 This shows that a non-linear classifier is required to separate these classes.
 \vspace{5mm}
+\item\textbf{Variance vs Skewness}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{variance_vs_skewness.eps}
+    \includegraphics[width=0.5\textwidth]{Images/variance_vs_skewness.eps}
     \caption{variance vs skewness}
     \label{fig:variance_vs_skewness}
 \end{figure}
+
+
+
 \noindent\textbf{Variance vs Skewness Inference:}\\
 In this plot Skewness and Variance help distinguish the two classes well despite having a few overlaps in the middle.
 The distribution of these points suggests that these two features can help separate authentic and forged banknotes.
+\clearpage
+\item\textbf{Variance vs Curtosis}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{variance_vs_curtosis.eps}
+    \includegraphics[width=0.5\textwidth]{Images/variance_vs_curtosis.eps}
     \caption{variance vs curtosis}
     \label{fig:variance_vs_curtosis}
 \end{figure}
@@ -393,28 +411,35 @@ In this plot, the distribution of samples shows a clear separation between the t
 The slight overlap between the clusters indicate that this feature helps the model to generalise better. 
 Overall variance and curtosis are well separated.
 
+\item\textbf{Variance vs Entropy}
+
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{variance_vs_entropy.eps}
+    \includegraphics[width=0.5\textwidth]{Images/variance_vs_entropy.eps}
     \caption{variance vs entropy}
     \label{fig:variance_vs_entropy}
 \end{figure}
 \noindent\textbf{Variance vs Entropy Inference:}\\
 The scatter plot shows moderate overlapping between the two classes. 
 This shows that Entropy and Variance together helps to distinguish between the two classes effectively.
+\clearpage
+\item\textbf{Curtosis vs Entropy}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{curtosis_vs_entropy.eps}
+    \includegraphics[width=0.5\textwidth]{Images/curtosis_vs_entropy.eps}
     \caption{curtosis vs entropy}
     \label{fig:curtosis_vs_entropy}
 \end{figure}
 \noindent\textbf{Curtosis vs Entropy Inference:}\\
 The scatter plot shows significant overlap between entropy and curtosis.
 Non-linear decision boundaries are required to separate the classes.
+
+\item\textbf{Boxplot of all features}
+
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{Boxplots_All_Features.eps}
+    \includegraphics[width=0.5\textwidth]{Images/Boxplots_All_Features.eps}
     \caption{Boxplots Of All Features}
     \label{fig:Boxplots Of All Features}
 \end{figure}
@@ -422,18 +447,24 @@ Non-linear decision boundaries are required to separate the classes.
 The box plot shows the overall distribution of the features in the dataset including variance, skewness, curtosis and entropy.
 From this box plot we can infer that curtosis contains the most outliers followed by entropy.
 The feature values of Variance is well distributed whereas the feature values of skewness follows a wide range of values.
+\clearpage
+\item\textbf{Training error vs epoch}
+
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{Training_Error_vs_Epoch.eps}
+    \includegraphics[width=0.5\textwidth]{Images/Training_Error_vs_Epoch.eps}
     \caption{Training Error vs Epoch}
     \label{fig:Training_Error_vs_Epoch}
 \end{figure}
 \noindent\textbf{Training error vs Epochs Inference:}\\
 From the plot, we can infer that the model learns quickly at first, then the error fluctuates slightly until the 100th epoch. 
 This shows that the error decreases rapidly at the beginning and then reaches a stable level.
+
+\item\textbf{Weight Evolution}
+
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{Weight_Evolution.eps}
+    \includegraphics[width=0.5\textwidth]{Images/Weight_Evolution.eps}
     \caption{Weight Evolution}
     \label{fig:Weight_Evolution}
 \end{figure}
@@ -441,26 +472,37 @@ This shows that the error decreases rapidly at the beginning and then reaches a 
 From the plot we can infer that the features Skewness,Curtosis and Variance receive increasing negative weights.
 Entropy receives weight updates almost close to zero.
 The graph shows that weight updates have reduced steadily with increasing epochs. This shows that the model is improving.
+\clearpage
+\item\textbf{Bias Evolution}
+
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{Bias_Evolution.eps}
+    \includegraphics[width=0.5\textwidth]{Images/Bias_Evolution.eps}
     \caption{Bias Evolution}
     \label{fig:Bias_Evolution}
 \end{figure}
 \noindent\textbf{Inference:}\\
 The bias changes steadily during training and becomes stable by the end of 100 epochs.
 This shows that the model gradually converges to a stable solution.
+
+\item\textbf{Confusion Matrix}
+
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{Confusion_Matrix.eps}
+    \includegraphics[width=0.5\textwidth]{Images/Confusion_Matrix.eps}
     \caption{Confusion Matrix}
     \label{fig:Confusion_Matrix}
 \end{figure}
 \noindent\textbf{Inference:}\\
 The confusion matrix shows that the model classifies most samples correctly with very few errors.
-It correctly identifies all Class 1 samples and makes only a few false positive predictions.\begin{figure}[H]
+It correctly identifies all Class 1 samples and makes only a few false positive predictions.
+
+\clearpage
+\item\textbf{Learning rate comparison}
+
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{Learning_Rate_Comparison.eps}
+    \includegraphics[width=0.5\textwidth]{Images/Learning_Rate_Comparison.eps}
     \caption{Learning Rate Comparison}
     \label{fig:Learning_Rate_Comparison}
 \end{figure}
@@ -468,6 +510,7 @@ It correctly identifies all Class 1 samples and makes only a few false positive 
 All three learning rates produce almost identical error curves during training.
 The three curves overlap, indicating that the learning rate has little to no effect on the number of misclassified samples for this dataset.
 %----------------------------------------------------------
+\end{enumerate}
 
 \vspace{10mm}
 \section*{9. Performance Tables}
@@ -499,7 +542,7 @@ F1-score &0.9839\\
 \end{tabular}
 
 \vspace{3mm}
-
+\clearpage
 \textbf{Epoch-wise Learning}
 
 \begin{table}[H]
@@ -532,15 +575,18 @@ F1-score &0.9839\\
 \end{table}
 
 %----------------------------------------------------------
+\clearpage
 \section*{10. Additional Task}
 Code the perceptron learning algorithm for OR, NOT, and AND gates using Python. Show the weights after each update. Plot the decision boundary after each weight update using Python built-in packages.
 \section*{Source Code}
 \url{https://github.com/ssvibitha/DeepLearningLab_2026-27/blob/main/Lab1_SLP/AdditionalTask_1.ipynb}
 
 \section*{Plots and Inference}
+\begin{enumerate}
+\item\textbf{AND Decision Boundaries}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1.0\textwidth]{AND_Decision_Boundaries.eps}
+    \includegraphics[width=1.0\textwidth]{Images/AND_Decision_Boundaries.eps}
     \caption{AND Decision Boundaries}
     \label{fig:AND_Decision_Boundaries}
 \end{figure}
@@ -595,9 +641,11 @@ Code the perceptron learning algorithm for OR, NOT, and AND gates using Python. 
     \end{itemize}
 
 \end{itemize}
+\clearpage
+\item\textbf{OR Decision Boundaries}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1.0\textwidth]{OR_Decision_Boundaries.eps}
+    \includegraphics[width=1.0\textwidth]{Images/OR_Decision_Boundaries.eps}
     \caption{OR Decision Boundaries}
     \label{fig:OR_Decision_Boundaries}
 \end{figure}
@@ -639,10 +687,10 @@ Code the perceptron learning algorithm for OR, NOT, and AND gates using Python. 
 
 \end{itemize}
 \vspace{20mm}
-
+\item\textbf{NOT Decision Boundaries}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1.0\textwidth]{NOT_Gate_Decision_Boundaries.eps}
+    \includegraphics[width=1.0\textwidth]{Images/NOT_Gate_Decision_Boundaries.eps}
     \caption{NOT Decision Boundaries}
     \label{fig:NOT_Gate_Decision_Boundaries}
 \end{figure}
@@ -689,7 +737,7 @@ Code the perceptron learning algorithm for OR, NOT, and AND gates using Python. 
 
 \end{itemize}
 \vspace{10mm}
-
+\end{enumerate}
 \section*{11. Discussion}
 
 \begin{itemize}
