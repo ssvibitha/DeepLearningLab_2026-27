@@ -245,66 +245,78 @@ Training Time& 113.793586 seconds & 153.884540 seconds\\
 \end{tabular}
 
 \section*{9. Plots with Inference}
-
+\begin{enumerate}
+\item\textbf{Sample Images}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{SampleImages.eps}
+    \includegraphics[width=0.5\textwidth]{Images/SampleImages.eps}
     \caption{Sample Images}
     \label{fig:SampleImages}
 \end{figure}
-
 \noindent\textbf{Sample Images Inference:}\\
 The grayscale sample images represent different fashion items along with the category they belong to.
 The wide range of data helps the model learn and distinguish between different clothing categories.
+\clearpage
+\item\textbf{Class Distribution}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{ClassDistribution.eps}
+    \includegraphics[width=0.5\textwidth]{Images/ClassDistribution.eps}
     \caption{Class Distribution}
     \label{fig:ClassDistribution}
 \end{figure}
-
 \noindent\textbf{Class Distribution Inference:}\\
 The plot shows that there exists 10 different fashion item classes namely Tshirt/top, Trouser, Pullover, Dress, Coat, Sandal, Sneaker, Bag, Ankle Boot.
 This plot represents the class disttribution for training set. Each class contains 6000 samples.
+
+\vspace{5mm}
+
+\item\textbf{Baseline Model ConfusionMatrix}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{BaselineModelConfusionMatrix.eps}
+    \includegraphics[width=0.5\textwidth]{Images/BaselineModelConfusionMatrix.eps}
     \caption{Baseline Model ConfusionMatrix}
     \label{fig:BaselineModelConfusionMatrix}
 \end{figure}
-
 \noindent\textbf{Baseline Model Confusion Matrix Inference:}\\
 The model correctly predicts most classes, performing best on classes 1, 5, 7, 8, and 9.
 It misclassifies class 4 as class 2 and class 6 as class 2 or class 0 often.
+\clearpage
+\item\textbf{Training and Validation Accuracy Vs Epoch}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{TrainingValidationAccuracyVsEpoch.eps}
+    \includegraphics[width=0.5\textwidth]{Images/TrainingValidationAccuracyVsEpoch.eps}
     \caption{Training, Validation Accuracy Vs Epoch}
     \label{fig:TrainingValidationAccuracyVsEpoch}
 \end{figure}
-
 \noindent\textbf{Training, Validation Accuracy Vs Epoch Inference:}\\
 Training accuracy teadily increases throughout training, reaching over 93 percent showing the model is learning the training data well.
 Validation accuracy plateaus around 89 percent after epoch 5 and drops sharply at the end indicating the model stops improving on unseen data and begins to overfit.
+
+\vspace{5mm}
+
+\item\textbf{Training and Validation Loss Vs Epoch}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{TrainingValidationLossVsEpoch.eps}
+    \includegraphics[width=0.5\textwidth]{Images/TrainingValidationLossVsEpoch.eps}
     \caption{Training, Validation Loss Vs Epoch}
     \label{fig:TrainingValidationLossVsEpoch}
 \end{figure}
-
 \noindent\textbf{Training, Validation Loss Vs Epoch Inference:}\\
 Training loss continuously decreases towards 0.18 showing consistent optimization on the training set.
 Validation loss decreases initially but hits a minimum around epoch 10 and 15 and begins rising sharply, clearly confirming overfitting in later epochs.
+
+\clearpage
+\item\textbf{Best Model Accuracy Comparison}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{BestModelAccuracyComparison.eps}
+    \includegraphics[width=0.5\textwidth]{Images/BestModelAccuracyComparison.eps}
     \caption{Best Model Accuracy Comparison}
     \label{fig:BestModelAccuracyComparison}
 \end{figure}
 \noindent\textbf{Best Model Accuracy Comparison Inference:}\\
 The optimized model achieved a higher accuracy of 88.25 percent compared to the baseline model's 86.59 percent.
 This indicates that hyperparameter tuning improved the model's classification performance.
+\end{enumerate}
 
 \section*{10. Additional Task}
 Code the perceptron learning algorithm for the XOR gate using Python. Show the weights after each update. Plot the decision boundary after each weight update using Python's built-in packages. Analyze and identify the pattern that prevents the algorithm from converging.
@@ -313,9 +325,11 @@ Code the perceptron learning algorithm for the XOR gate using Python. Show the w
 \url{https://github.com/ssvibitha/DeepLearningLab_2026-27/blob/main/Lab2_MLP/AdditionalTask_2.ipynb}
 
 \section{Plots and Inference}
+\begin{enumerate}
+\item\textbf{XOR Decision Boundaries}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{XOR_Decision_Boundaries.eps}
+    \includegraphics[width=0.8\textwidth]{Images/XOR_Decision_Boundaries.eps}
     \caption{XOR Decision Boundaries}
     \label{fig:XOR_Gate_Decision_Boundaries}
 \end{figure}
@@ -371,6 +385,8 @@ Code the perceptron learning algorithm for the XOR gate using Python. Show the w
     This demonstrates the limitation of a perceptron and shows that a multi-layer perceptron can help solve the XOR problem.
 
 \end{itemize}
+\end{enumerate}
+
 \section*{11. Discussion}
 
 Answer the following:
@@ -415,7 +431,6 @@ MLP configuration with 3 hidden layers, 128 neurons, tanh activation, RMSprop op
 The experiment successfully trained and evaluated an MLP classifier on the Fashion MNIST dataset.
 Hyperparameter tuning in training the Fashion MNIST dataset improved the model's accuracy and overall classification performance resulting in a more effective classifier.
 In addition to this, it was observed that the perceptron does not converge for the XOR gate because its classes cannot be separated using a single linear decision boundary.
-
 
 \section*{13. References}
 \begin{enumerate}
