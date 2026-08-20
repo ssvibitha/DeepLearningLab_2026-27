@@ -3,7 +3,27 @@
 
 This repository contains Deep Learning laboratory experiments implemented using **Python** and **Jupyter Notebooks (`.ipynb`)**. All notebooks are designed to run seamlessly on **Google Colab**.
 
+## Experiments
 
+### [**Lab 1** - Implementation of a Single Layer Perceptron for Binary Classification](./Lab1_SLP)
+### [**Lab 2** - Implementation of a Multi-Layer Perceptron (MLP) for Multi-Class Image Classification](./Lab2_MLP)
+### [**Lab 3** - Implementation of Convolutional Neural Networks (CNNs) for Image Classification](./Lab3_CNN)
+### [**Lab 4** - Comparative Study of Deep Convolutional Neural Network Architectures Using Transfer Learning](./Lab4_TransferLearning)
+
+## Prerequisites
+
+- Python 3.9+
+- Google Colab (or) Jupyter Notebook
+
+Required Python libraries:
+
+- TensorFlow
+- Keras
+- NumPy
+- Pandas
+- Matplotlib
+- Scikit-learn
+- Seaborn
 
 ## Setup
 
@@ -32,28 +52,6 @@ cd DeepLearningLab_2026-27
 pip install tensorflow keras numpy pandas matplotlib scikit-learn jupyter
 jupyter notebook
 ```
-
-## Prerequisites
-
-- Python 3.9+
-- Google Colab (or) Jupyter Notebook
-
-Required Python libraries:
-
-- TensorFlow
-- Keras
-- NumPy
-- Pandas
-- Matplotlib
-- Scikit-learn
-- Seaborn
-
-## Experiments
-
-### [**Lab 1** - Implementation of a Single Layer Perceptron for Binary Classification](./Lab1_SLP)
-### [**Lab 2** - Implementation of a Multi-Layer Perceptron (MLP) for Multi-Class Image Classification](./Lab2_MLP)
-### [**Lab 3** - Implementation of Convolutional Neural Networks (CNNs) for Image Classification](./Lab3_CNN)
-### [**Lab 4** - Comparative Study of Deep Convolutional Neural Network Architectures Using Transfer Learning](./Lab4_TransferLearning)
 
 ## Notes
 
