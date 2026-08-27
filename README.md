@@ -9,7 +9,7 @@ This repository contains Deep Learning laboratory experiments implemented using 
 ### [**Lab 2** - Implementation of a Multi-Layer Perceptron (MLP) for Multi-Class Image Classification](./Lab2_MLP)
 ### [**Lab 3** - Implementation of Convolutional Neural Networks (CNNs) for Image Classification](./Lab3_CNN)
 ### [**Lab 4** - Comparative Study of Deep Convolutional Neural Network Architectures Using Transfer Learning](./Lab4_TransferLearning)
-
+### [**Lab 5** - Comprehensive Study of CNN Training, Regularization, Optimization, Hyperparameter Tuning, Transfer Learning and Cross-Validation](./Lab5_MobileNetV2)
 ## Prerequisites
 
 - Python 3.9+
