@@ -322,18 +322,25 @@ This indicates that hyperparameter tuning improved the model's classification pe
 Code the perceptron learning algorithm for the XOR gate using Python. Show the weights after each update. Plot the decision boundary after each weight update using Python's built-in packages. Analyze and identify the pattern that prevents the algorithm from converging.
 
 \section{Source Code}
-\url{https://github.com/ssvibitha/DeepLearningLab_2026-27/blob/main/Lab2_MLP/AdditionalTask_2.ipynb}
+\noindent\textbf{XOR using Single layer Perceptron}
+
+\noindent\url{https://github.com/ssvibitha/DeepLearningLab_2026-27/blob/main/Lab2_MLP/XOR_SLP.ipynb}
+
+\vspace{5mm}
+\noindent\textbf{XOR using Multi layer Perceptron}
+
+\noindent\url{https://github.com/ssvibitha/DeepLearningLab_2026-27/blob/main/Lab2_MLP/XOR_MLP.ipynb}
 
 \section{Plots and Inference}
 \begin{enumerate}
-\item\textbf{XOR Decision Boundaries}
+\item\textbf{XOR using Single Layer Perceptron - Decision Boundaries}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{Images/XOR_Decision_Boundaries.eps}
-    \caption{XOR Decision Boundaries}
+    \caption{XOR using Single Layer Perceptron - Decision Boundaries}
     \label{fig:XOR_Gate_Decision_Boundaries}
 \end{figure}
-\noindent\textbf{XOR Decision Boundaries Inference:}\\
+\noindent\textbf{XOR using Single Layer Perceptron Inference:}\\
 \begin{itemize}[itemsep=0.25cm]
 
     \item The figure shows the decision boundary at each update while training 
@@ -385,8 +392,24 @@ Code the perceptron learning algorithm for the XOR gate using Python. Show the w
     This demonstrates the limitation of a perceptron and shows that a multi-layer perceptron can help solve the XOR problem.
 
 \end{itemize}
+\clearpage
+\item\textbf{XOR using Multi Layer Perceptron - Decision Boundaries}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Images/MLP_XOR.png}
+    \caption{XOR using Multi Layer Perceptron - Decision Boundaries}
+    \label{fig:XOR_MLP_Decision_Boundaries}
+\end{figure}
+\clearpage
+\noindent\textbf{XOR using Multi Layer Perceptron Inference:}\\
+\begin{itemize}[itemsep=0.25cm]
+    \item The plot shows the evolution of the decision boundary across multiple epochs for a XOR Gate trained using multi layer perceptron.
+    \item During the early training, the decision boundary is a line that fails to separate the two classes.
+    \item At epoch 500, we can see the two classes separated using a non-linear decision boundary. Subsequent epochs shows the shifting of decision boundary to maximise separation. Maximum separation between the two classes is achieved at epoch 3424.
+    \item The XOR inputs are arranged diagonally. This makes the problem non-linear. Multi layer perceptron uses hidden layers and non-linear activation to achieve a non-linear decision boundary. The weights are adjusted using backpropagation in hidden layers.
+    \item This shows that the multi layer perceptron can separate the two classes of XOR using a non-linear decision boundary.
+\end{itemize}
 \end{enumerate}
-
 \section*{11. Discussion}
 
 Answer the following:
