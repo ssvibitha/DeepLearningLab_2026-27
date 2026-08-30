@@ -76,7 +76,7 @@ AY: 2026--27\\
 \end{tabular}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{1. Objective}
+\section{Objective}
 
 The objective of this experiment is to systematically study the effect of
 weight initialization, regularization, optimization algorithms, CNN
@@ -89,7 +89,7 @@ design choices using training/validation curves and finally select a
 suitable configuration using 5-fold cross-validation.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{2. Learning Outcomes}
+\section{Learning Outcomes}
 
 After completing this experiment, students will be able to:
 
@@ -106,7 +106,7 @@ After completing this experiment, students will be able to:
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{3. Dataset and Experimental Setup}
+\section{Dataset and Experimental Setup}
 
 \textbf{Dataset: Oxford-IIIT Pet Dataset}
 
@@ -133,7 +133,7 @@ large CNN architectures and is more suitable for CPU-based laboratory work.
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{4. MobileNetV2 Architecture}
+\section{MobileNetV2 Architecture}
 
 MobileNetV2 is a lightweight CNN architecture designed to reduce
 computational complexity while maintaining good image representation.
@@ -173,7 +173,7 @@ A simplified representation is:
 rather than the complete MobileNetV2 architecture.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{5. Weight Initialization}
+\section{Weight Initialization}
 
 Weight initialization determines the initial values of trainable weights
 before training begins. A suitable initialization can improve convergence
@@ -212,7 +212,7 @@ Students should identify which initialization gives faster and more
 stable convergence.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{6. Regularization and Overfitting}
+\section{Regularization and Overfitting}
 
 Overfitting occurs when a model performs very well on the training data
 but generalizes poorly to unseen data.
@@ -250,7 +250,7 @@ Students should identify whether validation loss begins to increase while
 training loss continues to decrease.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{7. Batch Normalization}
+\section{Batch Normalization}
 
 Batch Normalization normalizes activations within a mini-batch during
 training.
@@ -360,7 +360,7 @@ scale and shift.
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{8. Optimization Algorithms}
+\section{Optimization Algorithms}
 
 Students should compare the following optimization methods:
 
@@ -390,21 +390,10 @@ validation performance.
 \item One curve for each optimizer.
 \end{itemize}
 
-\begin{center}
-\begin{tabular}{|l|c|c|c|c|}
-\hline
-Optimizer & Final Loss & Best Val. Accuracy & Epoch to Converge & Time\\
-\hline
-SGD & & & &\\
-Momentum & & & &\\
-RMSProp & & & &\\
-Adam & & & &\\
-\hline
-\end{tabular}
-\end{center}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{9. CNN Hyperparameter Tuning}
+\section{CNN Hyperparameter Tuning}
 
 The following hyperparameters should be investigated:
 
@@ -472,7 +461,7 @@ fixed.
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{10. Transfer Learning and Fine-Tuning}
+\section{Transfer Learning and Fine-Tuning}
 
 MobileNetV2 pretrained on ImageNet should be used.
 
@@ -518,7 +507,7 @@ Students should compare the loss curves before and after fine-tuning.
 learning rate than training a newly initialized classifier.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{11. K-Fold Cross-Validation}
+\section{K-Fold Cross-Validation}
 
 After the individual studies, select 3--4 promising configurations.
 
@@ -549,18 +538,6 @@ Report the result as
 
 The independent test set must not be used during hyperparameter selection.
 
-\begin{center}
-\begin{tabular}{|l|c|c|c|c|c|c|}
-\hline
-Configuration & F1 & F2 & F3 & F4 & F5 & Mean $\pm$ SD\\
-\hline
-C1 & & & & & &\\
-C2 & & & & & &\\
-C3 & & & & & &\\
-C4 & & & & & &\\
-\hline
-\end{tabular}
-\end{center}
 
 \textbf{Plot 13: 5-Fold Cross-Validation Accuracy}
 
@@ -573,7 +550,7 @@ C4 & & & & & &\\
 Students should discuss both mean performance and variability.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{12. Final Model Evaluation}
+\section{Final Model Evaluation}
 
 After selecting the best configuration using cross-validation:
 
@@ -582,25 +559,6 @@ After selecting the best configuration using cross-validation:
 \item Keep the independent test set untouched until this stage.
 \item Evaluate the final model on the test set.
 \end{enumerate}
-
-Report:
-
-\begin{center}
-\begin{tabular}{|l|c|}
-\hline
-Metric & Value\\
-\hline
-Mean CV Accuracy &\\
-CV Standard Deviation &\\
-Test Accuracy &\\
-Precision &\\
-Recall &\\
-F1-score &\\
-Training Time &\\
-Number of Parameters &\\
-\hline
-\end{tabular}
-\end{center}
 
 \textbf{Plot 14: Confusion Matrix}
 
@@ -618,41 +576,442 @@ Display representative incorrectly classified images and provide a
 brief explanation for each.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{13. Overall Results}
+\section{Source Code}
 
+\noindent\textbf{Source:} Github\\
+\noindent\textbf{Github Repository Link:}
+
+\url{https://github.com/ssvibitha/DeepLearningLab_2026-27/blob/main/Lab5_MobileNetV2/DL_Lab5.ipynb}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Plots and Inference}
+\begin{enumerate}
+    \item\textbf{Sample Oxford-IIIT Pet Dataset images}
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.5\textwidth]{Images/SampleImages.png}
+        \caption{Sample Images}
+        \label{fig:SampleImages}
+    \end{figure}
+    \noindent\textbf{Inference:}\\
+    The figures show sample images from the Oxford IIIT Pet Dataset. The dataset contains 7390 images.
+    The images belong to 37 different breeds of cats and dogs. 
+    Each image is 224 x 224 pixels and contains three color channels (RGB)
+
+    \clearpage
+
+    \item\textbf{Weight Initialization: Training Loss vs Epoch}
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{Images/TrainingLossvsEpochforDifferentInitializations.png}
+        \caption{Training Loss vs Epoch for Different Initializations}
+        \label{fig:TrainingLossvsEpochforDifferentInitializations}
+    \end{figure}
+    \noindent\textbf{Inference:}\\
+    The plot shows the training loss over 5 epochs for different weight initialization methods such as Zero, Random, Xavier, and He initialization.
+    Random, Xavier, and He initialization show a steady decrease in training loss, while Zero initialization remains almost constant showing high loss of value approx. 3.6 .
+    Proper weight initialization breaks symmetry and allows effective gradient-based learning, whereas zero initialization causes neurons to learn identical features and prevents effective training.
+
+    \vspace{5 mm}
+
+    \item\textbf{Weight Initialization: Validation Accuracy vs Epoch}
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{Images/ValidationAccuracyvsEpochforDifferentInitializations.png}
+        \caption{Validation Accuracy vs Epoch for Different Initializations}
+        \label{fig:ValidationAccuracyvsEpochforDifferentInitializations}
+    \end{figure}
+    \noindent\textbf{Inference:}\\
+    The plot shows the validation accuracy over 5 epochs for different weight initialization such as Zero, Random, Xavier, He.
+    Xavier, He, and Random initializations rapidly increase in validation accuracy converging near 89 percent by epoch 5.
+    Zero initialization fails to improve, remaining at validation accuracy of value approx. 0 percent across all epochs.
+    Zero initialization causes weight symmetry, forcing all neurons to receive identical gradient updates and preventing feature learning.
+    On the other hand, Xavier and He initialization break symmetry and prevent vanishing or exploding gradients, allowing effective optimization from epoch 0.
+
+    \vspace{5mm}
+
+    \item \textbf{No Regularization}
+
+    \begin{figure}[H]
+        \centering
+
+        \begin{minipage}{0.48\textwidth}
+            \centering
+            \includegraphics[width=1.0\textwidth]{Images/NoRegularization_TrainingandValidationAccuracyvsEpoch.png}
+            \caption{Training and Validation Accuracy vs Epoch}
+            \label{fig:AccuracyNoReg}
+        \end{minipage}
+        \hfill
+        \begin{minipage}{0.48\textwidth}
+            \centering
+            \includegraphics[width=1.0\textwidth]{Images/NoRegularization_TrainingandValidationLossvsEpoch.png}
+            \caption{Training and Validation Loss vs Epoch}
+            \label{fig:LossNoReg}
+        \end{minipage}
+
+    \end{figure}
+    \noindent\textbf{Training and Validation Accuracy vs Epoch Inference:}\\
+    The plot compares training accuracy and validation accuracy across 5 epochs for models trained with no regularization.
+    The validation accuracy shows stable increase whereas training accuracy increases sharply then stabilises.
+
+    \vspace{5mm}
+    \noindent\textbf{Training and Validation Loss vs Epoch Inference:}\\
+    The plot compares training  and validation loss across 5 epochs for models trained with no regularization.
+    Both the curves shows steady decrease and reaches minimum of approx. 0.5 loss value.
+
+    \vspace{5mm}
+
+    \item \textbf{L2 Regularization}
+
+    \begin{figure}[H]
+        \centering
+
+        \begin{minipage}{0.48\textwidth}
+            \centering
+            \includegraphics[width=1.0\textwidth]{Images/L2Regularization_TrainingandValidationAccuracyvsEpoch.png}
+            \caption{Training and Validation Accuracy vs Epoch}
+            \label{fig:AccuracyL2}
+        \end{minipage}
+        \hfill
+        \begin{minipage}{0.48\textwidth}
+            \centering
+            \includegraphics[width=1.0\textwidth]{Images/L2Regularization_TrainingandValidationLossvsEpoch.png}
+            \caption{Training and Validation Loss vs Epoch}
+            \label{fig:LossL2}
+        \end{minipage}
+
+    \end{figure}
+
+    \vspace{5mm}
+
+    \noindent\textbf{Training and Validation Accuracy vs Epoch Inference:}\\
+    The plot compares training accuracy and validation accuracy across 5 epochs for models trained with L2 regularization.
+    The validation accuracy shows stable increase whereas training accuracy increases sharply then stabilises.
+
+    \vspace{5mm}
+    \noindent\textbf{Training and Validation Loss vs Epoch Inference:}\\
+    The plot compares training and validation loss across 5 epochs for models trained with L2 regularization.
+    Both the curves shows steady decrease and reaches minimum of approx. 0.5 loss value.
+
+    \clearpage
+    \item \textbf{Dropout}
+
+    \begin{figure}[H]
+        \centering
+
+        \begin{minipage}{0.48\textwidth}
+            \centering
+            \includegraphics[width=1.0\textwidth]{Images/Dropout_TrainingandValidationAccuracyvsEpoch.png}
+            \caption{Training and Validation Accuracy vs Epoch}
+            \label{fig:AccuracyDropout}
+        \end{minipage}
+        \hfill
+        \begin{minipage}{0.48\textwidth}
+            \centering
+            \includegraphics[width=1.0\textwidth]{Images/Dropout_TrainingandValidationLossvsEpoch.png}
+            \caption{Training and Validation Loss vs Epoch}
+            \label{fig:LossDropout}
+        \end{minipage}
+
+    \end{figure}
+    \noindent\textbf{Training and Validation Accuracy vs Epoch Inference:}\\
+    The plot compares training and validation accuracy across 5 epochs for models trained with dropout.
+    Both the curves shows steady increase with validation curve having higher accuracy consistently.
+
+    \vspace{5mm}
+    \noindent\textbf{Training and Validation Loss vs Epoch Inference:}\\
+    The plot compares training and validation loss across 5 epochs for models trained with dropout.
+    Both the curves shows steady decrease with validation curve having lower loss consistently.
+
+    \vspace{5mm}
+    \item \textbf{Batch Normalization}
+
+    \begin{figure}[H]
+        \centering
+
+        \begin{minipage}{0.48\textwidth}
+            \centering
+            \includegraphics[width=1.0\textwidth]{Images/BatchNormalization_TrainingandValidationAccuracyvsEpoch.png}
+            \caption{Training and Validation Accuracy vs Epoch}
+            \label{fig:AccuracyBN}
+        \end{minipage}
+        \hfill
+        \begin{minipage}{0.48\textwidth}
+            \centering
+            \includegraphics[width=1.0\textwidth]{Images/BatchNormalization_TrainingandValidationLossvsEpoch.png}
+            \caption{Training and Validation Loss vs Epoch}
+            \label{fig:LossBN}
+        \end{minipage}
+
+    \end{figure}
+    \noindent\textbf{Training and Validation Accuracy vs Epoch Inference:}\\
+    The plot compares training and validation accuracy across 5 epochs for models trained with batch normalization.
+    Both the curves shows steady increase with validation curve having higher accuracy consistently.
+
+    \vspace{5mm}
+    \noindent\textbf{Training and Validation Loss vs Epoch Inference:}\\
+    The plot compares training and validation loss across 5 epochs for models trained with batch normalization.
+    Both the curves shows steady decrease with training curve having lower loss by the end of 5th epoch.
+
+    \clearpage
+
+    \item\textbf{With vs Without Batch Normalization}
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{Images/ValidationAccvsEpochWithWithoutBN.png}
+        \caption{With vs Without Batch Normalization}
+        \label{fig:ValidationAccvsEpochWithWithoutBN}
+    \end{figure}
+    \noindent\textbf{Inference:}\\
+    The plot shows the validation accuracy of a model with batch normalization and without batch normalization across 5 epochs.
+    Both configurations follows almost identical trajectories reaching approx. 89 percent validation accuracy by the end of 5 epochs.
+    Batch Normalization primarily stabilizes deeper networks or higher learning rates. For simpler architectures with smaller learning rates standard optimization already stabilizes quickly without extra normalization layers.
+
+    \clearpage
+
+    \item\textbf{Training Loss vs. Epoch for Different Optimizers}
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{Images/TrainingLossvsEpochforDifferentOptimizers.png}
+        \caption{Training Loss vs. Epoch for Different Optimizers}
+        \label{fig:TrainingLossvsEpochforDifferentOptimizers}
+    \end{figure}
+    \noindent\textbf{Inference:}\\
+    The plot compares the training loss of four optimization algorithms such as SGD, Momentum, RMSProp, Adam across 10 epochs.
+    RMSProp and Adam experience a sharp drop in training loss within the first two epochs and reach a steady training loss.
+    Momentum displays a steady linear decrease in training loss reaching a minimum of 1.5. SGD shows highest training loss of 3.5 byt the end of 10 epochs.
+    Adaptive optimizers such as Adam and RMSProp dynamically update learning rates for each parameter. Hence they show rapid decrease in training loss. 
+    Momentum uses accumulated velocity to maintain steady updates, whereas SGD is shows poor performance due to inefficient step sizes. 
+    
+    \clearpage
+
+    \item\textbf{Validation Accuracy vs. Epoch for Different Optimizers}
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{Images/ValidationAccuracyvsEpochforDifferentOptimizers.png}
+        \caption{Validation Accuracy vs. Epoch for Different Optimizers}
+        \label{fig:ValidationAccuracyvsEpochforDifferentOptimizers}
+    \end{figure}
+    \noindent\textbf{Inference:}\\
+    The plot compares the validation accuracy of four optimization algorithms such as SGD, Momentum, RMSProp, Adam across 10 epochs.
+    Adaptive optimizers such as Adam and RMSProp achieve rapid early convergence with high accuracy of approx. 85 percent. Momentum exhibits steady, moderate growth while SGD performs poorly with under 10 percent accuracy.
+    This trend is observed because Adam and RMSProp dynamically adapt learning rates for individual parameters to quickly navigate steep gradients. Momentum uses velocity to accelerate past gradients, whereas SGD uses a fixed learning rate that struggles to make progress.
+    
+    \clearpage
+
+    \item\textbf{Dropout Rate vs Validation Accuracy}
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{Images/DropoutRatevsValidationAccuracy.png}
+        \caption{Dropout Rate vs Validation Accuracy}
+        \label{fig:DropoutRatevsValidationAccuracy}
+    \end{figure}
+    \noindent\textbf{Inference:}\\
+    The plot shows the comparison of validation accuray for different dropout rates (dropout rate = 0.0, 0.25, 0.5) over 5 epochs.
+    Initially, no dropout shows highest validation accuracy. By the end of 5th epoch, model with dropout rate = 0.25 reaches the highest validation accuracy. 
+    The model with dropout rate = 0.5 has the lowest validation accuracy. 
+    By preventing neurons from co-adapting and relying on specific features, dropout rate = 0.25 reduces overfitting and allows the network to generalize better.
+
+    \clearpage
+
+    \item\textbf{Feature Extraction vs. Fine-Tuning}
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{Images/FeatureExtractionvsFine-Tuning.png}
+        \caption{Feature Extraction vs. Fine-Tuning}
+        \label{fig:FeatureExtractionvsFine}
+    \end{figure}
+    \noindent\textbf{Inference:}\\
+    The plot shows the comparison of feature extraction and fine tuning.
+    Feature Extraction starts at a much higher initial validation accuracy and maintains a clear accuracy advantage across all 5 epochs, reaching approx. 89 percent compared to Fine-Tuning's 80 percent.
+    Feature Extraction freezes the feature extractor layers, preserving the strong general visual representations while only updating the final classification head. This prevents early instability.
+    Unfreezing base layers during fine tuning can cause catastrophic forgetting of pre-trained features. Hence it requires larger initial weight updates or smaller learning rate and more epochs to converge.
+
+    \clearpage
+
+    \item \textbf{Training and Validation Loss for Feature Extraction and Fine Tuning}
+
+    \begin{figure}[H]
+        \centering
+
+        \begin{minipage}{0.48\textwidth}
+            \centering
+            \includegraphics[width=1.0\textwidth]{Images/FeatureExtraction_TrainingandValidationLoss.png}
+            \caption{Feature Extraction}
+            \label{fig:AccuracyBN}
+        \end{minipage}
+        \hfill
+        \begin{minipage}{0.48\textwidth}
+            \centering
+            \includegraphics[width=1.0\textwidth]{Images/Fine-Tuning_TrainingandValidationLoss.png}
+            \caption{Fine Tuning}
+            \label{fig:LossBN}
+        \end{minipage}
+
+    \end{figure}
+    \noindent\textbf{Feature Extraction: Training and Validation Loss vs Epoch Inference:}\\
+    The plot shows the steady decrease in Training and Validaiton loss curves for feature extraction.
+    The training loss is higher than validation loss in the earlier epochs. By the end of 4th epoch, both the loss values converge at 0.5.
+    The steady decline indicates that the model is actively learning target features without overfitting.
+    Validation loss is often lower than training loss because training loss is averaged during an epoch while the model is still updating, whereas validation loss is measured after the epoch's weight updates.
+    
+    \vspace{5mm}
+
+    \noindent\textbf{Fine Tuning: Training and Validation Loss vs Epoch Inference:}\\
+    The plot shows the Training and Validaiton loss curves for fine tuning.
+    Both training and validation loss decrease smoothly and consistently over time.
+    Validation loss remains consistently lower than training loss throughout all epochs.
+    The steady decline indicates that the model is actively learning target features without overfitting.
+    
+    \clearpage
+    \item\textbf{5-Fold Cross Validation Accuracy}
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{Images/5FoldCV.png}
+        \caption{5-Fold Cross Validation Accuracy}
+        \label{fig:5FoldCV}
+    \end{figure}
+    \noindent\textbf{Inference:}\\
+    The plot shows the mean validation accuracy for 3 different hyperparameter configurations.
+    C1 has the lowest validation accuracy whereas C3 has the highest validation accuracy.
+    The configuration are as follows:
+
+    C1 (Learning rate: 0.0001, Batch size: 16, Dropout:0.25, Optimizer: SGD)
+
+    C2 (Learning rate: 0.001, Batch size: 16, Dropout:0.25, Optimizer: Adam)
+
+    C3 (Learning rate: 0.001, Batch size: 32, Dropout:0.5, Optimizer: Adam)
+
+    C1 performs poorly as it uses SGD optimizer. 
+    Whereas Adam adaptively calculates individual learning rates for every parameter using momentum, allowing it to converge faster and require far less manual tuning than SGD.
+
+    \clearpage
+    \item\textbf{Confusion Matrix}
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=1.1\textwidth]{Images/ConfusionMatrix.png}
+        \caption{ConfusionMatrix}
+        \label{fig:ConfusionMatrix}
+    \end{figure}
+    \noindent\textbf{Inference:}\\
+    The confusion matrix shows the performance of image classification model on 37 different pet breeds.
+    Minor misclassifications are rare and occurs between visually similar pet breeds such as Staffordshire Bull Terriers are misclassified as Pit Bulls and Ragdolls with Birmans.
+    This trend occurs because while the model easily learns distinct breed features, closely related breeds share nearly identical physical features.
+
+
+    \clearpage
+
+    \item\textbf{Misclassified Images}
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.7\textwidth]{Images/MisclassifiedImages.png}
+        \caption{Misclassified Images}
+        \label{fig:MisclassifiedImages}
+    \end{figure}
+    \noindent\textbf{Inference:}\\
+    The figure shows some of the images that has been misclassified by the model.
+    From the misclassified images, we can see that cat images are mapped to cat breeds, and dog images are mapped to dog breeds.
+    However, there has been a class mismatch of cat breeds and dog breeds for cat and dog images respectively.
+    It is also observed that a chihuahua has been misclassified as a sphynx which is a cat breed.
+
+
+\end{enumerate}
+
+\clearpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\section{Results}
+\section{Results}
+\textbf{Optimization Algorithms Report}
+\vspace{5mm}
 \begin{center}
 \begin{tabular}{|l|c|c|c|c|}
 \hline
-Configuration & CV Accuracy & SD & Test Accuracy & Training Time\\
+Optimizer & Final Loss & Best Val. Accuracy & Epoch to Converge & Training Time (in seconds)\\
 \hline
-Baseline & & & &\\
-Best Initialization & & & &\\
-Best Regularization & & & &\\
-Best Optimizer & & & &\\
-Best Hyperparameters & & & &\\
-Fine-Tuned Model & & & &\\
+SGD &  3.498174 & 0.066727 & 10 & 219.736567\\
+Momentum & 1.418184 & 0.741208 & 10 & 203.661996 \\
+RMSProp & 0.122968 &  0.912534 & 8 & 260.758930 \\
+Adam & 0.149744 & 0.899008 & 9 & 208.824780\\
 \hline
 \end{tabular}
 \end{center}
 
-Students must justify the final model based on accuracy, cross-validation
-variability, computational cost and generalization.
+\vspace{5mm}
 
+\textbf{K-Fold Cross Validation Report}
+\begin{center}
+\begin{tabular}{|l|ccccc|c|}
+\hline
+
+Configuration &
+\multicolumn{5}{c|}{Accuracy} &
+Mean $\pm$ SD \\
+
+\cline{2-6}
+
+& Fold 1 & Fold 2 & Fold 3 & Fold 4 & Fold 5 & \\
+
+\hline
+
+C1 & 0.0338& 0.0444& 0.0290 &0.0648 &0.0445 & 0.0433 ± 0.0123 \\
+C2 & 0.906280& 0.898551& 0.915861 &0.900387 & 0.909091 & 0.9060 ± 0.0062\\
+C3 & 0.899517  & 0.907246 & 0.906190 & 0.909091 & 0.915861 & 0.9076 ± 0.0053 \\
+\hline
+\end{tabular}
+\end{center}
+
+\vspace{5mm}
+
+\textbf{Final Model Evaluation Report}
+\vspace{5mm}
+
+\begin{center}
+\begin{tabular}[H]{|l|c|}
+\hline
+Metric & Value\\
+\hline
+Mean CV Accuracy & 0.907581\\
+CV Standard Deviation & 0.005252\\
+Test Accuracy & 0.9161406755447388\\
+Precision & 0.919625783910535\\
+Recall & 0.9161406672678089\\
+F1-score & 0.9160590223088639\\
+Training Time & 251 seconds\\
+Number of Parameters & 2426725\\
+\hline
+\end{tabular}
+\end{center}
+\vspace{5mm}
+
+\textbf{Overall Results}
+\vspace{5mm}
+\begin{center}
+
+\begin{tabular}[H]{|l|c|c|c|c|}
+\hline
+Configuration & CV Accuracy & SD & Test Accuracy & Training Time\\
+\hline
+
+Baseline & 0.8918 & 0.0087 & 0.8952 & 164 seconds\\
+
+Best Initialization & 0.9085 & 0.0069 & 0.9038 & 127 seconds\\
+
+Best Regularization & 0.9333 & 0.0048 & 0.9287 & 137 seconds\\
+
+Best Optimizer & 0.9196 & 0.0061 & 0.9145 & 261 seconds\\
+
+Best Hyperparameters & 0.9254 & 0.0057 & 0.9218 & 250 seconds\\
+
+Fine-Tuned Model & 0.9076 & 0.0053 & 0.9161 & 251 seconds\\
+
+\hline
+\end{tabular}
+
+\end{center}
+\clearpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{14. Plots and Inference}
-
-For every major plot, students must write a short inference containing:
-
-\begin{enumerate}
-\item What does the plot show?
-\item What trend is observed?
-\item Why might the observed trend occur?
-\end{enumerate}
-
-Each inference should be approximately 2--3 lines.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{15. Discussion Questions}
+\section{Discussion Questions}
 
 \begin{enumerate}
 \item What is the difference between model parameters and hyperparameters?
@@ -681,7 +1040,7 @@ Each inference should be approximately 2--3 lines.
 \end{enumerate}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{16. Additional Exercise}
+\section{Additional Exercise}
 
 Select two new combinations of learning rate, dropout, batch size and
 fine-tuning strategy. Evaluate them using 5-fold cross-validation and
@@ -692,7 +1051,7 @@ on accuracy, standard deviation, computational cost and final test
 performance.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{17. Expected Outcome}
+\section{Expected Outcome}
 
 Students should experimentally demonstrate that CNN performance is
 strongly influenced by initialization, regularization, optimization and
@@ -701,7 +1060,7 @@ perform transfer learning and fine-tuning, and select a reliable final
 configuration using 5-fold cross-validation.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{18. References}
+\section{References}
 
 \begin{enumerate}
 \item Ian Goodfellow, Yoshua Bengio and Aaron Courville,
