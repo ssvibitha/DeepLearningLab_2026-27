@@ -1015,6 +1015,7 @@ Fine-Tuned Model & 0.9076 & 0.0053 & 0.9161 & 251 seconds\\
 
 \begin{enumerate}
 \item \textbf{What is the difference between model parameters and hyperparameters?}
+
 \vspace{5mm}
 Parameters are values learned automatically by the model during training. Ex: weights and bias of neurons. 
 Hyperparameters are set by the user before or during training. Ex: learning rate, batch size, number of layers, dropout rate.
@@ -1022,6 +1023,7 @@ Parameters directly determine the model's predictions, while hyperparameters con
 \vspace{3mm}
 
 \item \textbf{Why is weight initialization important?}
+
 \vspace{5mm}
 Weight initialization determines the starting values of neural network weights. 
 If weights are too small, activations or gradients may shrink through layers causing vanishing gradients.
@@ -1031,6 +1033,7 @@ Hence, good initialization helps maintain stable gradients through deep layers.
 \vspace{3mm}
 
 \item \textbf{Why can zero initialization be problematic for neural networks?}
+
 \vspace{5mm}
 If all weights are initialized to zero, neurons in the same layer produce identical outputs.
 Their gradients are also identical during backpropagation.
@@ -1040,6 +1043,7 @@ Hence, weights are usually initialized with small random values rather than all 
 \vspace{3mm}
 
 \item \textbf{Compare Xavier and He initialization.}
+
 \vspace{5mm}
 Xavier initialization is mainly used for activation functions such as sigmoid and tanh.
 It maintains similar variance between input and output layers. 
@@ -1049,12 +1053,14 @@ He uses a larger variance, commonly to compensate for this effect. Thus, He is g
 \vspace{3mm}
 
 \item \textbf{How can training and validation curves identify overfitting?}
+
 \vspace{5mm}
 In an ideal model, training and validation loss decreases. During overfitting, training error decreases and validation error increases.
 This indicates that the model is learning the training data too specifically and is not generalizing well to unseen data.
 \vspace{3mm}
 
 \item \textbf{How does Dropout reduce overfitting?}
+
 \vspace{5mm}
 Dropout randomly deactivates a fraction of neurons during training. 
 This prevents the network from depending too strongly on particular neurons or specific feature combinations. 
@@ -1063,6 +1069,7 @@ During testing, dropout is disabled and the complete network is used. Thus, Drop
 \vspace{3mm}
 
 \item \textbf{What is the purpose of Batch Normalization?}
+
 \vspace{5mm}
 Batch Normalization normalizes the activations of a layer using the mean and variance calculated from a mini-batch. 
 It produces standardized activations and then uses learnable parameters $\gamma$ and $\beta$ to restore useful scale and shift. 
@@ -1072,6 +1079,7 @@ Therefore, it helps neural networks train more reliably and efficiently.
 \vspace{3mm}
 
 \item \textbf{Explain the numerical Batch Normalization example.}
+
 \vspace{5mm}
 Given a mini-batch $\mathcal{B} = \{x_1, x_2, \dots, x_m\}$ of size $m$:
 
@@ -1103,6 +1111,7 @@ y_i = \gamma \hat{x}_i + \beta
 \vspace{3mm}
 
 \item \textbf{What are the roles of $\gamma$ and $\beta$?}
+
 \vspace{5mm}
 In Batch Normalization, $\gamma$ is the learnable scale parameter and $\beta$ is the learnable shift parameter.
 Gamma controls how much the normalized activation is stretched or compressed, while beta controls how much it is shifted. 
@@ -1110,6 +1119,7 @@ These parameters allow the network to learn an appropriate distribution instead 
 \vspace{3mm}
 
 \item \textbf{Compare SGD, Momentum, RMSProp and Adam.}
+
 \vspace{5mm}
 SGD updates weights using the gradient of the current mini-batch. 
 Momentum adds a velocity term that accumulates previous gradients helping accelerate movement in consistent directions and reduce oscillations. 
@@ -1119,6 +1129,7 @@ Hence, Adam is more suitanle for faster training.
 \vspace{3mm}
 
 \item \textbf{What happens when the learning rate is too large?}
+
 \vspace{5mm}
 The learning rate controls the size of each parameter update during optimization. 
 If it is too large, the optimizer may overshoot the minimum instead of moving toward it. 
@@ -1126,6 +1137,7 @@ The loss may oscillate, diverge, or become unstable, and the model may fail to c
 \vspace{3mm}
 
 \item \textbf{What happens when the learning rate is too small?}
+
 \vspace{5mm}
 When the learning rate is too small, parameter updates become very small. 
 The model may require a very large number of iterations for convergence.
@@ -1133,6 +1145,7 @@ It can also appear as if the loss has stopped improving because progress is extr
 \vspace{3mm}
 
 \item \textbf{What is the effect of increasing batch size?}
+
 \vspace{5mm}
 Increasing batch size means that more training examples are used to calculate each gradient update. 
 This generally produces a more stable and less noisy gradient and improves computational efficiency on GPUs.
@@ -1141,6 +1154,7 @@ However, very large batches may require more memory and can reduces noise that c
 \vspace{3mm}
 
 \item \textbf{Explain stride and padding.}
+
 \vspace{5mm}
 Stride specifies how far the convolution filter moves across the input at each step. 
 A larger stride reduces the spatial dimensions of the output. 
@@ -1149,6 +1163,7 @@ It allows control over output size and helps preserve information near the edges
 \vspace{3mm}
 
 \item \textbf{Why is MobileNetV2 computationally efficient?}
+
 \vspace{5mm}
 MobileNetV2 uses depthwise separable convolutions which require significantly fewer computations than standard convolutions. 
 It also uses an inverted residual structure with linear bottlenecks where computation is performed efficiently in an expanded intermediate representation and then compressed. 
@@ -1157,6 +1172,7 @@ These design choices make MobileNetV2 suitable for devices with limited computat
 \vspace{3mm}
 
 \item \textbf{What is depthwise separable convolution?}
+
 \vspace{5mm}
 A depthwise separable convolution divides a standard convolution into two operations: depthwise convolution and pointwise convolution. 
 Depthwise convolution applies one spatial filter independently to each input channel, while pointwise convolution uses a 1 x 1 convolution to combine information across channels.
@@ -1164,6 +1180,7 @@ This reduces the number of parameters and operations. Hence, it makes CNNs compu
 \vspace{3mm}
 
 \item \textbf{What is transfer learning?}
+
 \vspace{5mm}
 Transfer learning is the process of using knowledge learned by a model on one dataset or task for another related task. 
 A pretrained CNN, may have already learned general features such as edges, textures, and shapes from a large dataset. 
@@ -1172,6 +1189,7 @@ Hence, it is used when the target dataset is limited.
 \vspace{3mm}
 
 \item \textbf{Differentiate feature extraction and fine-tuning.}
+
 \vspace{5mm}
 In feature extraction, the pretrained model's earlier layers are kept frozen and only a new classification head or selected layers are trained. 
 The pretrained features are reused without changing their weights. 
@@ -1180,6 +1198,7 @@ Fine-tuning allows the model to adapt its learned representations to the target 
 \vspace{3mm}
 
 \item \textbf{Why is a smaller learning rate generally used during fine-tuning?}
+
 \vspace{5mm}
 During fine-tuning, a pretrained network which already contains useful learned features is used. 
 Using a large learning rate can cause large weight updates that destroy these useful representations. This is known as catastrophic forgetting. 
@@ -1188,6 +1207,7 @@ This provides controlled adaptation while preserving previously learned knowledg
 \vspace{3mm}
 
 \item \textbf{Why is K-Fold Cross-Validation useful for hyperparameter selection?}
+
 \vspace{5mm}
 K-Fold Cross-Validation divides the training data into K subsets called folds. The model is trained on K-1 folds and validated on the remaining fold.
 This process is repeated K times.
@@ -1196,6 +1216,7 @@ This reduces dependence on one particular train-validation split. This acts as a
 \vspace{3mm}
 
 \item \textbf{Why must the test set remain untouched during tuning?}
+
 \vspace{5mm}
 The test set must remain untouched during tuning to prevent data leakage and ensure an unbiased evaluation of how the model performs on truly unseen real-world data.
 Using testing set for training may lead to overfitting as the test data may be used to influence model predictions.  
@@ -1203,6 +1224,7 @@ Using testing set for training may lead to overfitting as the test data may be u
 
 
 \item \textbf{Why should mean and standard deviation both be reported?}
+
 \vspace{5mm}
 The mean describes the average performance of a model across different folds, runs, or experiments. The standard deviation describes how much that performance varies around the mean. 
 A high mean with a large standard deviation indicates that performance may be unstable across different data splits or runs. 
@@ -1210,6 +1232,7 @@ Hence reporting both mean and standard deviation helps to make experimental resu
 \vspace{3mm}
 
 \item \textbf{Is the highest validation accuracy always sufficient to select a model?}
+
 \vspace{5mm}
 No, the highest validation accuracy is not always sufficient to select a model. 
 If the validation dataset has unequal data for different classes, the model can repeatedly predict majority class. Hence the model may misclassify target class due to class imbalance.
