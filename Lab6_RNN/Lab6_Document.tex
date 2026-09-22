@@ -1,0 +1,1424 @@
+
+\documentclass[10pt]{article}
+
+\usepackage[a4paper,margin=0.65in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{caption}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,shapes.geometric,fit,calc}
+
+\setlist{nosep,leftmargin=*}
+\renewcommand{\arraystretch}{1.2}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2pt}
+
+\tikzset{
+layer/.style={
+draw,
+rounded corners,
+minimum width=1.7cm,
+minimum height=0.65cm,
+align=center,
+fill=blue!10,
+font=\scriptsize
+},
+smalllayer/.style={
+draw,
+rounded corners,
+minimum width=1.35cm,
+minimum height=0.58cm,
+align=center,
+fill=green!10,
+font=\scriptsize
+},
+arrow/.style={
+-{Latex[length=2mm]},
+thin
+}
+}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TITLE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{center}
+
+{\large\textbf{Shiv Nadar University Chennai}}
+
+\vspace{2mm}
+
+{\normalsize\textbf{CS3807 -- Deep Learning Laboratory}}
+
+\vspace{2mm}
+
+{\large\textbf{Experiment 6}}
+
+\vspace{1mm}
+
+{\normalsize\textbf{End-to-End Study of RNN, LSTM and GRU for}}
+
+{\normalsize\textbf{Sequence Learning and Video Understanding}}
+
+\end{center}
+
+\vspace{3mm}
+
+\begin{tabular}{|p{3.4cm}|p{9.0cm}|p{1.4cm}|}
+\hline
+Degree \& Branch &
+B.Tech Artificial Intelligence \& Data Science &
+Semester V\\
+\hline
+Subject Code \& Name &
+CS3807 -- Deep Learning Laboratory &
+AY: 2026--27\\
+\hline
+\end{tabular}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{1. Objective}
+
+The objective of this experiment is to develop an end-to-end understanding of
+recurrent sequence learning by implementing and comparing Vanilla RNN, LSTM
+and GRU models. The experiment also introduces Backpropagation Through Time
+(BPTT), the limitations of conventional RNNs, and the use of CNN-extracted
+features with recurrent networks for video understanding.
+
+The experiment uses the UCI Human Activity Recognition Using Smartphones
+dataset as the primary sequence dataset. Students will prepare temporal input
+sequences, visualize them, train RNN/LSTM/GRU models, compare their
+performance, analyze convergence and generalization, and extend the pipeline
+to video understanding using CNN feature extraction followed by an LSTM or
+GRU.
+
+A small synthetic sequence-to-sequence task is included at the end to
+demonstrate the encoder--decoder framework.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{2. Learning Outcomes}
+
+After completing this experiment, students will be able to:
+
+\begin{itemize}
+\item represent sequential data using the $(N,T,F)$ input format;
+\item explain the architecture and operation of a Vanilla RNN;
+\item explain Backpropagation Through Time and the vanishing/exploding gradient challenges;
+\item implement sequence classification using SimpleRNN, LSTM and GRU;
+\item compare RNN, LSTM and GRU using quantitative performance measures;
+\item interpret training/validation curves and confusion matrices;
+\item explain the role of CNNs in extracting spatial features from video frames;
+\item construct a CNN--LSTM or CNN--GRU pipeline for video understanding;
+\item explain the encoder--decoder architecture for sequence-to-sequence learning; and
+\item draw conclusions using predictive performance, model complexity and computational cost.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{3. Dataset and Experimental Setup}
+
+\textbf{Primary Dataset: UCI Human Activity Recognition Using Smartphones}
+
+The UCI Human Activity Recognition (HAR) dataset contains smartphone sensor
+measurements collected from subjects performing six activities:
+
+\begin{itemize}
+\item WALKING
+\item WALKING\_UPSTAIRS
+\item WALKING\_DOWNSTAIRS
+\item SITTING
+\item STANDING
+\item LAYING
+\end{itemize}
+
+The experiment should use the raw inertial signal files rather than only the
+already-computed 561-feature vectors. Each activity window contains 128
+temporal measurements. The three-axis body acceleration, three-axis
+gyroscope and three-axis total acceleration signals provide nine channels.
+
+Thus, the desired input representation is
+
+\[
+X\in\mathbb{R}^{N\times128\times9}.
+\]
+
+The dataset can be obtained from:
+
+\url{https://archive.ics.uci.edu/dataset/240/human+activity+recognition+using+smartphones}
+
+\textbf{Recommended laboratory subset:} To keep execution time small, use
+the first 1500--3000 training windows while preserving all six classes and
+approximately balanced class representation. For a complete study, the full
+training and test partitions may be used.
+
+\textbf{Important:} The same train/validation/test protocol and preprocessing
+must be used for RNN, LSTM and GRU so that the comparison is controlled.
+
+\subsection*{Expected Input}
+
+For one sample:
+
+\[
+X_i\in\mathbb{R}^{128\times9}.
+\]
+
+For a batch of 32 samples:
+
+\[
+X_{\mathrm{batch}}\in\mathbb{R}^{32\times128\times9}.
+\]
+
+The dimensions represent:
+
+\begin{center}
+\begin{tabular}{|c|c|l|}
+\hline
+Dimension & Meaning & Example\\
+\hline
+$N$ & Number of sequences & 1500\\
+$T$ & Time steps per sequence & 128\\
+$F$ & Features/channels per time step & 9\\
+\hline
+\end{tabular}
+\end{center}
+
+Therefore, the model must receive a three-dimensional tensor rather than a
+conventional two-dimensional tabular matrix.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{4. Overall Experimental Pipeline}
+
+The complete sequence-classification pipeline is:
+
+\begin{center}
+\begin{tikzpicture}[node distance=5mm]
+\node[layer](a){Raw Sensor\\Signals};
+\node[layer,right=of a](b){Windowing\\$128\times9$};
+\node[layer,right=of b](c){Normalization};
+\node[layer,right=of c](d){RNN / LSTM / GRU};
+\node[layer,right=of d](e){Dense};
+\node[layer,right=of e](f){Softmax};
+\node[layer,right=of f](g){Activity\\Class};
+
+\foreach \x/\y in {a/b,b/c,c/d,d/e,e/f,f/g}
+\draw[arrow](\x)--(\y);
+\end{tikzpicture}
+\end{center}
+
+The three recurrent models must use the same input, output layer, optimizer,
+batch size and evaluation protocol.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{5. Preprocessing}
+
+Perform the following preprocessing steps:
+
+\begin{enumerate}
+\item Load the raw inertial signals.
+\item Arrange every observation window as $128\times9$.
+\item Assign one activity label to each window.
+\item Encode the six activity labels.
+\item Normalize the input using statistics calculated from the training data.
+\item Create training, validation and test sets.
+\item Verify the class distribution.
+\end{enumerate}
+
+\textbf{Suggested split:}
+
+\[
+70\% \text{ training},\qquad
+15\% \text{ validation},\qquad
+15\% \text{ testing}.
+\]
+
+The test data must not be used during model selection or hyperparameter tuning.
+
+\subsection*{Expected Preprocessing Output}
+
+Students must print:
+
+\begin{verbatim}
+Input tensor shape:
+Training   : (N_train, 128, 9)
+Validation : (N_val,   128, 9)
+Testing    : (N_test,  128, 9)
+
+Number of classes: 6
+Number of features per time step: 9
+Sequence length: 128
+\end{verbatim}
+
+The actual values of $N_{\mathrm{train}}$, $N_{\mathrm{val}}$ and
+$N_{\mathrm{test}}$ depend on the selected subset.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{6. Temporal Data Visualization}
+
+Select representative sequences from at least three different activity
+classes.
+
+\textbf{Plot 1: Sensor signal versus time}
+
+\begin{itemize}
+\item X-axis: Time step (1--128)
+\item Y-axis: Sensor value
+\item Plot at least three representative channels.
+\item Include examples from different activity classes.
+\end{itemize}
+
+Students should observe that temporal patterns differ across activities.
+
+\textbf{Required inference:}
+
+\begin{enumerate}
+\item What temporal pattern is visible?
+\item Which activities exhibit similar patterns?
+\item Why is the ordering of measurements important?
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{7. Vanilla RNN Architecture}
+
+A Vanilla RNN maintains a hidden state that is updated at every time step:
+
+\[
+h_t=\tanh(W_xx_t+W_hh_{t-1}+b_h).
+\]
+
+The output can be written as
+
+\[
+y_t=g(W_yh_t+b_y).
+\]
+
+For sequence classification, the final hidden representation can be passed
+to a classifier.
+
+\begin{center}
+\begin{tikzpicture}[node distance=7mm]
+\node[layer](x1){$x_1$};
+\node[layer,right=of x1](h1){$h_1$};
+\node[layer,right=of h1](x2){$x_2$};
+\node[layer,right=of x2](h2){$h_2$};
+\node[layer,right=of h2](x3){$\cdots$};
+\node[layer,right=of x3](h3){$h_T$};
+\node[layer,right=of h3](y){Softmax};
+
+\draw[arrow](x1)--(h1);
+\draw[arrow](h1)--(x2);
+\draw[arrow](x2)--(h2);
+\draw[arrow](h2)--(x3);
+\draw[arrow](x3)--(h3);
+\draw[arrow](h3)--(y);
+\end{tikzpicture}
+\end{center}
+
+The diagram represents the unrolled view of an RNN. The same recurrent weights
+are reused across time steps.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{8. Backpropagation Through Time}
+
+When an RNN is unrolled, the loss depends on the sequence of hidden states.
+Backpropagation Through Time (BPTT) propagates the error backward through
+the recurrent steps.
+
+\begin{center}
+\begin{tikzpicture}[node distance=5mm]
+\node[smalllayer](a){$h_1$};
+\node[smalllayer,right=of a](b){$h_2$};
+\node[smalllayer,right=of b](c){$h_3$};
+\node[smalllayer,right=of c](d){$\cdots$};
+\node[smalllayer,right=of d](e){$h_T$};
+\node[smalllayer,below=of e](l){Loss};
+
+\draw[arrow](a)--(b);
+\draw[arrow](b)--(c);
+\draw[arrow](c)--(d);
+\draw[arrow](d)--(e);
+\draw[arrow](e)--(l);
+
+\draw[arrow]($(e.south)!0.5!(l.north)$) to[bend right=35]
+node[below,font=\scriptsize]{backward gradient} ($(a.south)!0.5!(b.south)$);
+\end{tikzpicture}
+\end{center}
+
+Students should explain that repeated multiplication of derivatives through
+many time steps can cause gradients to become extremely small or extremely
+large.
+
+\subsection*{Challenges}
+
+\begin{itemize}
+\item Vanishing gradients
+\item Exploding gradients
+\item Difficulty learning long-term dependencies
+\item Sequential computation and limited parallelism
+\end{itemize}
+
+The vanishing-gradient problem can be conceptually represented as
+
+\[
+\left|\frac{\partial h_t}{\partial h_{t-k}}\right|\rightarrow0
+\]
+
+while exploding gradients correspond to very large gradient magnitudes.
+
+\subsection*{Numerical Exercise}
+
+Consider
+
+\[
+x_1=0.5,\qquad x_2=0.7,\qquad x_3=0.2,
+\]
+
+\[
+h_0=0,\qquad W_x=0.5,\qquad W_h=0.8,\qquad b=0.1.
+\]
+
+Using
+
+\[
+h_t=\tanh(W_xx_t+W_hh_{t-1}+b),
+\]
+
+calculate $h_1$, $h_2$ and $h_3$ manually.
+
+Students must compare their calculated values with the values obtained from
+a program.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{9. RNN Implementation}
+
+Use a small recurrent architecture:
+
+\begin{center}
+\begin{tikzpicture}[node distance=5mm]
+\node[layer](a){Input\\$128\times9$};
+\node[layer,right=of a](b){SimpleRNN\\32 units};
+\node[layer,right=of b](c){Dropout\\0.2};
+\node[layer,right=of c](d){Dense\\16 ReLU};
+\node[layer,right=of d](e){Dense\\6};
+\node[layer,right=of e](f){Softmax};
+
+\foreach \x/\y in {a/b,b/c,c/d,d/e,e/f}
+\draw[arrow](\x)--(\y);
+\end{tikzpicture}
+\end{center}
+
+\textbf{Suggested training configuration:}
+
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+Parameter & Value\\
+\hline
+Recurrent units & 32\\
+Dropout & 0.2\\
+Optimizer & Adam\\
+Learning rate & $10^{-3}$\\
+Batch size & 32\\
+Epochs & 30\\
+Loss & Sparse categorical cross-entropy\\
+\hline
+\end{tabular}
+\end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{10. LSTM Architecture}
+
+LSTM introduces a memory cell and gates to control information flow.
+
+The forget gate is
+
+\[
+f_t=\sigma(W_f[h_{t-1},x_t]+b_f),
+\]
+
+the input gate is
+
+\[
+i_t=\sigma(W_i[h_{t-1},x_t]+b_i),
+\]
+
+and the output gate is
+
+\[
+o_t=\sigma(W_o[h_{t-1},x_t]+b_o).
+\]
+
+The candidate cell state is
+
+\[
+\tilde{C}_t=
+\tanh(W_C[h_{t-1},x_t]+b_C),
+\]
+
+and the cell state is
+
+\[
+C_t=f_tC_{t-1}+i_t\tilde{C}_t.
+\]
+
+The hidden state is
+
+\[
+h_t=o_t\tanh(C_t).
+\]
+
+\begin{center}
+\begin{tikzpicture}[node distance=5mm]
+\node[layer](a){Input\\$x_t$};
+\node[layer,right=of a](b){LSTM\\Cell};
+\node[layer,right=of b](c){$h_t$};
+\node[layer,above=of b](d){$C_t$};
+\node[layer,right=of c](e){Classifier};
+
+\draw[arrow](a)--(b);
+\draw[arrow](b)--(c);
+\draw[arrow](b)--(d);
+\draw[arrow](c)--(e);
+\draw[arrow](d)--(b);
+\end{tikzpicture}
+\end{center}
+
+\textbf{Required inference:} Explain how the cell state and gates help the
+network retain or discard information over long sequences.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{11. GRU Architecture}
+
+GRU uses two principal gates:
+
+\[
+z_t=\sigma(W_z[h_{t-1},x_t]+b_z)
+\]
+
+and
+
+\[
+r_t=\sigma(W_r[h_{t-1},x_t]+b_r).
+\]
+
+The candidate hidden state is
+
+\[
+\tilde{h}_t=
+\tanh(W_h[r_t\odot h_{t-1},x_t]+b_h).
+\]
+
+The hidden state is updated using
+
+\[
+h_t=(1-z_t)h_{t-1}+z_t\tilde{h}_t.
+\]
+
+\begin{center}
+\begin{tikzpicture}[node distance=5mm]
+\node[layer](a){Input\\$x_t$};
+\node[smalllayer,right=of a](b){Reset\\Gate};
+\node[smalllayer,above=of b](c){Update\\Gate};
+\node[layer,right=of b](d){Candidate\\State};
+\node[layer,right=of d](e){$h_t$};
+
+\draw[arrow](a)--(b);
+\draw[arrow](a)--(c);
+\draw[arrow](b)--(d);
+\draw[arrow](c)--(e);
+\draw[arrow](d)--(e);
+\end{tikzpicture}
+\end{center}
+
+Students should compare the number of gates and state representations in
+RNN, LSTM and GRU.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{12. LSTM and GRU Implementation}
+
+Implement the same classifier used for the RNN, replacing only the recurrent
+layer.
+
+\begin{center}
+\begin{tabular}{|l|c|c|c|}
+\hline
+Model & Recurrent Layer & Units & Output Classes\\
+\hline
+RNN & SimpleRNN & 32 & 6\\
+LSTM & LSTM & 32 & 6\\
+GRU & GRU & 32 & 6\\
+\hline
+\end{tabular}
+\end{center}
+
+All other experimental conditions should remain unchanged.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{13. Required Training Plots}
+
+For each of RNN, LSTM and GRU, generate:
+
+\textbf{Plot 2: Training and Validation Loss}
+
+\begin{itemize}
+\item X-axis: Epoch
+\item Y-axis: Loss
+\item Curves: Training loss and validation loss
+\end{itemize}
+
+\textbf{Plot 3: Training and Validation Accuracy}
+
+\begin{itemize}
+\item X-axis: Epoch
+\item Y-axis: Accuracy (\%)
+\item Curves: Training accuracy and validation accuracy
+\end{itemize}
+
+\textbf{Inference:} Students must identify convergence, overfitting,
+underfitting and the generalization gap where applicable.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{14. Performance Evaluation}
+
+Evaluate each model on the independent test set.
+
+The following metrics are mandatory:
+
+\begin{itemize}
+\item Accuracy
+\item Precision
+\item Recall
+\item F1-score
+\item Confusion matrix
+\item Number of trainable parameters
+\item Training time
+\end{itemize}
+
+For multi-class classification, report macro-averaged Precision, Recall and
+F1-score.
+
+\begin{center}
+\begin{tabular}{|l|c|c|c|}
+\hline
+Metric & RNN & LSTM & GRU\\
+\hline
+Accuracy (\%) & & &\\
+Macro Precision (\%) & & &\\
+Macro Recall (\%) & & &\\
+Macro F1 (\%) & & &\\
+Parameters & & &\\
+Training Time (s) & & &\\
+\hline
+\end{tabular}
+\end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{15. Confusion Matrix Analysis}
+
+\textbf{Plot 4: Confusion Matrix}
+
+Generate a separate confusion matrix for each model.
+
+Students must identify:
+
+\begin{itemize}
+\item the activity with the highest recognition rate;
+\item the activity with the largest number of misclassifications;
+\item pairs of activities that are frequently confused; and
+\item whether the errors are consistent across RNN, LSTM and GRU.
+\end{itemize}
+
+The inference must be based on the student's observed matrix rather than on
+an assumed result.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{16. RNN vs. LSTM vs. GRU Comparison}
+
+Students must complete the following table.
+
+\begin{center}
+\begin{tabular}{|l|c|c|c|}
+\hline
+Property & RNN & LSTM & GRU\\
+\hline
+Hidden state & Yes & Yes & Yes\\
+Cell state & No & Yes & No\\
+Forget gate & No & Yes & No\\
+Input gate & No & Yes & No\\
+Output gate & No & Yes & No\\
+Update gate & No & No & Yes\\
+Reset gate & No & No & Yes\\
+Parameters & & &\\
+Training time & & &\\
+Test F1-score & & &\\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{Plot 5: Model Performance Comparison}
+
+Create a bar plot comparing the test Accuracy, Macro F1-score and, where
+appropriate, normalized computational measures.
+
+\textbf{Required inference:}
+
+Students should discuss the trade-off among:
+
+\[
+\text{Predictive Performance}
+\quad\leftrightarrow\quad
+\text{Model Complexity}
+\quad\leftrightarrow\quad
+\text{Training Cost}.
+\]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{17. Effect of Sequence Length}
+
+To understand temporal dependency, repeat the experiment using selected
+sequence lengths:
+
+\[
+T\in\{32,64,128\}.
+\]
+
+When reducing the sequence length, truncate or construct the input consistently.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Sequence Length & RNN F1 & LSTM F1 & GRU F1\\
+\hline
+32 & & &\\
+64 & & &\\
+128 & & &\\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{Plot 6: Sequence Length vs. Test F1-score}
+
+Students should discuss how the amount of temporal context affects the
+classification result.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{18. Video Understanding Using CNN and RNN}
+
+This part demonstrates the application:
+
+\[
+\boxed{\text{Video Understanding using CNN + RNN}}
+\]
+
+A video is a sequence of image frames. CNNs are used to extract spatial
+features from individual frames, while RNN/LSTM/GRU models the temporal
+relationship among those features.
+
+The complete pipeline is:
+
+\begin{center}
+\begin{tikzpicture}[node distance=5mm]
+\node[layer](a){Video};
+\node[layer,right=of a](b){Frame\\Extraction};
+\node[layer,right=of b](c){Pretrained\\CNN};
+\node[layer,right=of c](d){Frame\\Features};
+\node[layer,right=of d](e){LSTM / GRU};
+\node[layer,right=of e](f){Dense};
+\node[layer,right=of f](g){Action};
+
+\foreach \x/\y in {a/b,b/c,c/d,d/e,e/f,f/g}
+\draw[arrow](\x)--(\y);
+\end{tikzpicture}
+\end{center}
+
+\subsection*{Recommended Dataset}
+
+Use a small subset of the UCF101 action-recognition dataset:
+
+\url{https://www.crcv.ucf.edu/data/UCF101.php}
+
+Select only 3--5 action classes and a small number of videos per class so that
+the experiment remains computationally manageable.
+
+Possible classes include:
+
+\begin{itemize}
+\item Basketball
+\item Biking
+\item Walking
+\item Running
+\item TennisSwing
+\end{itemize}
+
+The objective is to understand the CNN--recurrent pipeline rather than to
+train a state-of-the-art video recognition system.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{19. Expected Video Input and Output}
+
+Sample 10 frames uniformly from each video.
+
+Each frame is resized to
+
+\[
+224\times224\times3.
+\]
+
+A pretrained CNN such as MobileNetV2 is used only as a feature extractor.
+
+If the CNN produces a feature vector of dimension $D$, then the recurrent
+network receives:
+
+\[
+X\in\mathbb{R}^{10\times D}.
+\]
+
+For a batch of $B$ videos:
+
+\[
+X\in\mathbb{R}^{B\times10\times D}.
+\]
+
+The expected output is a probability vector over the selected action classes.
+
+For example:
+
+\begin{verbatim}
+Predicted class : Basketball
+Actual class    : Basketball
+Confidence      : 0.xx
+\end{verbatim}
+
+The confidence value must be obtained from the trained model and must not be
+manually entered.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{20. CNN Feature Extraction}
+
+Use a pretrained CNN with the classification head removed.
+
+\begin{center}
+\begin{tikzpicture}[node distance=5mm]
+\node[layer](a){Frame\\$224\times224\times3$};
+\node[layer,right=of a](b){MobileNetV2};
+\node[layer,right=of b](c){Global Avg.\\Pooling};
+\node[layer,right=of c](d){Feature\\Vector};
+\node[layer,right=of d](e){Sequence\\of Features};
+
+\foreach \x/\y in {a/b,b/c,c/d,d/e}
+\draw[arrow](\x)--(\y);
+\end{tikzpicture}
+\end{center}
+
+Do not train the CNN from scratch. Freeze the pretrained CNN and extract
+features first. Then train the recurrent classifier.
+
+\textbf{Required observation:}
+
+Students must report the CNN feature dimension and the resulting tensor
+shape supplied to the recurrent network.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{21. CNN--LSTM / CNN--GRU Model}
+
+Use the following architecture:
+
+\begin{center}
+\begin{tikzpicture}[node distance=5mm]
+\node[layer](a){10 Frames};
+\node[layer,right=of a](b){CNN\\Feature Extraction};
+\node[layer,right=of b](c){10$\times$D};
+\node[layer,right=of c](d){LSTM / GRU\\32 units};
+\node[layer,right=of d](e){Dense};
+\node[layer,right=of e](f){Softmax};
+
+\foreach \x/\y in {a/b,b/c,c/d,d/e,e/f}
+\draw[arrow](\x)--(\y);
+\end{tikzpicture}
+\end{center}
+
+\textbf{Plot 7: Video Sample Frames}
+
+Display a representative sequence of sampled frames from one video.
+
+Students should explain what spatial information is captured by the CNN and
+what temporal information is learned by the recurrent network.
+
+\textbf{Plot 8: Video Training and Validation Curves}
+
+Plot training/validation accuracy and loss for the selected recurrent
+architecture.
+
+\textbf{Plot 9: Video Confusion Matrix}
+
+Analyze class-level recognition and temporal confusions.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{22. Sequence-to-Sequence Learning}
+
+Sequence-to-sequence learning maps one sequence to another.
+
+For a simple laboratory task, construct a synthetic reversal dataset.
+
+Example:
+
+\[
+[1,4,7,2]\rightarrow[2,7,4,1].
+\]
+
+Generate several thousand short sequences using integers from a fixed range.
+
+The task is intentionally simple so that the encoder--decoder mechanism can
+be studied without a large external dataset.
+
+\begin{center}
+\begin{tikzpicture}[node distance=8mm]
+\node[layer](a){Input\\Sequence};
+\node[layer,right=of a](b){Encoder\\LSTM};
+\node[layer,right=of b](c){Context\\State};
+\node[layer,right=of c](d){Decoder\\LSTM};
+\node[layer,right=of d](e){Output\\Sequence};
+
+\foreach \x/\y in {a/b,b/c,c/d,d/e}
+\draw[arrow](\x)--(\y);
+\end{tikzpicture}
+\end{center}
+
+The encoder converts the input sequence into a learned representation.
+The decoder generates the output sequence one element at a time.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{23. Expected Sequence-to-Sequence Input and Output}
+
+\textbf{Input example:}
+
+\[
+[3,8,1,5]
+\]
+
+\textbf{Expected output:}
+
+\[
+[5,1,8,3].
+\]
+
+Students must display at least five test examples in the report.
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Sample & Input Sequence & Predicted Output\\
+\hline
+1 & &\\
+2 & &\\
+3 & &\\
+4 & &\\
+5 & &\\
+\hline
+\end{tabular}
+\end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{24. Sequence-to-Sequence Evaluation}
+
+Report:
+
+\begin{itemize}
+\item Token accuracy
+\item Sequence accuracy
+\item Training loss
+\item Validation loss
+\end{itemize}
+
+Token accuracy is
+
+\[
+\text{Token Accuracy}
+=
+\frac{\text{Correctly predicted tokens}}
+{\text{Total tokens}}.
+\]
+
+Sequence accuracy is
+
+\[
+\text{Sequence Accuracy}
+=
+\frac{\text{Completely correct sequences}}
+{\text{Total sequences}}.
+\]
+
+\textbf{Required inference:}
+
+Explain why sequence-level accuracy can be substantially lower than token
+accuracy even when most individual tokens are predicted correctly.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{25. Consolidated Results}
+
+Students must complete the following table.
+
+\begin{center}
+\begin{tabular}{|l|c|c|c|c|c|}
+\hline
+Model & Accuracy & Precision & Recall & F1 & Parameters\\
+\hline
+RNN & & & & &\\
+LSTM & & & & &\\
+GRU & & & & &\\
+CNN--LSTM/GRU & & & & &\\
+\hline
+\end{tabular}
+\end{center}
+
+A separate table must be provided for the sequence-to-sequence task.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{26. Required Inferences}
+
+For every major plot, students must write a short inference containing:
+
+\begin{enumerate}
+\item What does the plot show?
+\item What trend is observed?
+\item Why might the observed trend occur?
+\item What conclusion can be drawn from the experiment?
+\end{enumerate}
+
+The following inferences are mandatory:
+
+\begin{itemize}
+\item temporal pattern observed in the sensor signals;
+\item convergence behavior of RNN;
+\item convergence behavior of LSTM;
+\item convergence behavior of GRU;
+\item evidence of overfitting or underfitting;
+\item activity-wise errors from the confusion matrix;
+\item effect of sequence length;
+\item parameter and computational differences among RNN, LSTM and GRU;
+\item role of CNN in video understanding;
+\item role of the recurrent model in temporal modeling; and
+\item difference between token accuracy and sequence accuracy in seq2seq learning.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{27. Plots and Visualisation}
+
+\subsection*{Plot 1 -- Sensor Signals (Temporal Patterns)}
+
+The following plots show raw inertial sensor signals for three representative activity classes:
+Walking, Walking Upstairs, and Sitting. Each plot contains 128 time steps across the nine sensor
+channels (three-axis body acceleration, three-axis gyroscope and three-axis total acceleration).
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[t]{0.32\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Images/SensorSignalsWalking.png}
+    \caption{Walking}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.32\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Images/SensorSignalsWalking Upstairs.png}
+    \caption{Walking Upstairs}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.32\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Images/SensorSignalsSitting.png}
+    \caption{Sitting}
+  \end{subfigure}
+  \caption{Raw sensor signals for three activity classes (128 time steps, 9 channels).}
+  \label{fig:sensor_signals}
+\end{figure}
+
+\textbf{Inference:}
+\begin{enumerate}
+  \item \textit{What temporal pattern is visible?} Walking and Walking Upstairs show periodic, rhythmic oscillations in the acceleration channels, reflecting the repetitive footstep cycle. Sitting exhibits near-zero fluctuations, indicating a stationary posture.
+  \item \textit{Which activities exhibit similar patterns?} Walking and Walking Upstairs share similar oscillatory structure, differing mainly in amplitude and frequency, since both involve a repetitive stride motion. Sitting and Standing are both low-activity signals and can appear visually close.
+  \item \textit{Why is the ordering of measurements important?} The sequence of sensor readings encodes the temporal dynamics of movement. Shuffling the time steps would destroy phase relationships and periodicity, making classification impossible for a model that relies on temporal structure.
+\end{enumerate}
+
+\vspace{4mm}
+
+\subsection*{Plot 2 -- Training and Validation Loss}
+
+Training and validation loss curves are shown below for all three models.
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[t]{0.32\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Images/rnn_loss.png}
+    \caption{RNN Loss}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.32\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Images/lstm_loss.png}
+    \caption{LSTM Loss}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.32\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Images/gru_loss.png}
+    \caption{GRU Loss}
+  \end{subfigure}
+  \caption{Training and validation loss over epochs for RNN, LSTM, and GRU.}
+  \label{fig:loss_curves}
+\end{figure}
+
+\textbf{Inference:} The loss curves show that all three models converge within the training epochs. The LSTM and GRU exhibit smoother convergence and lower final validation loss compared to the vanilla RNN, attributed to their gating mechanisms that mitigate vanishing gradients. A small generalization gap between training and validation loss is visible across models, indicating mild overfitting, particularly in the RNN. Loss stabilization beyond epoch $\sim$20 suggests the models have reached their capacity limits under the current hyperparameter configuration.
+
+\vspace{4mm}
+
+\subsection*{Plot 3 -- Training and Validation Accuracy}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[t]{0.32\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Images/rnn_accuracy.png}
+    \caption{RNN Accuracy}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.32\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Images/lstm_accuracy.png}
+    \caption{LSTM Accuracy}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.32\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Images/gru_accuracy.png}
+    \caption{GRU Accuracy}
+  \end{subfigure}
+  \caption{Training and validation accuracy over epochs for RNN, LSTM, and GRU.}
+  \label{fig:accuracy_curves}
+\end{figure}
+
+\textbf{Inference:} Both LSTM and GRU reach higher validation accuracy faster than the vanilla RNN, confirming the benefit of gating mechanisms in learning long-range temporal dependencies. The RNN's accuracy plateaus earlier and at a lower level, consistent with its susceptibility to vanishing gradients. The LSTM and GRU show comparable final accuracy, with GRU achieving similar performance using fewer parameters.
+
+\vspace{4mm}
+
+\subsection*{Plot 4 -- Confusion Matrices}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[t]{0.32\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Images/rnn_confusion_matrix.png}
+    \caption{RNN Confusion Matrix}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.32\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Images/lstm_confusion_matrix.png}
+    \caption{LSTM Confusion Matrix}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.32\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Images/gru_confusion_matrix.png}
+    \caption{GRU Confusion Matrix}
+  \end{subfigure}
+  \caption{Confusion matrices on the test set for RNN, LSTM, and GRU.}
+  \label{fig:conf_matrices}
+\end{figure}
+
+\textbf{Inference:}
+\begin{itemize}
+  \item \textit{Highest recognition rate:} LAYING is typically recognised with near-perfect accuracy across all models, as it produces a distinctly flat, low-amplitude sensor profile.
+  \item \textit{Most misclassified activity:} SITTING and STANDING are frequently confused with each other because their sensor signals share low activity levels and similar orientations.
+  \item \textit{Common confusion pairs:} SITTING $\leftrightarrow$ STANDING and WALKING $\leftrightarrow$ WALKING\_UPSTAIRS are the most common error pairs. The RNN produces more off-diagonal entries than LSTM or GRU, confirming its weaker temporal modelling.
+  \item \textit{Consistency across models:} The same activity pairs are confused across RNN, LSTM, and GRU, indicating that the difficulty stems from the inherent signal similarity rather than from model weakness alone.
+\end{itemize}
+
+\vspace{4mm}
+
+\subsection*{Plot 5 -- Model Performance Comparison}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.65\linewidth]{Images/model_performance_comparison.png}
+  \caption{Bar chart comparing test accuracy, macro F1-score and parameter count for RNN, LSTM, and GRU.}
+  \label{fig:model_comparison}
+\end{figure}
+
+\textbf{Inference:} The bar chart illustrates the trade-off among predictive performance, model complexity, and training cost.
+\begin{itemize}
+  \item LSTM achieves the highest accuracy and F1-score owing to its three-gate memory mechanism, but at the cost of the largest parameter count and longest training time.
+  \item GRU closely matches LSTM in accuracy while using fewer parameters (two gates instead of three), offering a better efficiency-performance trade-off.
+  \item The vanilla RNN achieves the lowest accuracy despite being the fastest to train, highlighting the cost of ignoring long-range dependencies.
+  \item For this dataset, GRU presents the best balance: near-LSTM accuracy with lower computational overhead.
+\end{itemize}
+
+\vspace{4mm}
+
+\subsection*{Plot 7 -- Video Sample Frames}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\linewidth]{Images/video_sample_frames.png}
+  \caption{Representative sequence of 10 uniformly sampled frames from one video clip (UCF-101 subset).}
+  \label{fig:video_frames}
+\end{figure}
+
+\textbf{Inference:} Each frame captures the spatial content of an action at a specific point in time. The CNN extracts spatial features such as human body posture, limb positions, and object interactions from individual frames. The temporal ordering of the 10 feature vectors then allows the LSTM/GRU to learn motion dynamics -- for example, the progressive limb swing cycle in a walking sequence or the characteristic arc in a basketball shot.
+
+\vspace{4mm}
+
+\subsection*{Plot 8 -- Video Training and Validation Curves}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Images/video_loss.png}
+    \caption{Video Model Loss}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Images/video_accuracy.png}
+    \caption{Video Model Accuracy}
+  \end{subfigure}
+  \caption{Training and validation loss/accuracy for the CNN--LSTM/GRU video understanding model.}
+  \label{fig:video_curves}
+\end{figure}
+
+\textbf{Inference:} The video model converges quickly because the CNN features are rich, pre-trained representations that require only a compact recurrent classifier on top. The validation accuracy remains close to training accuracy, suggesting good generalisation on the small selected class subset. The final accuracy is higher than that obtained with the HAR dataset using an equivalent recurrent architecture, confirming the effectiveness of pretrained CNN features as temporal sequence inputs.
+
+\vspace{4mm}
+
+\subsection*{Plot 9 -- Video Confusion Matrix (CNN--GRU)}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.55\linewidth]{Images/cnn-gru_confusion_matrix.png}
+  \caption{Confusion matrix for the CNN--GRU video understanding model on the test set.}
+  \label{fig:video_conf}
+\end{figure}
+
+\textbf{Inference:} The CNN--GRU model correctly classifies the majority of action clips. Minor confusions arise between visually similar actions (e.g., Walking vs.\ Running) where the spatial appearance of frames is similar and differentiation depends on motion speed -- a temporal cue that a short 10-frame sequence may not fully capture. Overall, the confusion matrix confirms that combining pretrained CNN features with a GRU yields an effective video understanding pipeline even with very few training examples.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{28. Discussion Questions}
+
+\begin{enumerate}
+
+\item \textbf{What is a recurrent neural network?}\\
+\textit{Answer:} A recurrent neural network (RNN) is a class of neural network designed for sequential data. Unlike feed-forward networks, an RNN maintains a hidden state $h_t$ that is updated at each time step using both the current input $x_t$ and the previous hidden state $h_{t-1}$, enabling the network to model temporal dependencies.\\
+\vspace{8mm} % \underline{\hspace{\linewidth}}
+
+\item \textbf{What information is represented by the hidden state?}\\
+\textit{Answer:} The hidden state $h_t$ is a compressed, learned summary of all inputs seen up to time step $t$. It encodes context from past inputs and is used to inform predictions at the current and future time steps.\\
+\vspace{8mm}
+
+\item \textbf{Why is sequence order important?}\\
+\textit{Answer:} The temporal ordering of samples encodes causal and dynamic relationships. In activity recognition, a footstep follows a specific kinematic phase; shuffling the time order destroys this structure and eliminates the temporal patterns that distinguish one activity from another.\\
+\vspace{8mm}
+
+\item \textbf{Explain the difference between a feed-forward network and an RNN.}\\
+\textit{Answer:} A feed-forward network maps an input to an output without memory of previous inputs; every sample is processed independently. An RNN processes inputs one time step at a time while carrying a hidden state forward, allowing information from earlier time steps to influence later computations.\\
+\vspace{8mm}
+
+\item \textbf{Explain Backpropagation Through Time.}\\
+\textit{Answer:} BPTT unrolls the RNN across all $T$ time steps to form a computational graph equivalent to a deep feed-forward network with shared weights. The standard chain rule is applied through this unrolled graph to compute gradients with respect to the recurrent weights, which are then updated by the optimizer.\\
+\vspace{8mm}
+
+\item \textbf{Why can gradients vanish during BPTT?}\\
+\textit{Answer:} When the magnitude of the recurrent weight matrix (or its derivative after the activation) is less than one, repeated multiplication across many time steps drives gradients exponentially towards zero: $|\partial h_t / \partial h_{t-k}| \rightarrow 0$ as $k$ increases. This prevents the network from learning long-range dependencies.\\
+\vspace{8mm}
+
+\item \textbf{Why can gradients explode during BPTT?}\\
+\textit{Answer:} When the recurrent weight matrix has spectral radius greater than one, repeated multiplication amplifies gradients exponentially. This causes unstable training and is commonly addressed with gradient clipping.\\
+\vspace{8mm}
+
+\item \textbf{What are long-term dependencies?}\\
+\textit{Answer:} Long-term dependencies are relationships between inputs that are many time steps apart. For example, in a long sentence, the subject near the start determines the correct verb conjugation near the end. Vanilla RNNs struggle to capture these due to vanishing gradients.\\
+\vspace{8mm}
+
+\item \textbf{What is the role of the LSTM cell state?}\\
+\textit{Answer:} The cell state $C_t$ acts as a long-term memory highway that runs across time steps with only multiplicative gate interactions, minimising information loss. Gates selectively add relevant information to or remove irrelevant information from the cell state.\\
+\vspace{8mm}
+
+\item \textbf{What are the forget, input and output gates in LSTM?}\\
+\textit{Answer:} The \textbf{forget gate} $f_t$ determines what fraction of the previous cell state to retain. The \textbf{input gate} $i_t$ determines how much of the new candidate cell state $\tilde{C}_t$ to write into memory. The \textbf{output gate} $o_t$ determines how much of the current cell state to expose as the hidden state $h_t$.\\
+\vspace{8mm}
+
+\item \textbf{What are the reset and update gates in GRU?}\\
+\textit{Answer:} The \textbf{reset gate} $r_t$ controls how much of the previous hidden state is used when computing the candidate state, allowing the model to forget irrelevant history. The \textbf{update gate} $z_t$ interpolates between the previous hidden state and the candidate state, deciding how much the hidden state should change at each step.\\
+\vspace{8mm}
+
+\item \textbf{Compare LSTM and GRU.}\\
+\textit{Answer:} LSTM uses three gates and maintains separate hidden and cell states, giving it greater expressive capacity but higher parameter count. GRU uses two gates and merges the hidden and cell states into a single hidden state, resulting in fewer parameters and faster training. In practice, GRU achieves accuracy comparable to LSTM on many sequence tasks.\\
+\vspace{8mm}
+
+\item \textbf{Why does GRU generally use a simpler gating mechanism than LSTM?}\\
+\textit{Answer:} GRU was designed to achieve the core benefit of LSTM -- mitigating vanishing gradients -- with reduced architectural complexity. The update gate subsumes the roles of both the forget and input gates by coupling the forget and input decisions, and there is no separate cell state, reducing the number of weight matrices and computation.\\
+\vspace{8mm}
+
+\item \textbf{Why should RNN, LSTM and GRU be compared using the same experimental settings?}\\
+\textit{Answer:} Controlled comparison requires that all factors except the recurrent architecture (dataset, preprocessing, split, optimizer, learning rate, batch size, hidden units, epochs) are held constant. Without this, differences in performance cannot be attributed solely to the architectural choice.\\
+\vspace{8mm}
+
+\item \textbf{What does the confusion matrix reveal that accuracy alone does not?}\\
+\textit{Answer:} The confusion matrix reveals class-level performance, showing which specific activities are correctly identified and which are confused with each other. Accuracy aggregates all predictions into a single number and can be misleadingly high when class distributions are imbalanced.\\
+\vspace{8mm}
+
+\item \textbf{Why should macro F1-score be reported for multi-class classification?}\\
+\textit{Answer:} Macro F1 computes the F1-score independently for each class and averages them, giving equal weight to each class regardless of sample count. This prevents the overall metric from being dominated by the majority class, which is especially important when class sizes are unequal.\\
+\vspace{8mm}
+
+\item \textbf{What is the significance of sequence length?}\\
+\textit{Answer:} Longer sequences provide more temporal context, potentially improving accuracy, but also increase computation and the risk of vanishing gradients. Shorter sequences reduce computational cost but may truncate important temporal patterns, leading to lower performance.\\
+\vspace{8mm}
+
+\item \textbf{Why can a CNN be used as a feature extractor for video?}\\
+\textit{Answer:} A CNN learns to detect spatially local patterns (edges, textures, object parts) in image data. When applied to individual video frames, it transforms each 2-D image into a compact feature vector encoding spatial content. These features can then be arranged as a temporal sequence for an RNN/LSTM/GRU.\\
+\vspace{8mm}
+
+\item \textbf{What type of information is extracted by the CNN?}\\
+\textit{Answer:} The CNN extracts spatial features from each frame: low-level features such as edges and colours in early layers, and high-level semantic features such as human body posture, object identity, and scene context in deeper layers.\\
+\vspace{8mm}
+
+\item \textbf{What type of information is learned by the recurrent network?}\\
+\textit{Answer:} The recurrent network learns temporal dynamics: how the CNN feature vectors change across frames, capturing motion patterns, speed, direction of movement, and the temporal order of events that collectively identify an action.\\
+\vspace{8mm}
+
+\item \textbf{Why are CNN features arranged as a sequence before being given to LSTM/GRU?}\\
+\textit{Answer:} A video is inherently sequential; actions unfold over time. Arranging frame features as an ordered sequence $\mathbb{R}^{T \times D}$ preserves temporal order, enabling the LSTM/GRU to model how appearance changes over time, which is essential for distinguishing dynamic actions from static ones.\\
+\vspace{8mm}
+
+\item \textbf{Explain the encoder and decoder in sequence-to-sequence learning.}\\
+\textit{Answer:} The \textbf{encoder} processes the entire input sequence and compresses it into a context vector (the final hidden/cell state). The \textbf{decoder} receives the context vector as its initial state and generates the output sequence one token at a time, conditioning each output on both the context and the previously generated token.\\
+\vspace{8mm}
+
+\item \textbf{What is teacher forcing?}\\
+\textit{Answer:} Teacher forcing is a training strategy for seq2seq models where the ground-truth output token from the previous time step is fed as input to the decoder at the current step, rather than the decoder's own previous prediction. This stabilises training but can introduce a discrepancy between training and inference behaviour (exposure bias).\\
+\vspace{8mm}
+
+\item \textbf{Differentiate token accuracy and sequence accuracy.}\\
+\textit{Answer:} Token accuracy counts the fraction of individual output tokens that are predicted correctly, regardless of whether the full sequence matches. Sequence accuracy counts only those sequences where every single token is correct. Sequence accuracy is always $\leq$ token accuracy because one wrong token invalidates the entire sequence.\\
+\vspace{8mm}
+
+\item \textbf{Why must the test set remain untouched during model selection?}\\
+\textit{Answer:} If the test set is used to tune hyperparameters or select the best model, the chosen model is implicitly optimised for those specific test examples. This causes an over-optimistic estimate of real-world performance and invalidates the evaluation. A separate validation set is used for model selection; the test set is used only for the final, unbiased performance estimate.\\
+\vspace{8mm}
+
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{28. Additional Exercises}
+
+\begin{enumerate}
+\item Replace the 32 recurrent units with 16 and 64 units and study the effect
+on accuracy, F1-score, parameter count and training time.
+\item Compare GRU and LSTM using the same number of recurrent units.
+\item Add a second recurrent layer and investigate whether performance improves.
+\item Compare a bidirectional LSTM with a unidirectional LSTM.
+\item Change the sequence length and study the effect on computational cost.
+\item For the video task, compare LSTM and GRU after extracting identical CNN
+features.
+\item Modify the seq2seq task so that the output sequence has a different
+length from the input sequence.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{29. Expected Outcome}
+
+At the end of the experiment, students should be able to demonstrate the
+complete sequence-learning pipeline:
+
+\[
+\boxed{
+\text{Sequential Data}
+\rightarrow
+\text{Preprocessing}
+\rightarrow
+\text{RNN/LSTM/GRU}
+\rightarrow
+\text{Evaluation}
+}
+\]
+
+and the video-understanding pipeline:
+
+\[
+\boxed{
+\text{Video}
+\rightarrow
+\text{Frames}
+\rightarrow
+\text{CNN Features}
+\rightarrow
+\text{LSTM/GRU}
+\rightarrow
+\text{Action Prediction}
+}
+\]
+
+They should also understand the encoder--decoder formulation:
+
+\[
+\boxed{
+\text{Input Sequence}
+\rightarrow
+\text{Encoder}
+\rightarrow
+\text{Context}
+\rightarrow
+\text{Decoder}
+\rightarrow
+\text{Output Sequence}
+}
+\]
+
+The final report should demonstrate both implementation and interpretation.
+Numerical performance values must be obtained from the student's own
+execution and should not be assumed in advance.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{29. Source Code}
+
+The complete source code for this experiment -- including data preprocessing, RNN/LSTM/GRU
+implementation, training, evaluation, and the CNN--GRU video understanding pipeline -- is
+available at the following GitHub repository:
+
+\begin{center}
+  \url{https://github.com/ssvibitha/DeepLearningLab_2026-27}
+\end{center}
+
+Navigate to the \texttt{Lab6\_RNN} directory for all scripts and notebooks related to
+this experiment.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{30. References}
+
+\begin{enumerate}
+\item Ian Goodfellow, Yoshua Bengio and Aaron Courville,
+\emph{Deep Learning}, MIT Press, 2016.
+
+\item Sepp Hochreiter and Jürgen Schmidhuber,
+``Long Short-Term Memory,'' \emph{Neural Computation}, 1997.
+
+\item Kyunghyun Cho et al.,
+``Learning Phrase Representations using RNN Encoder--Decoder for Statistical
+Machine Translation,'' EMNLP, 2014.
+
+\item Anguita et al.,
+``A Public Domain Dataset for Human Activity Recognition Using Smartphones,''
+ESANN, 2013.
+
+\item Khurram Soomro, Amir Roshan Zamir and Mubarak Shah,
+``UCF101: A Dataset of 101 Human Actions Classes From Videos in the Wild,''
+2012.
+
+\item TensorFlow Documentation:
+\url{https://www.tensorflow.org}
+
+\item Keras Documentation:
+\url{https://keras.io}
+\end{enumerate}
+
+\end{document}
