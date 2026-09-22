@@ -609,12 +609,12 @@ F1-score.
 \hline
 Metric & RNN & LSTM & GRU\\
 \hline
-Accuracy (\%) & & &\\
-Macro Precision (\%) & & &\\
-Macro Recall (\%) & & &\\
-Macro F1 (\%) & & &\\
-Parameters & & &\\
-Training Time (s) & & &\\
+Accuracy (\%) & 84.67 & 95.78 & 96.22 \\
+Macro Precision (\%) & 84.52 & 95.83 & 96.37\\
+Macro Recall (\%) & 84.27 & 95.86 & 96.34\\
+Macro F1 (\%) & 83.99 & 95.82 & 96.30 \\
+Parameters & 1,974 & 6,006 & 4,758 \\
+Training Time (s) & 54.80 & 139.62 & 199.27 \\
 \hline
 \end{tabular}
 \end{center}
@@ -655,9 +655,10 @@ Input gate & No & Yes & No\\
 Output gate & No & Yes & No\\
 Update gate & No & No & Yes\\
 Reset gate & No & No & Yes\\
-Parameters & & &\\
-Training time & & &\\
-Test F1-score & & &\\
+Parameters & 1,974 & 6,006 & 4,758 \\
+Training Time (s) & 54.80 & 139.62 & 199.27 \\
+Test F1-score (\%) & 83.99 & 95.82 & 96.30 \\
+
 \hline
 \end{tabular}
 \end{center}
@@ -696,9 +697,9 @@ When reducing the sequence length, truncate or construct the input consistently.
 \hline
 Sequence Length & RNN F1 & LSTM F1 & GRU F1\\
 \hline
-32 & & &\\
-64 & & &\\
-128 & & &\\
+32 & 78.20\% & 94.20\% & 94.95\%\\
+64 & 72.01\% & 96.71\% & 95.18\% \\
+128 & 81.15\% & 96.29\% & 96.51\% \\
 \hline
 \end{tabular}
 \end{center}
