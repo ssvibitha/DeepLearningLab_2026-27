@@ -937,7 +937,7 @@ Sample & Input Sequence & Predicted Output\\
 5 & [19, 14, 10, 13, 5, 7] & [7, 5, 13, 10, 14, 19]\\
 \hline
 \end{tabular}
-\caption{Sample Predictions on the Synthetic Sequence Reversal Task}
+\caption{Sequence-to-Sequence Input and Output}
 \label{tab:seq2seq_samples}
 \end{table}
 
@@ -1051,25 +1051,29 @@ The following inferences are mandatory:
 
 \begin{enumerate}
 
-\item \textbf{Sensor Signals (Temporal Patterns)}
+\item \textbf{Temporal Patterns observed in Sensor signals}
 
-The following plots show raw inertial sensor signals for three representative activity classes:
-Walking, Walking Upstairs, and Sitting. Each plot contains 128 time steps across the nine sensor
-channels (three-axis body acceleration, three-axis gyroscope and three-axis total acceleration).
+The following plots show raw inertial sensor signals for three activity classes such as 
+Walking, Walking Upstairs, and Sitting. Each plot contains 128 time steps across nine sensor
+channels which includes three-axis body acceleration, three-axis gyroscope and three-axis total acceleration.
 
 \begin{figure}[H]
   \centering
-  \begin{subfigure}[t]{0.32\textwidth}
+  \begin{subfigure}[b]{0.75\textwidth}
     \centering
     \includegraphics[width=\linewidth]{Images/SensorSignalsWalking.png}
     \caption{Walking}
-  \end{subfigure}\hfill
-  \begin{subfigure}[t]{0.32\textwidth}
+  \end{subfigure}
+  \vspace{3mm}
+
+  \begin{subfigure}[b]{0.75\textwidth}
     \centering
     \includegraphics[width=\linewidth]{Images/SensorSignalsWalking Upstairs.png}
     \caption{Walking Upstairs}
-  \end{subfigure}\hfill
-  \begin{subfigure}[t]{0.32\textwidth}
+  \end{subfigure}
+  \vspace{3mm}
+
+  \begin{subfigure}[b]{0.75\textwidth}
     \centering
     \includegraphics[width=\linewidth]{Images/SensorSignalsSitting.png}
     \caption{Sitting}
@@ -1078,18 +1082,17 @@ channels (three-axis body acceleration, three-axis gyroscope and three-axis tota
   \label{fig:sensor_signals}
 \end{figure}
 
+
 \textbf{Inference:}
 \begin{enumerate}[label=\arabic*.]  
-  \item \textit{What temporal pattern is visible?} Walking and Walking Upstairs show periodic, rhythmic oscillations in the acceleration channels, reflecting the repetitive footstep cycle. Sitting exhibits near-zero fluctuations, indicating a stationary posture.
-  \item \textit{Which activities exhibit similar patterns?} Walking and Walking Upstairs share similar oscillatory structure, differing mainly in amplitude and frequency, since both involve a repetitive stride motion. Sitting and Standing are both low-activity signals and can appear visually close.
-  \item \textit{Why is the ordering of measurements important?} The sequence of sensor readings encodes the temporal dynamics of movement. Shuffling the time steps would destroy phase relationships and periodicity, making classification impossible for a model that relies on temporal structure.
+  \item Walking and Walking Upstairs show periodic, rhythmic oscillations in the acceleration channels. This reflects the repetitive footstep cycle. Sitting exhibits near-zero fluctuations. This indicates a stationary posture.
+  \item  Walking and Walking Upstairs share similar oscillatory structure, differing mainly in amplitude and frequency, since both involve a repetitive stride motion. Sitting and Standing are both low activity signals and can appear visually close.
+  \item The sequence of sensor readings shows the temporal dynamics of movement. If the order of time steps is shuffled it would destroy phase relationships and periodicity. This would make classification impossible for a model that relies on temporal structure.
 \end{enumerate}
 
 \vspace{4mm}
 
 \item \textbf{Training and Validation Loss}
-
-Training and validation loss curves are shown below for all three models.
 
 \begin{enumerate}[label=\alph*.]
 
@@ -1119,7 +1122,7 @@ Training and validation loss curves are shown below for all three models.
 
 \end{enumerate}
 
-\textbf{Inference:} The loss curves show that all three models converge within the training epochs. The LSTM and GRU exhibit smoother convergence and lower final validation loss compared to the vanilla RNN, attributed to their gating mechanisms that mitigate vanishing gradients. A small generalization gap between training and validation loss is visible across models, indicating mild overfitting, particularly in the RNN. Loss stabilization beyond epoch $\sim$20 suggests the models have reached their capacity limits under the current hyperparameter configuration.
+\textbf{Inference:} The loss curves show that all three models converge within 30 epochs. The LSTM and GRU exhibit smoother convergence and they both show lower final validation loss compared to RNN model. This is due to the gating mechanisms in GRU and LSTM that reduces the impact of vanishing gradients. A small generalization gap between training and validation loss is visible in all 3 models. This indicates mild overfitting. The model seems to overfit in RNN. It can be seen that the loss has stabilized in all 3 models approximately after the 20th epoch.
 
 \vspace{4mm}
 
@@ -1153,7 +1156,7 @@ Training and validation loss curves are shown below for all three models.
 
 \end{enumerate}
 
-\textbf{Inference:} Both LSTM and GRU reach higher validation accuracy faster than the vanilla RNN, confirming the benefit of gating mechanisms in learning long-range temporal dependencies. The RNN's accuracy plateaus earlier and at a lower level, consistent with its susceptibility to vanishing gradients. The LSTM and GRU show comparable final accuracy, with GRU achieving similar performance using fewer parameters.
+\textbf{Inference:} From the plots it can be seen that both LSTM and GRU reach higher validation accuracy faster than RNN. This shows that the gated mechanism in LSTM and GRU helps in learning long range temporal dependencies better. The RNN's accuracy stops improving earlier and remains lower due to vanishing gradients. LSTM and GRU achieve similar accuracy, but GRU uses fewer parameters.
 
 \vspace{4mm}
 
@@ -1189,10 +1192,10 @@ Training and validation loss curves are shown below for all three models.
 
 \textbf{Inference:}
 \begin{itemize}
-  \item \textit{Highest recognition rate:} LAYING is typically recognised with near-perfect accuracy across all models, as it produces a distinctly flat, low-amplitude sensor profile.
-  \item \textit{Most misclassified activity:} SITTING and STANDING are frequently confused with each other because their sensor signals share low activity levels and similar orientations.
-  \item \textit{Common confusion pairs:} SITTING $\leftrightarrow$ STANDING and WALKING $\leftrightarrow$ WALKING\_UPSTAIRS are the most common error pairs. The RNN produces more off-diagonal entries than LSTM or GRU, confirming its weaker temporal modelling.
-  \item \textit{Consistency across models:} The same activity pairs are confused across RNN, LSTM, and GRU, indicating that the difficulty stems from the inherent signal similarity rather than from model weakness alone.
+  \item Laying is typically recognised with near-perfect accuracy across all models. This is because it produces a distinctly flat, low amplitude sensor profile.
+  \item Sitting and Standing are frequently confused with each other because their sensor signals share low activity levels and similar orientations.
+  \item Sitting and Standing as well as  Walking and Walking upstairs are interchangeably confused together. This is observed in all 3 models. However RNN shows the most misclassifications due to its weaker temporal modelling.
+  \item The same activity pairs are confused across RNN, LSTM, and GRU, indicating that the difficulty comes from the inherent signal similarity rather than from model weakness alone.
 \end{itemize}
 
 \vspace{4mm}
@@ -1206,12 +1209,12 @@ Training and validation loss curves are shown below for all three models.
   \label{fig:model_comparison}
 \end{figure}
 
-\textbf{Inference:} The bar chart illustrates the trade-off among predictive performance, model complexity, and training cost.
+\textbf{Inference:}
 \begin{itemize}
-  \item LSTM achieves the highest accuracy and F1-score owing to its three-gate memory mechanism, but at the cost of the largest parameter count and longest training time.
-  \item GRU closely matches LSTM in accuracy while using fewer parameters (two gates instead of three), offering a better efficiency-performance trade-off.
-  \item The vanilla RNN achieves the lowest accuracy despite being the fastest to train, highlighting the cost of ignoring long-range dependencies.
-  \item For this dataset, GRU presents the best balance: near-LSTM accuracy with lower computational overhead.
+  \item LSTM achieves the highest accuracy and F1-score due to its 3 gate memory mechanism, but at the cost of the largest parameter count and longest training time.
+  \item GRU closely matches LSTM in accuracy while using fewer parameters since it uses two gates instead of three. This results in better efficiency performance trade-off.
+  \item RNN achieves the lowest accuracy despite having lower training time. This highlights the cost of ignoring long-range dependencies.
+  \item For this dataset, GRU presents the best balance having similar accuracy compared to LSTM with lower computational costs.
 \end{itemize}
 
 \vspace{4mm}
@@ -1230,20 +1233,20 @@ Training and validation loss curves are shown below for all three models.
 \begin{enumerate}[label=\alph*.]
 
   \item \textbf{RNN} \\
-  The vanilla RNN shows a non-monotonic response to sequence length. F1-score rises from 78.20\% at $T=32$ to a dip at $T=64$ (72.01\%) before recovering to 81.15\% at $T=128$. This inconsistency reflects the RNN's susceptibility to vanishing gradients -- while more temporal context is available at $T=128$, the gradient signal degrades, preventing reliable learning of longer-range dependencies.
+  RNN shows a non-monotonic response to sequence length. F1-score rises from 78.20\% at $T=32$ to achieving the lowest score at $T=64$ showing 72.01\% score. Then it reaches a peak 81.15\% score at $T=128$. This inconsistency reflects the RNN's susceptibility to vanishing gradients. This shows that the model is unreliable due to its long range dependencies.
 
   \item \textbf{LSTM} \\
-  The LSTM achieves high F1-scores across all sequence lengths (94.20\% at $T=32$, 96.71\% at $T=64$, 96.29\% at $T=128$), demonstrating robust performance regardless of temporal context. The forget and input gates allow the LSTM to selectively retain relevant information, making it far less sensitive to sequence length than the vanilla RNN.
+  LSTM achieves high F1-scores across all sequence lengths. This demonstrates robust performance regardless of temporal context. The forget and input gates in LSTM allows it to selectively retain relevant information. This makes it less sensitive to sequence length.
 
   \item \textbf{GRU} \\
-  The GRU exhibits a steadily increasing trend: 94.95\% at $T=32$, 95.18\% at $T=64$, and 96.51\% at $T=128$. More temporal context consistently improves the GRU's classification, confirming that its streamlined gating mechanism effectively exploits additional time steps without suffering from gradient degradation.
+  GRU exhibits a steady increasing trend. In GEU, more temporal context consistently improves classification. 
 
 \end{enumerate}
 
-\textbf{Overall conclusion:} LSTM and GRU are significantly more robust to changes in sequence length than the vanilla RNN. Longer sequences generally benefit gated architectures, while the RNN's performance remains unstable.
+ Overall LSTM and GRU are more robust to changes in sequence length than RNN.
 
 \vspace{4mm}
-
+\clearpage
 \item \textbf{Video Sample Frames}
 
 \begin{figure}[H]
@@ -1253,31 +1256,36 @@ Training and validation loss curves are shown below for all three models.
   \label{fig:video_frames}
 \end{figure}
 
-\textbf{Inference:} Each frame captures the spatial content of an action at a specific point in time. The CNN extracts spatial features such as human body posture, limb positions, and object interactions from individual frames. The temporal ordering of the 10 feature vectors then allows the LSTM/GRU to learn motion dynamics -- for example, the progressive limb swing cycle in a walking sequence or the characteristic arc in a basketball shot.
+\textbf{Inference:} Each frame captures the spatial content of an action at a specific point in time. The CNN extracts spatial features such as human body posture, limb positions, and object interactions from individual frames. The temporal ordering of the 10 feature vectors then allows the LSTM/GRU to learn motion dynamics such as progressive limb swing cycle in a walking sequence or the arc in a basketball shot.
 
 \vspace{4mm}
 
-\item \textbf{Video Training and Validation Curves}
+\item \textbf{CNN--GRU Training and Validation Loss}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.72\linewidth]{Images/video_loss.png}
-  \caption{CNN--LSTM/GRU Video Model -- Training and Validation Loss}
+  \caption{CNN--GRU Model -- Training and Validation Loss}
   \label{fig:video_loss}
 \end{figure}
+\clearpage
+\textbf{Inference:} Both training and validation loss decline steeply during the initial epochs and smoothly converge near zero by epoch 30.The gap between the validation loss and training loss is close.This demonstrates effective learning and strong generalization with no signs of overfitting.   
+\vspace{4mm}
+
+\item \textbf{CNN--GRU Training and Validation Accuracy}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.72\linewidth]{Images/video_accuracy.png}
-  \caption{CNN--LSTM/GRU Video Model -- Training and Validation Accuracy}
+  \caption{CNN--GRU Model -- Training and Validation Accuracy}
   \label{fig:video_accuracy}
 \end{figure}
 
-\textbf{Inference:} The video model converges quickly because the CNN features are rich, pre-trained representations that require only a compact recurrent classifier on top. The validation accuracy remains close to training accuracy, suggesting good generalisation on the small selected class subset. The final accuracy is higher than that obtained with the HAR dataset using an equivalent recurrent architecture, confirming the effectiveness of pretrained CNN features as temporal sequence inputs.
+\textbf{Inference:} The CNN--GRU model converges quickly because the CNN features contain pre-trained representations that requires a compact recurrent classifier on top. The validation accuracy remains close to training accuracy. This suggests good generalisation on the small class subset. Both validation and training accuracy reaches 100\% confirming the effectiveness of pretrained CNN features as temporal sequence inputs.
 
 \vspace{4mm}
 
-\item \textbf{Video Confusion Matrix (CNN--GRU)}
+\item \textbf{CNN--GRU Confusion Matrix}
 
 \begin{figure}[H]
   \centering
@@ -1286,113 +1294,112 @@ Training and validation loss curves are shown below for all three models.
   \label{fig:video_conf}
 \end{figure}
 
-\textbf{Inference:} The CNN--GRU model correctly classifies the majority of action clips. Minor confusions arise between visually similar actions (e.g., Walking vs.\ Running) where the spatial appearance of frames is similar and differentiation depends on motion speed -- a temporal cue that a short 10-frame sequence may not fully capture. Overall, the confusion matrix confirms that combining pretrained CNN features with a GRU yields an effective video understanding pipeline even with very few training examples.
+\textbf{Inference:} The CNN--GRU model correctly classifies all the action clips. Overall, the confusion matrix confirms that combining pretrained CNN features with a GRU yields an effective video understanding pipeline even with very few training examples.
 
 \end{enumerate}
-
+\clearpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Discussion Questions}
 
 \begin{enumerate}
 
 \item \textbf{What is a recurrent neural network?}\\
-\textit{Answer:} A recurrent neural network (RNN) is a class of neural network designed for sequential data. Unlike feed-forward networks, an RNN maintains a hidden state $h_t$ that is updated at each time step using both the current input $x_t$ and the previous hidden state $h_{t-1}$, enabling the network to model temporal dependencies.\\
-\vspace{8mm} % \underline{\hspace{\linewidth}}
+\textit{Answer:} A recurrent neural network (RNN) is a class of neural network designed for sequential data. Unlike feed-forward networks, an RNN maintains a hidden state $h_t$ that is updated at each time step using both the current input $x_t$ and the previous hidden state $h_{t-1}$. This enables the network to model temporal dependencies.\\
+\vspace{8mm} 
 
 \item \textbf{What information is represented by the hidden state?}\\
-\textit{Answer:} The hidden state $h_t$ is a compressed, learned summary of all inputs seen up to time step $t$. It encodes context from past inputs and is used to inform predictions at the current and future time steps.\\
+\textit{Answer:} The hidden state consists of a compressed learned summary of all inputs seen up to the current time step. It encodes context from past inputs and is used to inform predictions at the current and future time steps.\\
 \vspace{8mm}
 
 \item \textbf{Why is sequence order important?}\\
-\textit{Answer:} The temporal ordering of samples encodes causal and dynamic relationships. In activity recognition, a footstep follows a specific kinematic phase; shuffling the time order destroys this structure and eliminates the temporal patterns that distinguish one activity from another.\\
+\textit{Answer:} The temporal ordering of samples encodes causal and dynamic relationships. In activity recognition, a footstep contributes to a specific kinematic phase. Shuffling the time order destroys this structure and eliminates the temporal patterns that distinguish one activity from another.\\
 \vspace{8mm}
 
 \item \textbf{Explain the difference between a feed-forward network and an RNN.}\\
-\textit{Answer:} A feed-forward network maps an input to an output without memory of previous inputs; every sample is processed independently. An RNN processes inputs one time step at a time while carrying a hidden state forward, allowing information from earlier time steps to influence later computations.\\
+\textit{Answer:} A feed-forward network maps an input to an output without memory of previous inputs. Here, every sample is processed independently. An RNN processes inputs one time step at a time while carrying a hidden state forward. This allows information from earlier time steps to influence later computations.\\
 \vspace{8mm}
 
 \item \textbf{Explain Backpropagation Through Time.}\\
-\textit{Answer:} BPTT unrolls the RNN across all $T$ time steps to form a computational graph equivalent to a deep feed-forward network with shared weights. The standard chain rule is applied through this unrolled graph to compute gradients with respect to the recurrent weights, which are then updated by the optimizer.\\
+\textit{Answer:} Backpropagation Through Time unrolls the RNN across all $T$ time steps to form a computational graph which is equivalent to a deep feed-forward network with shared weights. The standard chain rule is applied through this unrolled graph to compute gradients with respect to the recurrent weights. These weights are then updated by the optimizer.\\
 \vspace{8mm}
 
 \item \textbf{Why can gradients vanish during BPTT?}\\
-\textit{Answer:} When the magnitude of the recurrent weight matrix (or its derivative after the activation) is less than one, repeated multiplication across many time steps drives gradients exponentially towards zero: $|\partial h_t / \partial h_{t-k}| \rightarrow 0$ as $k$ increases. This prevents the network from learning long-range dependencies.\\
+\textit{Answer:} When the magnitude of the recurrent weight matrix (or) its derivative after the activation is less than one, the repeated multiplication across many time steps drives gradients exponentially towards zero. This prevents the network from learning long-range dependencies and results in vanishing gradient problem.\\
 \vspace{8mm}
 
 \item \textbf{Why can gradients explode during BPTT?}\\
-\textit{Answer:} When the recurrent weight matrix has spectral radius greater than one, repeated multiplication amplifies gradients exponentially. This causes unstable training and is commonly addressed with gradient clipping.\\
+\textit{Answer:} When the recurrent weight matrix has values greater than one, the repeated multiplication exponentially increases the value of gradients . This causes unstable training and results in exploding gradient problem. This is commonly addressed with gradient clipping.\\
 \vspace{8mm}
 
 \item \textbf{What are long-term dependencies?}\\
-\textit{Answer:} Long-term dependencies are relationships between inputs that are many time steps apart. For example, in a long sentence, the subject near the start determines the correct verb conjugation near the end. Vanilla RNNs struggle to capture these due to vanishing gradients.\\
-\vspace{8mm}
+\textit{Answer:} Long-term dependencies are relationships between information that occurs far apart in a sequence. For example, a word at the beginning of a sentence may be needed to understand a word near the end. Vanilla RNNs have difficulty remembering such information because of the vanishing gradient problem.\\\vspace{8mm}
 
 \item \textbf{What is the role of the LSTM cell state?}\\
-\textit{Answer:} The cell state $C_t$ acts as a long-term memory highway that runs across time steps with only multiplicative gate interactions, minimising information loss. Gates selectively add relevant information to or remove irrelevant information from the cell state.\\
+\textit{Answer:} The cell state acts as a long-term memory highway that runs across time steps with only multiplicative gate interactions. This minimises information loss. These gates selectively add relevant information or remove irrelevant information from the cell state.\\
 \vspace{8mm}
 
 \item \textbf{What are the forget, input and output gates in LSTM?}\\
-\textit{Answer:} The \textbf{forget gate} $f_t$ determines what fraction of the previous cell state to retain. The \textbf{input gate} $i_t$ determines how much of the new candidate cell state $\tilde{C}_t$ to write into memory. The \textbf{output gate} $o_t$ determines how much of the current cell state to expose as the hidden state $h_t$.\\
+\textit{Answer:} The forget gate determines what fraction of the previous cell state to retain. The input gate determines how much of the new candidate cell state to write into memory. The output gate determines how much of the current cell state to expose as the hidden state.\\
 \vspace{8mm}
 
 \item \textbf{What are the reset and update gates in GRU?}\\
-\textit{Answer:} The \textbf{reset gate} $r_t$ controls how much of the previous hidden state is used when computing the candidate state, allowing the model to forget irrelevant history. The \textbf{update gate} $z_t$ interpolates between the previous hidden state and the candidate state, deciding how much the hidden state should change at each step.\\
+\textit{Answer:} The reset gate controls how much of the previous hidden state is used when computing the candidate state. This allows the model to forget irrelevant history. The update gate operates between the previous hidden state and the candidate state, deciding how much the hidden state should change at each step.\\
 \vspace{8mm}
 
 \item \textbf{Compare LSTM and GRU.}\\
-\textit{Answer:} LSTM uses three gates and maintains separate hidden and cell states, giving it greater expressive capacity but higher parameter count. GRU uses two gates and merges the hidden and cell states into a single hidden state, resulting in fewer parameters and faster training. In practice, GRU achieves accuracy comparable to LSTM on many sequence tasks.\\
+\textit{Answer:} LSTM uses three gates and maintains separate hidden and cell states which gives it greater expressive capacity but higher parameter count. GRU uses two gates and merges the hidden and cell states into a single hidden state, resulting in fewer parameters and faster training. In practice, GRU achieves accuracy comparable to LSTM on many sequence tasks.\\
 \vspace{8mm}
 
 \item \textbf{Why does GRU generally use a simpler gating mechanism than LSTM?}\\
-\textit{Answer:} GRU was designed to achieve the core benefit of LSTM -- mitigating vanishing gradients -- with reduced architectural complexity. The update gate subsumes the roles of both the forget and input gates by coupling the forget and input decisions, and there is no separate cell state, reducing the number of weight matrices and computation.\\
+\textit{Answer:} GRU was designed to achieve the main advantage of LSTM ie. mitigating vanishing gradients. GRU achieves this with reduced architectural complexity. The update gate combines the roles of both the forget and input gates by coupling the forget and input decisions and there is no separate cell state which reduces the number of weight matrices and computation.\\
 \vspace{8mm}
 
 \item \textbf{Why should RNN, LSTM and GRU be compared using the same experimental settings?}\\
-\textit{Answer:} Controlled comparison requires that all factors except the recurrent architecture (dataset, preprocessing, split, optimizer, learning rate, batch size, hidden units, epochs) are held constant. Without this, differences in performance cannot be attributed solely to the architectural choice.\\
+\textit{*Answer:*} Controlled comparison requires that all factors except the recurrent architecture (dataset, preprocessing, split, optimizer, learning rate, batch size, hidden units, and epochs) are kept constant. This ensures that both models are trained and evaluated under the same conditions. Otherwise, a difference in performance may be caused by factors such as a different learning rate or number of epochs, rather than the architecture itself. Therefore, keeping these factors constant allows us to fairly measure the effect of the recurrent architecture.\\
 \vspace{8mm}
 
 \item \textbf{What does the confusion matrix reveal that accuracy alone does not?}\\
-\textit{Answer:} The confusion matrix reveals class-level performance, showing which specific activities are correctly identified and which are confused with each other. Accuracy aggregates all predictions into a single number and can be misleadingly high when class distributions are imbalanced.\\
+\textit{Answer:} The confusion matrix reveals class-level performance, showing which specific activities are correctly identified and which are confused with each other. Accuracy aggregates all predictions into a single number and can be misleading when class distributions are imbalanced.\\
 \vspace{8mm}
 
 \item \textbf{Why should macro F1-score be reported for multi-class classification?}\\
-\textit{Answer:} Macro F1 computes the F1-score independently for each class and averages them, giving equal weight to each class regardless of sample count. This prevents the overall metric from being dominated by the majority class, which is especially important when class sizes are unequal.\\
+\textit{Answer:} Macro F1 computes the F1-score independently for each class and averages them, giving equal weight to each class regardless of sample count. This prevents the overall metric from being dominated by the majority class, which is important when class sizes are unequal.\\
 \vspace{8mm}
 
 \item \textbf{What is the significance of sequence length?}\\
-\textit{Answer:} Longer sequences provide more temporal context, potentially improving accuracy, but also increase computation and the risk of vanishing gradients. Shorter sequences reduce computational cost but may truncate important temporal patterns, leading to lower performance.\\
+\textit{Answer:} Longer sequences provide more temporal context which can potentially improve accuracy, but at the same time increases computation and the risk of vanishing gradients. Shorter sequences reduce computational cost but may truncate important temporal patterns. This leads to lower performance.\\
 \vspace{8mm}
 
 \item \textbf{Why can a CNN be used as a feature extractor for video?}\\
-\textit{Answer:} A CNN learns to detect spatially local patterns (edges, textures, object parts) in image data. When applied to individual video frames, it transforms each 2-D image into a compact feature vector encoding spatial content. These features can then be arranged as a temporal sequence for an RNN/LSTM/GRU.\\
+\textit{Answer:} A CNN learns to detect spatially local patterns such as edges, textures, object parts in image data. When applied to individual video frames, it transforms each 2-D image into a compact feature vector encoding spatial content. These features can then be arranged as a temporal sequence for an RNN or LSTM or GRU model.\\
 \vspace{8mm}
 
 \item \textbf{What type of information is extracted by the CNN?}\\
-\textit{Answer:} The CNN extracts spatial features from each frame: low-level features such as edges and colours in early layers, and high-level semantic features such as human body posture, object identity, and scene context in deeper layers.\\
+\textit{Answer:} The CNN extracts spatial features from each frame which includes low-level features such as edges and colours in early layers and high-level semantic features such as human body posture, object identity and scene context in deeper layers.\\
 \vspace{8mm}
 
 \item \textbf{What type of information is learned by the recurrent network?}\\
-\textit{Answer:} The recurrent network learns temporal dynamics: how the CNN feature vectors change across frames, capturing motion patterns, speed, direction of movement, and the temporal order of events that collectively identify an action.\\
+\textit{Answer:} The recurrent network learns temporal dynamics which tells us how the CNN feature vectors change across frames, capturing motion patterns, speed, direction of movement and the temporal order of events that collectively identify an action.\\
 \vspace{8mm}
 
 \item \textbf{Why are CNN features arranged as a sequence before being given to LSTM/GRU?}\\
-\textit{Answer:} A video is inherently sequential; actions unfold over time. Arranging frame features as an ordered sequence $\mathbb{R}^{T \times D}$ preserves temporal order, enabling the LSTM/GRU to model how appearance changes over time, which is essential for distinguishing dynamic actions from static ones.\\
+\textit{Answer:} A video is inherently sequential where actions unfold over time. Arranging frame features as an ordered sequence preserves temporal order which enables models like LSTM/GRU to model how appearance changes over time which is essential for distinguishing dynamic actions from static ones.\\
 \vspace{8mm}
 
 \item \textbf{Explain the encoder and decoder in sequence-to-sequence learning.}\\
-\textit{Answer:} The \textbf{encoder} processes the entire input sequence and compresses it into a context vector (the final hidden/cell state). The \textbf{decoder} receives the context vector as its initial state and generates the output sequence one token at a time, conditioning each output on both the context and the previously generated token.\\
+\textit{Answer:} The encoder processes the entire input sequence and compresses it into a context vector. The decoder receives the context vector as its initial state and generates the output sequence one token at a time, conditioning each output on both the context and the previously generated token.\\
 \vspace{8mm}
 
 \item \textbf{What is teacher forcing?}\\
-\textit{Answer:} Teacher forcing is a training strategy for seq2seq models where the ground-truth output token from the previous time step is fed as input to the decoder at the current step, rather than the decoder's own previous prediction. This stabilises training but can introduce a discrepancy between training and inference behaviour (exposure bias).\\
+\textit{Answer:} Teacher forcing is a training strategy for seq2seq models where the ground-truth output token from the previous time step is fed as input to the decoder at the current step, rather than the decoder's own previous prediction. This stabilises training but can introduce a discrepancy between training and inference behaviour.\\
 \vspace{8mm}
 
 \item \textbf{Differentiate token accuracy and sequence accuracy.}\\
-\textit{Answer:} Token accuracy counts the fraction of individual output tokens that are predicted correctly, regardless of whether the full sequence matches. Sequence accuracy counts only those sequences where every single token is correct. Sequence accuracy is $\leq$ token accuracy because one wrong token invalidates the entire sequence.\\
+\textit{Answer:} Token accuracy counts the fraction of individual output tokens that are predicted correctly, regardless of whether the full sequence matches. Sequence accuracy counts only those sequences where every single token is correct. Sequence accuracy is less than or equal to token accuracy because one wrong token invalidates the entire sequence.\\
 \vspace{8mm}
 
 \item \textbf{Why must the test set remain untouched during model selection?}\\
-\textit{Answer:} If we use test set during model selection or tuning hyperparameter, the model trains \\
+\textit{Answer} The test set must remain untouched because it is used to give an unbiased estimate of how the final model performs on unseen data. If it is used for model selection or tuning, the model may indirectly adapt to the test data which leads the model to achieve high testing accuracy. This makes the model unreliable to adapt to actual real world datasets.\\
 \vspace{8mm}
 
 \end{enumerate}
