@@ -414,9 +414,9 @@ Report:
 \hline
 Metric & Value\\
 \hline
-Test MSE &\\
-Test MAE &\\
-Mean SSIM &\\
+Test MSE & 0.022779\\
+Test MAE & 0.059762\\
+Mean SSIM & 0.728950\\
 \hline
 \end{tabular}
 \end{center}
@@ -473,8 +473,8 @@ Train both models using the same training and test images.
 \hline
 Model & MSE & MAE & SSIM & Parameters\\
 \hline
-Fully Connected AE & & & &\\
-Convolutional AE & & & &\\
+Fully Connected AE & 0.022779 & 0.059762 & 0.728950 & 211,040 \\
+Convolutional AE & 0.002589 & 0.015037 & 0.973643 & 74,497\\
 \hline
 \end{tabular}
 \end{center}
@@ -588,9 +588,9 @@ Report:
 \hline
 Noise Level & MSE & MAE & SSIM\\
 \hline
-0.1 & & &\\
-0.2 & & &\\
-0.3 & & &\\
+0.1 & 0.003766 & 0.018101 & 0.959378\\
+0.2 & 0.004668 & 0.021268 & 0.944897\\
+0.3 & 0.007008 & 0.029014 & 0.872354\\
 \hline
 \end{tabular}
 \end{center}
@@ -835,9 +835,9 @@ Compare the three reconstruction-based models:
 \hline
 Model & MSE & MAE & SSIM & Parameters\\
 \hline
-Fully Connected AE & & & &\\
-Convolutional AE & & & &\\
-Denoising CAE & & & &\\
+Fully Connected AE & 0.022779 & 0.059762 & 0.728950 & 211,040 \\
+Convolutional AE & 0.002589 & 0.015037 & 0.973643 & 74,497\\
+Denoising CAE & 0.004679 & 0.021278 & 0.944660 & 74,497\\
 \hline
 \end{tabular}
 \end{center}
@@ -850,12 +850,12 @@ objective also contains the KL-divergence term.
 \hline
 VAE Metric & Value\\
 \hline
-Reconstruction Loss &\\
-KL Loss &\\
-Total Loss &\\
-Test MSE &\\
-Test MAE &\\
-Mean SSIM &\\
+Reconstruction Loss & 0.0 \\
+KL Loss & 0.0 \\
+Total Loss & 0.0 \\
+Test MSE & 0.042663 \\
+Test MAE & 0.099256 \\
+Mean SSIM & 0.500027 \\
 \hline
 \end{tabular}
 \end{center}
@@ -938,10 +938,10 @@ difficult to reconstruct.
 \hline
 Model & MSE & MAE & SSIM & Parameters & Time\\
 \hline
-FC Autoencoder & & & & &\\
-Conv. Autoencoder & & & & &\\
-Denoising CAE & & & & &\\
-VAE & & & & &\\
+Fully Connected AE & 0.022779 & 0.059762 & 0.728950 & 211,040 & 22 sec\\
+Convolutional AE & 0.002589 & 0.015037 & 0.973643 & 74,497 & 698 sec\\
+Denoising CAE & 0.004679 & 0.021278 & 0.944660 & 74,497 & 657 sec\\
+VAE & 0.042663 & 0.099256 & 0.500027 & 485,957 & 671 sec\\
 \hline
 \end{tabular}
 \end{center}
@@ -991,10 +991,10 @@ Report:
 \hline
 Latent Dimension & MSE & SSIM & Parameters\\
 \hline
-2 & & &\\
-8 & & &\\
-16 & & &\\
-32 & & &\\
+2 & 0.046838 &  0.434463 & 210130\\
+8 & 0.028525 & 0.665247 & 210520\\
+16 & 0.021986 & 0.738112 & 211040\\
+32 & 0.018799 & 0.771977 & 212080\\
 \hline
 \end{tabular}
 \end{center}
