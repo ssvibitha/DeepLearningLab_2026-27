@@ -1147,122 +1147,124 @@ quality.
 \vspace{5mm}
 
 \item \textbf{What is the purpose of the encoder?}\\[1.5mm]
-\textbf{Answer:} The encoder acts as a dimensionality reduction and feature extraction function, denoted as $z = f_\theta(x)$. Its purpose is to map high-dimensional raw input data (e.g., pixel arrays) into a compact latent vector space. It progressively discards redundant information, noise, and irrelevant variations while preserving essential semantic features. This compressed code captures the underlying coordinates of the data manifold required for faithful reconstruction.
+\textbf{Answer:} The encoder acts as a dimensionality reduction and feature extraction function. It maps high dimensional raw input data into a compact latent vector space. It progressively discards redundant information, noise, and irrelevant variations while preserving essential semantic features. This compressed code captures the most important features of the data needed to reconstruct the original input accurately.
 
 \vspace{5mm}
 
 \item \textbf{What is the purpose of the decoder?}\\[1.5mm]
-\textbf{Answer:} The decoder acts as a generative reconstruction network, denoted as $\hat{x} = g_\phi(z)$. Its primary purpose is to take the low-dimensional latent code from the encoder and reconstruct the original input in high-dimensional space. By inverting the bottleneck compression, it synthesizes an approximation of the input using learned structural priors. The decoder ensures that the latent space retains sufficient information fidelity to reconstruct identifiable, high-quality images.
+\textbf{Answer:} The decoder is a generative reconstruction network. The primary task of a decoder is to reconstruct the original input in a high-dimensional space from the low-dimensional latent code obtained from the encoder. It synthesizes an approximation of the input using learned structural priors by inverting the bottleneck compression. The decoder ensures that the latent space contains enough information fidelity to reconstruct identifiable high quality images.
 
 \vspace{5mm}
 
 \item \textbf{What is a latent representation?}\\[1.5mm]
-\textbf{Answer:} A latent representation (or latent code) is an internal, compressed intermediate vector residing at the bottleneck layer between the encoder and decoder. It represents the data using hidden, unobserved variables that capture the intrinsic coordinates of the underlying data manifold. Rather than storing individual raw pixel values, it encodes high-level features such as stroke thickness, digit identity, angle, and curvature. This lower-dimensional representation facilitates data compression, clustering, and downstream transfer tasks.
+\textbf{Answer:} The decoder is a generative reconstruction network. The primary task of a decoder is to reconstruct the original input in a high-dimensional space from the low-dimensional latent code obtained from the encoder. It synthesizes an approximation of the input using learned structural priors by inverting the bottleneck compression. The decoder ensures that the latent space contains enough information fidelity to reconstruct identifiable high quality images.
 
 \vspace{5mm}
 
 \item \textbf{Why is the latent representation usually smaller than the input?}\\[1.5mm]
-\textbf{Answer:} Constraining the latent dimension to be smaller than the input creates an undercomplete information bottleneck. This architectural constraint prevents the network from simply learning an identity or copy function that trivially memorizes inputs. By forcing compression, the network is compelled to discover compact statistical regularities, correlations, and essential structures. Consequently, it discards noise and retains only the most critical attributes necessary for faithful reconstruction.
+\textbf{Answer:} If the latent dimension is less than the input, there arises an information bottleneck, forcing the network to retain only important aspects of the input data and not allowing it to memorize the input data.
+ Thus, it is possible to reconstruct the original input using just the important information and discarding all the noise.
 
 \vspace{5mm}
 
 \item \textbf{What happens when the latent dimension is too small?}\\[1.5mm]
-\textbf{Answer:} When the latent dimension is excessively restricted (e.g., $d_z = 2$ for complex high-dimensional datasets), an information bottleneck occurs. The network lacks sufficient expressive capacity to store fine-grained structural and high-frequency details. This leads to high reconstruction loss (MSE), loss of fine stroke boundaries, and severe blurriness in the output images. Furthermore, distinct classes or features can overlap or collapse together in latent space, degrading reconstruction fidelity.
+\textbf{Answer:} In case the latent dimension is too constrained (for highly dimensional data), an information bottleneck happens. There is no enough expressive power of the network to capture fine structure and high frequency details. The reconstruction error (MSE) is very high, the fine stroke boundaries are lost and there is high blurriness of the reconstructed images. In addition, different classes/ features might be overlapped or even collapsed in latent space.
 
 \vspace{5mm}
 
 \item \textbf{What happens when the latent dimension is increased?}\\[1.5mm]
-\textbf{Answer:} Increasing the latent dimension expands the capacity of the bottleneck, enabling the network to capture subtle nuances, sharp edges, and high-frequency textures. This monotonically reduces reconstruction error and increases perceptual metrics like SSIM. However, if the latent dimension is made excessively large, the network risks overfitting and learning trivial identity mappings. Overly high dimensionality can also diminish the quality of compression and make latent space clustering or visualization less meaningful.
+\textbf{Answer:} A larger latent dimension means that there is more capacity for information storage within the neural network, making it possible to extract detailed information such as edges and textures. This tends to improve the quality of reconstructed images and lowers the error. However, an excessively large latent dimension will only make the network copy the input image rather than extracting features. This reduces the effectiveness of data compression.
 
 \vspace{5mm}
 
 \item \textbf{Why can a convolutional autoencoder preserve spatial information more effectively?}\\[1.5mm]
-\textbf{Answer:} Convolutional autoencoders (CAEs) preserve spatial information by utilizing local receptive fields, shared weights, and 2D feature maps rather than flattening images into 1D vectors. Flattening in fully connected networks destroys the 2D geometric grid topology, spatial adjacency, and local pixel correlations. CAEs inherently possess translation equivariance, allowing them to detect local visual primitives (edges, curves, loops) regardless of their spatial location. This structural inductive bias results in sharper reconstructions with significantly fewer trainable parameters.
+\textbf{Answer:} Convolutional Autoencoders (CAEs) retain spatial structure due to their use of local receptive fields, weight sharing, and 2-dimensional activation maps instead of flattening the image into a 1D vector. The flattening of an image in a fully connected neural network causes the loss of the 2-dimensional geometric structure, spatially adjacent nature, and local dependencies between the pixels. CAEs have built-in translation equivariance that enables them to identify local visual elements (edges, curves, loops) irrespective of their location.
 
 \vspace{5mm}
 
 \item \textbf{Differentiate an autoencoder and a denoising autoencoder.}\\[1.5mm]
-\textbf{Answer:} A standard autoencoder takes clean data $x$ as both input and target, learning to reconstruct the original input via an undercomplete bottleneck. A denoising autoencoder (DAE) receives a corrupted or noisy version $\tilde{x} = x + \eta$ at its input, while still using the original clean image $x$ as its reconstruction target. While a standard autoencoder primarily performs dimensionality reduction, a DAE learns vector fields that project off-manifold corrupted points back onto the true data manifold. This forces the DAE to learn robust, noise-invariant representations of data structure.
-
+\textbf{Answer:} While a regular autoencoder takes the input vector \(x\) and attempts to reproduce the same input vector after putting it through the bottleneck process, a denoising autoencoder (DAE) takes the corrupted input vector \(\tilde{x} = x + \eta\) as the input while considering the original input vector \(x\) as the target. Hence, the denoising autoencoder will train itself to ignore any kind of noise in the training data and learn the features of interest in the training data.
 \vspace{5mm}
 
 \item \textbf{Why is the clean image used as the target in denoising?}\\[1.5mm]
-\textbf{Answer:} Using the clean image as the target forces the network to learn the underlying manifold of valid, noise-free data rather than reconstructing the corrupting noise. The optimization objective penalizes any residual noise present in the reconstruction, incentivizing the network to extract invariant underlying features. This teaches the model an orthogonal projection from noisy ambient space back to the high-density data manifold. Consequently, the network learns to filter out stochastic perturbations while preserving authentic structural contours.
+\textbf{Answer:} As the clean image serves as the target, the learning process ensures that the network captures the manifold of the noiseless data points instead of trying to reconstruct the noise itself. Thus, the optimization function discourages the presence of any noise in the reconstructed image, encouraging the network to identify the invariant features of the underlying manifold. It results in the learning of an orthogonal projection of the noisy ambient space onto the manifold of dense data points.
 
 \vspace{5mm}
 
 \item \textbf{What happens when the noise level is increased?}\\[1.5mm]
-\textbf{Answer:} As the input noise variance or standard deviation ($\sigma$) increases, the corrupted data points are pushed further away from the clean data manifold. At moderate noise levels, the autoencoder remains robust and effectively removes noise, albeit with slight loss in fine edge sharpness. However, at excessive noise levels, critical structural features and stroke topologies are masked or destroyed. This leads to a steep decline in SSIM, an increase in reconstruction MSE, and blurry or hallucinated reconstructions due to information loss.
+\textbf{Answer:} When the variance or standard deviation of input noise ($\sigma$) increases, the noisy points move farther away from the clean data manifold. In moderate amounts of noise, the autoencoder is resilient and can filter out noise successfully, although there is some loss in edge sharpness. But when there is too much noise, the important structural elements get covered up. Therefore, there is a rapid drop in the value of SSIM, an increase in MSE, and blurring in the reconstructed image.
 
 \vspace{5mm}
 
 \item \textbf{Why are MSE, MAE and SSIM useful for image reconstruction?}\\[1.5mm]
-\textbf{Answer:} MSE (Mean Squared Error) and MAE (Mean Absolute Error) provide objective, pixel-by-pixel numeric measures of reconstruction residual intensity, where MSE penalizes large errors quadratically. However, pixel-wise metrics often fail to capture human perceptual visual quality and can favor uniformly blurred images. SSIM (Structural Similarity Index Measure) addresses this limitation by evaluating degradation of luminance, contrast, and structural inter-pixel dependencies. Combining these metrics provides a balanced evaluation of both numerical pixel accuracy and perceived visual fidelity.
+\textbf{Answer:}  MSE and MAE give pixel‑by‑pixel numbers that show how much the rebuilt image differs from the original. MSE gives penalties for large mistakes. Yet pixel‑by‑pixel numbers do not always show how a human sees the picture and they can make a blurry picture look good. SSIM fixes this problem, by checking how light, contrast and structure have changed between pixels. Using MSE, MAE and SSIM together gives a test of both the numbers and the way the image looks to people.
 
 \vspace{5mm}
 
 \item \textbf{What is a Variational Autoencoder?}\\[1.5mm]
-\textbf{Answer:} A Variational Autoencoder (VAE) is a directed probabilistic generative model that combines deep neural networks with variational Bayesian inference. Unlike deterministic autoencoders, the encoder maps each input to the parameters of a probability distribution (mean $\mu$ and log-variance $\log\sigma^2$) over the latent space. The decoder then samples latent vectors from this distribution to reconstruct the input. By training with an objective that balances reconstruction fidelity and latent regularization, VAEs ensure a continuous, smooth latent space suitable for generative sampling.
+\textbf{Answer:} A Variational Autoencoder (VAE) is a directed generative model that blends deep neural networks with variational Bayesian inference. In a Variational Autoencoder the encoder does not send an input to a point; it sends the input to the parameters of a probability distribution: a mean $ \mu $ and a log-variance $ \log\sigma^2 $. The decoder then takes a sample from this distribution. Uses it to rebuild the input. By training, with an objective that balances how well the input is rebuilt and how tightly the latent codes are kept in check a Variational Autoencoder guarantees that the latent space remains smooth and continuous making it easy to generate samples.
 
 \vspace{5mm}
 
 \item \textbf{How does a VAE differ from a conventional autoencoder?}\\[1.5mm]
-\textbf{Answer:} A conventional autoencoder deterministically maps an input image to an isolated point in latent space, often resulting in gaps, discontinuities, and overfitting. In contrast, a VAE maps inputs to continuous probability density distributions, regularizing the latent space via Kullback-Leibler (KL) divergence against a standard normal prior. This constraint ensures that the latent space is smooth, complete, and devoid of empty ``holes''. Consequently, while conventional autoencoders are limited to reconstruction and compression, VAEs can generate novel, plausible samples by sampling from the prior distribution.
+\textbf{Answer:} A conventional autoencoder maps each input image to a point in latent space. This deterministic mapping often creates gaps, breaks and overfitting. By contrast a VAE maps inputs to smooth probability density functions. The VAE uses Kullback‑Leibler (KL) divergence to keep the latent space close, to a normal prior. This rule makes the latent space smooth, full and free of holes. While a conventional autoencoder can only reconstruct and compress a VAE can also create believable images by sampling from the prior distribution.
 
 \vspace{5mm}
 
 \item \textbf{Why does a VAE learn a distribution instead of a single latent vector?}\\[1.5mm]
-\textbf{Answer:} Learning a distribution introduces controlled stochasticity and continuity into the latent space, preventing the encoder from encoding inputs as isolated, memorized points. By mapping inputs to regions defined by $\mu$ and $\sigma$, neighboring regions in the latent space correspond to semantically similar outputs. This prevents severe discontinuities and ``holes'' where the decoder would output nonsensical artifacts. The distributional formulation also provides a mathematically principled framework for sampling new data points from known prior distributions.
+\textbf{Answer:} The learning of distributions creates noise and smoothes out some parts of the space. This way, the encoder does not only remember but also places the input data into sensible places. When the inputs are mapped into the regions by mu and sigmoid portions of the hidden space, the outcomes come out to be quite alike. The outputs become unreasonable because of this way. The distribution technique enables us to generate data based on our knowledge of mathematics.
 
 \vspace{5mm}
 
 \item \textbf{What is the reparameterization trick?}\\[1.5mm]
-\textbf{Answer:} The reparameterization trick is an algorithmic reformulation that enables gradient backpropagation through stochastic sampling nodes in a neural network. Direct random sampling $z \sim \mathcal{N}(\mu, \sigma^2)$ is non-differentiable because random variables lack continuous gradients with respect to network parameters. The trick isolates stochasticity by sampling an independent auxiliary noise vector $\epsilon \sim \mathcal{N}(0, I)$ and computing the latent vector deterministically as $z = \mu + \sigma \odot \epsilon$. This allows gradients of the loss function to flow directly through $\mu$ and $\sigma$ using standard backpropagation.
+The reparameterization trick is a way to recast the algorithm such that the gradients can be passed backwards through random sampling nodes in a neural network model. Direct random sampling $z \sim \mathcal{N}(\mu, \sigma^2)$ cannot be differentiated due to the fact that the random variables do not have continuous gradients with respect to the parameters of the model. Instead, the trick separates the randomness by drawing a random noise vector $\epsilon \sim \mathcal{N}(0, I)$ and calculating $z = \mu + \sigma \odot \epsilon$ deterministically.
 
 \vspace{5mm}
 
 \item \textbf{Why is $\epsilon$ sampled from a standard normal distribution?}\\[1.5mm]
-\textbf{Answer:} Sampling $\epsilon$ from a standard normal distribution $\mathcal{N}(0, I)$ provides a zero-mean, unit-variance parameter-free stochastic source that is completely independent of the model's weights. This independence ensures that the random generator does not participate in gradient calculation during backpropagation. Additionally, scaling and shifting a standard normal variable by $\sigma$ and $\mu$ mathematically generates the target Gaussian distribution $\mathcal{N}(\mu, \sigma^2)$ exactly. It also aligns directly with the standard Gaussian prior commonly enforced by the KL-divergence term.
+\textbf{Answer:} $\epsilon$ drawn from the standard Gaussian distribution $\mathcal{N}(0, I)$ yields a stochastic source of parameters with mean 0 and variance 1 that is entirely independent of the weights of the model. This independence guarantees that the random number generator does not contribute to the backpropagation of gradients. In addition, scaling and shifting a standard Gaussian by $\sigma$ and $\mu$ respectively results in a Gaussian distribution $\mathcal{N}(\mu, \sigma^2)$, which is precisely what is desired.
 
 \vspace{5mm}
 
 \item \textbf{What is the role of KL divergence in the VAE loss?}\\[1.5mm]
-\textbf{Answer:} The Kullback-Leibler (KL) divergence acts as a statistical regularizer that measures how much the encoder's posterior distribution $q_\phi(z|x)$ deviates from the prior $p(z) = \mathcal{N}(0, I)$. It penalizes distributions with means far from zero or variances diverging from unity, preventing the encoder from clustering classes into isolated, distant regions. This ensures that the latent space remains smooth, centered, and compactly packed without empty voids. Balancing the KL loss with reconstruction loss creates a trade-off between generative smoothness and sample reconstruction sharpness.
+\textbf{Answer:} The Kullback-Leibler (KL) divergence is a kind of statistical regularizer for how much the posterior $q_\phi(z|x)$ produced by the encoder deviates from the prior $p(z)=\mathcal{N}(0, I)$. In other words, it penalizes the cases where the distributions have the means not close to zero and variance not equal to one. This way, the model won't have separated regions of different classes in the latent space. The latent space will be smooth, centered, and densely occupied.
 
 \vspace{5mm}
 
 \item \textbf{What is the prior distribution used in the VAE?}\\[1.5mm]
-\textbf{Answer:} The standard prior distribution used in a VAE is an isotropic multivariate Gaussian, defined as $p(z) = \mathcal{N}(0, I)$. This prior assumes that latent variables are zero-mean, mutually independent, and have unit variance across all dimensions. It provides a simple, continuous, and analytically tractable reference distribution for computing closed-form KL divergence with Gaussian posteriors. Furthermore, its standard normal form makes generating new samples straightforward by directly sampling random vectors from standard normal noise.
+\textbf{Answer:} The usual prior used for VAE is that of an isotropic multivariate Gaussian having the probability density function of $p(z) = \mathcal{N}(0, I)$. This particular prior defines the latent variables to be zero-mean, independent of each other, and unit-variance in all dimensions. This prior provides a simple and analytical prior for determining the closed-form KL-divergence for posterior Gaussians. In addition, the normality of the prior in standard form helps in sample generation.
 
 \vspace{5mm}
 
 \item \textbf{Why is a two-dimensional latent space useful for visualization?}\\[1.5mm]
-\textbf{Answer:} A two-dimensional latent space ($d_z = 2$) allows direct, unprojected Cartesian plotting of latent coordinates without requiring post-hoc dimensionality reduction techniques like PCA or t-SNE. It enables complete visualization of class clustering, class separation boundaries, and manifold topology on a single 2D plane. Researchers can also construct systematic 2D grid scans across coordinate intervals to inspect how digit shapes continuously transform across latent axes. This provides an intuitive, visually interpretable diagnostic tool for assessing latent space organization and smoothness.
+\textbf{Answer:} A two-dimensional latent space ($d_z = 2$) allows for simple visualization of the latent coordinate system by plotting the latent coordinates on a two-dimensional plane without further dimensionality reduction steps such as PCA or t-SNE. This not only facilitates the interpretation of class separability and manifold structure, but also provides an intuitive means to analyze variations of digit shapes across the latent space by exploring it on a two-dimensional grid. In short, a two-dimensional latent space is an easy-to-interpret probe into the representational geometry of the latent space.
 
 \vspace{5mm}
 
 \item \textbf{What does latent-space interpolation demonstrate?}\\[1.5mm]
-\textbf{Answer:} Latent-space interpolation involves moving along a continuous trajectory (such as a straight line $z(\alpha) = (1-\alpha)z_A + \alpha z_B$) between two latent vectors and decoding intermediate points. It demonstrates whether the learned latent space is continuous, compact, and semantically well-ordered. If the decoded images morph smoothly from one digit class to another without producing garbled artifacts, it proves the manifold lacks holes or voids. This confirms that the decoder has learned a meaningful underlying generative representation of the data distribution.
+\textbf{Answer:} The latent-space interpolation works by exploring an arbitrary continuous trajectory (e.g., a straight line $z(\alpha) = (1-\alpha)z_A + \alpha z_B$) in the latent space and decoding the obtained latent vectors as images. This procedure qualitatively confirms that the latent space is continuous, compact, and ordered in a semantically meaningful way. In particular, if the decoded images change in a non-garbled way from one digit class to another, this implies that the latent manifold does not possess holes or gaps. This is a critical property that facilitates decoder learning of the true underlying data distribution.
 
 \vspace{5mm}
 
 \item \textbf{Why can a VAE generate new images?}\\[1.5mm]
-\textbf{Answer:} A VAE can generate new images because its training objective regularizes the encoder distribution to approximate a known, tractable prior $p(z) = \mathcal{N}(0, I)$. Because the latent space is continuous and dense, almost any latent vector sampled from this prior maps to a valid point on the data manifold. To synthesize a novel image, one simply draws a random sample $z \sim \mathcal{N}(0, I)$ and passes it through the trained decoder. The decoder then reconstructs a realistic synthetic image possessing the characteristic features of the training domain.
+\textbf{Answer:} A VAE is able to generate novel images because it's training objective regularizes the encoder distribution to be close to a known, tractable prior $p(z) = \mathcal{N}(0, I)$.
+Because the latent space is continuous and dense, almost every latent vector drawn from this distribution will correspond to a valid point on the data manifold. To synthesize a novel image, one just draws a random sample $z \sim \mathcal{N}(0, I)$ and passes it through the trained decoder, which will reconstruct a realistic synthetic image with the characteristic features of the training domain.
 
 \vspace{5mm}
 
 \item \textbf{Why might some VAE-generated images be unclear?}\\[1.5mm]
-\textbf{Answer:} VAE-generated images often appear blurry because pixel-wise reconstruction losses (such as MSE) penalize errors globally and encourage the model to output conditional expectation averages when uncertain. Additionally, the KL divergence constraint forces latent distributions to overlap, causing trade-offs between reconstruction sharpness and latent regularity. When generative capacity is constrained or when the decoder attempts to bridge overlapping class boundaries, it averages multi-modal possibilities. This leads to soft, low-pass filtered reconstructions that lack sharp high-frequency edge details.
+\textbf{Answer:}The images generated by VAE tend to be blurry because the pixel-wise reconstruction loss (e.g., MSE) penalizes the network for global errors and encourages it to learn the conditional expectation of the distribution. Furthermore, the KL divergence term in the loss function forces the distributions in the latent space to overlap, resulting in a trade-off between reconstruction quality and latent space regularity. Generative capacity being constrained or the decoder trying to interpolate between different modes in the latent space results in the learned model outputting a blurred version of any multi-modal distribution in the training set.
 
 \vspace{5mm}
 
 \item \textbf{What is the difference between reconstruction and generation?}\\[1.5mm]
-\textbf{Answer:} Reconstruction is a conditional mapping process where an existing input image $x$ is encoded into latent space and recreated as $\hat{x} \approx x$. Its goal is to minimize information loss and maximize fidelity relative to a specific source image. In contrast, generation creates entirely novel synthetic data samples from scratch by sampling random latent vectors $z$ from a prior distribution without referencing any specific input image. While reconstruction evaluates encoding-decoding precision, generation tests the model's ability to sample broadly from the learned distribution.
+\textbf{Answer:} Reconstruction is a process where an existing input image x is turned into a latent space representation and then rebuilt as x equal to x. The purpose is to make sure that there is little information lost and that the result is very close to the original image. On the hand generation is when completely new data is created from nothing by taking random latent vectors z from a certain distribution and not looking at any specific input image. While reconstruction checks how well the model can encode and decode generation checks how well the model can create samples, from the distribution it has learned.
 
 \vspace{5mm}
 
 \item \textbf{Why should test images remain unseen during training?}\\[1.5mm]
-\textbf{Answer:} Keeping test images strictly unseen during training is fundamental for evaluating the model's true generalization performance on out-of-sample data. If test images were exposed during training, the network could trivially memorize pixel patterns rather than learning the intrinsic data manifold. Evaluating unseen test data confirms that the autoencoder has captured robust, generalizable representations rather than overfitting to specific training exemplars. It also provides an unbiased assessment of real-world reconstruction capability and anomaly detection reliability.
+\textbf{Answer:} I think that keeping test images hidden during training is essential for determining how the model will perform on new data. If test images were visible to the model during training the model could remember pixel patterns of learning the real shape of the data. Testing the model on test images shows that the autoencoder has learned good general representations instead of just copying specific training examples. It also gives a view of how well the model can reconstruct images in the real world and how reliable it is, at detecting unusual pictures.
+
 \end{enumerate}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
