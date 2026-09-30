@@ -1,4 +1,3 @@
-
 \documentclass[10pt]{article}
 
 \usepackage[a4paper,margin=0.65in]{geometry}
@@ -344,26 +343,21 @@ Loss & Binary Cross-Entropy\\
 \end{center}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
 \section*{8. Required Analysis of the Basic Autoencoder}
 
 \textbf{Plot 1: Original versus Reconstructed Images}
 
-Display at least 10 test images in a grid.
 
-For every image, show:
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{Images/fc_ae_reconstruction.png}
+\caption{Original vs Reconstructed images produced by Fully Connected Autoencoder}
+\end{figure}
 
-\[
-\text{Original}\quad|\quad\text{Reconstruction}.
-\]
+\textbf{Inference:} The image compares original MNIST test digits versus outcomes generated from Fully Connected Autoencoder. The reconstructed data gets the digit's class and orientation right, but shows some blurriness and softness of the strokes. The process of flattening a 2D image into a 1D vector loses spatial locality, pushing the fully connected layer to learn correlations on a more global level which induces low-pass filtering according to the MSE criterion. As we see, the fully connected auto encoder does manage to learn relevant compressed representations, but does not have the spatial inductive bias that is necessary for high-fidelity reconstruction.
 
-Students must comment on:
-
-\begin{itemize}
-\item preservation of digit shape;
-\item loss of fine details;
-\item blurred regions;
-\item differences between easy and difficult samples.
-\end{itemize}
+\vspace{5mm}
 
 \textbf{Plot 2: Training and Validation Reconstruction Loss}
 
@@ -373,8 +367,14 @@ Students must comment on:
 \item Curves: Training loss and validation loss
 \end{itemize}
 
-\textbf{Required inference:} Determine whether the model converges and whether
-there is evidence of overfitting.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\linewidth]{Images/fc_ae_training_validation_loss.png}
+\caption{Training and validation reconstruction loss (Binary Cross-Entropy) versus training epochs for the Fully Connected Autoencoder.}
+\end{figure}
+
+\textbf{Inference:} As can be seen from the graph, the Binary Cross-Entropy loss decreases rapidly during the first five epochs, after which there is a slow decrease up to the 17th epoch, after which the curves overlap, which means that there is no overfitting. Due to the limitation imposed by the bottleneck, it becomes impossible for the network to memorize each data point individually, meaning it becomes possible to learn how to reconstruct with the help of the Adam Optimizer.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{9. Reconstruction Metrics}
@@ -491,6 +491,15 @@ Display:
 \text{CAE Reconstruction}.
 \]
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{Images/fc_vs_cae_reconstruction.png}
+\caption{Reconstruction comparison across Original MNIST test digits, Fully Connected AE reconstructions and Convolutional Autoencoder}
+\end{figure}
+
+\textbf{Inference:} Through convolution, it is easier for the model to maintain proximity of adjacent pixels and their features, such as edges and curves. Through the CAE, it can be observed that the digits in the image are better and clearer compared to fully connected auto encoder.
+
+
 \textbf{Required inference:}
 
 Discuss how preserving spatial locality through convolution affects image
@@ -573,6 +582,17 @@ For at least 10 images, display:
 \text{Denoised}.
 \]
 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{Images/denoising_comparison.png}
+\caption{Clean vs. Noisy vs. Denoised images}
+\end{figure}
+
+\textbf{Inference:} It is clear from this that the denoising autoencoder is successful in eliminating noise but also retaining the necessary features in the digits. The Denoising CAE reduces the noise and connects the disconnected strokes by mapping the noisy inputs back onto the clean data manifold. From the image above, it is evident that the denoised images resemble the clean images with smoother and connected strokes.
+
+\vspace{5mm}
+
 \textbf{Plot 5: Noise Level vs. Reconstruction Quality}
 
 For each noise level, calculate:
@@ -580,6 +600,34 @@ For each noise level, calculate:
 \[
 MSE,\quad MAE,\quad SSIM.
 \]
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\linewidth]{Images/noise_level_mse.png}
+\caption{Comparison of MSE of Denoising autoencoder for different noise levels}
+\end{figure}
+
+\textbf{Inference:}
+
+\vspace{5mm}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\linewidth]{Images/noise_level_mae.png}
+\caption{Comparison of MAE of Denoising autoencoder for different noise levels}
+\end{figure}
+
+\textbf{Inference:}
+
+\vspace{5mm}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\linewidth]{Images/noise_level_ssim.png}
+\caption{Comparison of SSIM of Denoising autoencoder for different noise levels}
+\end{figure}
+
+\textbf{Inference:}
 
 Report:
 
@@ -597,9 +645,9 @@ Noise Level & MSE & MAE & SSIM\\
 
 \textbf{Required inference:}
 
-Explain how increasing corruption affects reconstruction quality and identify
-whether the denoising model is able to recover the major structure of the
-original image.
+The higher the noise level, the greater the MSE and MAE become while the SSIM decreases, which shows that the reconstruction quality is getting worse and worse.
+The model still retains the main structure of the original image and achieves good denoising even in the case of higher corruption.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{15. Variational Autoencoder}
@@ -742,6 +790,7 @@ A compact architecture is:
 \end{tikzpicture}
 \end{center}
 
+\clearpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{18. Exploring the VAE Latent Space}
 
@@ -759,11 +808,16 @@ images in a two-dimensional plane.
 The labels are used only for visualization; they are not supplied to the VAE
 during training.
 
-\textbf{Required inference:}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.72\linewidth]{Images/vae_latent_space.png}
+\caption{Two-dimensional latent space ($z_1$ vs. $z_2$) of the Variational Autoencoder, color-coded by MNIST test set ground-truth digit labels (0--9).}
+\end{figure}
 
-Students should describe whether samples belonging to the same digit occupy
-similar regions and whether different digits overlap.
+\textbf{Inference:} It is clear from the 2D scatter plot that the latent space for the VAE model is compact, smooth, centered around the origin and consists of distinct clusters for digit classes without any form of label guidance. The uniquely structured digits (''1'', ''0'', ''7'') are located in distant areas, while visually similar digits (''3'', ''5'', ''8'', ''9'') have overlapping clusters. The clustering pattern is a result of the KL divergence constraint which imposes an approximation of $\mathcal{N}(0, I)$ for all the posterior distributions of the encoder network, thus not allowing isolated clusters and creating continuous, hollow-free manifold.
 
+
+\clearpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{19. Generating New Images with the VAE}
 
@@ -775,20 +829,23 @@ z\sim\mathcal{N}(0,I).
 
 Pass the sampled latent vectors through the decoder.
 
+\vspace{5mm}
+
 \textbf{Plot 7: Randomly Generated Images}
 
 Generate at least 25 images using randomly sampled latent vectors.
 
 Display them in a grid.
 
-Students should determine:
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.68\linewidth]{Images/vae_generated_images.png}
+\caption{Randomly generated sample images by VAE}
+\end{figure}
 
-\begin{itemize}
-\item whether the generated images resemble handwritten digits;
-\item whether digit shapes are recognizable;
-\item whether there is visible variation among generated samples; and
-\item whether some samples are ambiguous or unrealistic.
-\end{itemize}
+\textbf{Inference:} The 5 x 5 grid contains 25 images that have been generated from 25 samples drawn from the VAE prior as $z \sim \mathcal{N}(0, I)$ and then decoded; no input images have been used for this generation process. All but two of the generated images can be identified as handwritten digits such as 0, 1, 6, 7, 8 or 9, which exhibit reasonable variability in terms of stroke thickness and curvatures, indicating that the decoder maps prior probability density on the actual manifold of digits. Some of the images lying at the boundaries between classes look somewhat blurred, which is understandable given the 2D nature of the bottleneck.
+
+\clearpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{20. Latent Space Interpolation}
@@ -816,14 +873,20 @@ Use values such as:
 
 Decode every interpolated vector.
 
+\vspace{5mm}
+
 \textbf{Plot 8: Latent Space Interpolation}
 
 Display the decoded images in sequence.
 
-\textbf{Required inference:}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.72\linewidth]{Images/vae_latent_space.png}
+\caption{Latent space interpolation of the images of digits given by Variational Autoencoder}
+\end{figure}
 
-Describe whether the decoded image changes smoothly as the latent vector moves
-between two points.
+\textbf{Inference:} 
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{21. Reconstruction Comparison Across Models}
@@ -861,143 +924,12 @@ Mean SSIM & 0.500027 \\
 \end{center}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{22. Plot Visualization}
+\section*{22. Source Code }
 
-This section presents the complete visual and quantitative experimental results obtained from evaluating the Fully Connected Autoencoder, Convolutional Autoencoder, Denoising Autoencoder, and Variational Autoencoder on the MNIST handwritten digit benchmark. For each required plot, the generated figure is presented alongside a detailed four-part analytical inference addressing:
-\begin{enumerate}[label=(\roman*)]
-\item \textbf{Description}: What the plot shows (input, architecture, components, axes, metrics).
-\item \textbf{Observed Trend}: Quantitative and qualitative behaviors observed during evaluation.
-\item \textbf{Underlying Mechanism}: Theoretical and architectural principles explaining the observed phenomena.
-\item \textbf{Conclusion}: Key practical and methodological takeaways.
-\end{enumerate}
+\noindent\textbf{Source:} Github\\
+\noindent\textbf{Github Repository Link:}
 
-%-----------------------------------------------------------
-\subsection*{Plot 1: Original versus Reconstructed Images (Basic FC Autoencoder)}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.88\linewidth]{Images/fc_ae_reconstruction.png}
-\caption{Reconstruction results of the Fully Connected Autoencoder ($d_z = 16$). Top row: Original MNIST test digits. Bottom row: Corresponding decoded reconstructions $\hat{x}$.}
-\end{figure}
-
-\textbf{Inference:} The plot compares original MNIST test digits with reconstructions from the Fully Connected Autoencoder ($d_z = 16$). The reconstructed outputs correctly capture digit class identity and orientation, but exhibit visible blurring and softened stroke edges, reflected in a moderate $\text{SSIM} = 0.728950$ and $\text{MSE} = 0.022779$. Flattening 2D images to 1D discards spatial locality, forcing fully connected layers to learn pixel correlations globally, which promotes low-pass smoothing under MSE loss. This confirms that while a fully connected AE learns meaningful compressed representations, it lacks the spatial inductive bias needed for sharp, high-fidelity reconstruction.
-
-%-----------------------------------------------------------
-\subsection*{Plot 2: Training and Validation Loss for Basic Autoencoder}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.68\linewidth]{Images/fc_ae_training_validation_loss.png}
-\caption{Training and validation reconstruction loss (Binary Cross-Entropy) versus training epochs for the Fully Connected Autoencoder.}
-\end{figure}
-
-\textbf{Inference:} The plot shows training and validation Binary Cross-Entropy loss over 20 epochs for the Fully Connected Autoencoder. Both curves drop steeply in the first 4 epochs then gradually plateau near $0.095$, with training and validation loss remaining tightly coupled throughout, indicating no overfitting. The bottleneck dimension ($d_z = 16$) acts as an implicit regularizer, preventing the $211,040$ parameters from memorizing individual samples. The smooth convergence confirms that the Adam optimizer and the chosen architecture are well-suited for stable reconstruction learning on the MNIST subset.
-
-%-----------------------------------------------------------
-\subsection*{Plot 3: Fully Connected AE versus Convolutional AE Reconstruction}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.88\linewidth]{Images/fc_vs_cae_reconstruction.png}
-\caption{Reconstruction comparison across models: Original MNIST test digits (top row), Fully Connected AE reconstructions (middle row), and Convolutional Autoencoder reconstructions (bottom row).}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.68\linewidth]{Images/conv_ae_loss.png}
-\caption{Training and validation loss progression for the Convolutional Autoencoder over 20 epochs.}
-\end{figure}
-
-\textbf{Inference:} The CAE reconstructions are sharply superior to FC-AE outputs on identical test digits. The CAE achieves $\text{SSIM} = 0.973643$ versus $0.728950$ for FC-AE, and reduces MSE nearly tenfold ($0.002589$ vs $0.022779$), all with $64.7\%$ fewer parameters ($74{,}497$ vs $211{,}040$). Convolutional layers exploit local receptive fields, weight sharing, and 2D translation equivariance, preserving spatial structure that FC layers lose by flattening. This demonstrates that spatial inductive bias is essential for high-fidelity image reconstruction, making CAEs the preferred architecture over fully connected autoencoders.
-
-%-----------------------------------------------------------
-\subsection*{Plot 4: Clean versus Noisy versus Denoised Images}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.88\linewidth]{Images/denoising_comparison.png}
-\caption{Denoising performance: Original clean digits (top row), noisy corrupted inputs with Gaussian noise $\sigma = 0.2$ (middle row), and recovered denoised reconstructions (bottom row).}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.68\linewidth]{Images/denoising_ae_loss.png}
-\caption{Training and validation loss curves for the Denoising Convolutional Autoencoder.}
-\end{figure}
-
-\textbf{Inference:} The plot shows clean digits, heavily corrupted inputs ($\sigma = 0.2$ Gaussian noise), and the denoised reconstructions side by side. Despite significant grain and obscured stroke boundaries in the noisy inputs, the DCAE recovers clean, legible digits achieving $\text{SSIM} = 0.944660$ and $\text{MSE} = 0.004679$. By training with noisy inputs against clean targets, the network learns to project off-manifold corrupted points back onto the valid digit manifold, rather than simply copying its input. This confirms that denoising autoencoders learn the underlying data structure, enabling effective image restoration under substantial corruption.
-
-%-----------------------------------------------------------
-\subsection*{Plot 5: Noise Level versus Reconstruction Quality}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.75\linewidth]{Images/noise_level_vs_metrics.png}
-\caption{Quantitative reconstruction metrics (MSE, MAE, and SSIM) plotted against increasing Gaussian noise levels ($\sigma \in \{0.1, 0.2, 0.3\}$).}
-\end{figure}
-
-\textbf{Inference:} The plot depicts how reconstruction quality (MSE, MAE, SSIM) degrades as Gaussian noise level increases from $\sigma = 0.1$ to $0.3$. At $\sigma = 0.1$, the model achieves SSIM $= 0.959$; at $\sigma = 0.2$, SSIM remains high at $0.945$; but at $\sigma = 0.3$, SSIM drops sharply to $0.872$, revealing a non-linear degradation beyond a noise threshold. Low-to-moderate noise preserves stroke topology, allowing convolutional kernels to distinguish signal from noise, while high noise masks structural features and pushes inputs far off the learned data manifold. This demonstrates that the denoising autoencoder is robust within a moderate noise range but loses recovery ability when input corruption exceeds the training distribution.
-
-%-----------------------------------------------------------
-\subsection*{Plot 6: VAE Latent-Space Visualization}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.72\linewidth]{Images/vae_latent_space.png}
-\caption{Two-dimensional latent space ($z_1$ vs. $z_2$) of the Variational Autoencoder, color-coded by MNIST test set ground-truth digit labels (0--9).}
-\end{figure}
-
-\textbf{Inference:} The 2D scatter plot reveals that the VAE latent space is compact, smoothly distributed, and centered at the origin, with distinct digit classes forming identifiable clusters entirely without label supervision. Structurally unique digits (``1'', ``0'', ``7'') occupy well-separated regions, while visually similar digits (``3'', ``5'', ``8'', ``9'') overlap gracefully at cluster boundaries. This organized structure arises from the KL divergence penalty, which forces each encoder posterior to approximate $\mathcal{N}(0, I)$, preventing isolated clusters and producing a continuous, void-free manifold. Unlike deterministic autoencoders, the VAE latent space is globally smooth and semantically structured, enabling principled generative sampling.
-
-%-----------------------------------------------------------
-\subsection*{Plot 7: Randomly Generated Images with VAE}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.68\linewidth]{Images/vae_generated_images.png}
-\caption{Novel handwritten digits generated by sampling random latent vectors from the standard normal prior $z \sim \mathcal{N}(0, I)$ and decoding through the VAE.}
-\end{figure}
-
-\textbf{Inference:} The $5 \times 5$ grid displays 25 images synthesized by sampling $z \sim \mathcal{N}(0, I)$ from the VAE prior and decoding, with no real input images used. Most generated samples are recognizable as handwritten digits (``0'', ``1'', ``6'', ``7'', ``8'', ``9'') with natural variation in stroke thickness and curvature, validating that the decoder maps prior density to the true digit manifold. Some samples at class boundaries appear slightly ambiguous or blurry, which is expected since the 2D bottleneck forces decoder outputs to interpolate between adjacent class regions. Overall, the diversity and recognizability of samples confirm the VAE operates as a genuine generative model, not merely a compressor.
-
-%-----------------------------------------------------------
-\subsection*{Plot 8: Latent Space Interpolation}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.88\linewidth]{Images/vae_interpolation.png}
-\caption{Linear latent space interpolation $z(\alpha) = (1-\alpha)z_A + \alpha z_B$ for $\alpha \in [0, 1]$ between two latent vectors decoded through the VAE.}
-\end{figure}
-
-\textbf{Inference:} Linear interpolation $z(\alpha) = (1-\alpha)z_A + \alpha z_B$ across 11 steps produces a seamless sequence of decoded images that morph smoothly from digit $z_A$ to digit $z_B$, with no abrupt jumps, noise artifacts, or nonsensical intermediate shapes. This smoothness arises because the VAE's KL regularization ensures every point on the interpolation line lies within a high-probability region of the prior, where the decoder has been trained to produce valid outputs. In contrast, deterministic autoencoders often contain unpopulated voids in latent space, causing interpolated points to decode into garbled images. The smooth morphing confirms that the VAE has learned a continuous, globally consistent semantic manifold rather than isolated point encodings.
-
-%-----------------------------------------------------------
-\subsection*{Plot 9: Training and Validation Reconstruction Loss for the VAE}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.68\linewidth]{Images/vae_reconstruction_loss.png}
-\caption{Reconstruction loss component for the Variational Autoencoder across training epochs.}
-\end{figure}
-
-\textbf{Inference:} The VAE reconstruction loss (binary cross-entropy component of ELBO) decreases steadily from $\approx 0.24$ at epoch 1 to $\approx 0.16$ by epoch 15, with training and validation curves remaining tightly coupled and exhibiting no overfitting. However, the final test MSE of $0.042663$ and SSIM of $0.500027$ are significantly worse than the deterministic CAE ($\text{MSE} = 0.002589$, $\text{SSIM} = 0.974$), directly reflecting the fundamental trade-off between reconstruction sharpness and the KL regularization constraint. The KL penalty restricts the latent distribution to $\mathcal{N}(0, I)$, sacrificing pixel-level precision in favor of smooth, continuous, and generatively useful latent representations. This illustrates the core difference between deterministic and probabilistic autoencoders: VAEs trade reconstruction accuracy for generative capability.
-
-%-----------------------------------------------------------
-\subsection*{Plot 10: Reconstruction Error Distribution and High-Error Outlier Analysis}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.68\linewidth]{Images/reconstruction_error_distribution.png}
-\caption{Distribution (histogram) of per-image Mean Squared Reconstruction Errors on the MNIST test set.}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.88\linewidth]{Images/high_error_images.png}
-\caption{Visualization of test samples exhibiting the highest reconstruction errors: Original digit (top row) versus reconstructed output (bottom row).}
-\end{figure}
-
-\textbf{Inference:} The histogram shows a strongly right-skewed per-image MSE distribution: the majority of test samples cluster in a narrow low-error range ($e_i \in [0.005, 0.025]$), with a sparse tail extending beyond $e_i > 0.06$. High-error outliers correspond to atypical handwriting: fragmented strokes, extreme slants, or ambiguous digit glyphs that occur rarely in the training distribution. Since autoencoders minimize aggregate loss, common patterns receive sharp reconstructions while rare, idiosyncratic samples are smoothed toward the population mean, degrading their visual quality. This relationship directly links reconstruction error magnitude to visual quality degradation, and demonstrates that per-image MSE is a reliable unsupervised signal for anomaly detection.
+\url{https://github.com/ssvibitha/DeepLearningLab_2026-27/blob/main/Lab7_Autoencoders/DL_Lab7.ipynb}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{23. Reconstruction Error Distribution}
@@ -1015,14 +947,19 @@ e_i=
 
 Plot a histogram of $e_i$ over the test set.
 
-Students should identify:
 
-\begin{itemize}
-\item the typical reconstruction-error range;
-\item whether the distribution is concentrated or spread out;
-\item possible high-error samples; and
-\item representative images corresponding to high reconstruction error.
-\end{itemize}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\linewidth]{Images/reconstruction_error_distribution.png}
+\caption{Distribution (histogram) of per-image Mean Squared Reconstruction Errors on the MNIST test set.}
+\end{figure}
+
+
+\textbf{Inference:} The graph reveals a very right-skewed distribution where the majority of images have low reconstruction errors, and a small number of them have high reconstruction errors.
+High reconstruction error images typically depict unique handwriting patterns, such as broken characters, highly skewed characters, and unclear digits.
+This is due to the fact that the autoencoder picks up common patterns more easily than unique ones.
+
+\clearpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{24. Required High-Error Image Analysis}
@@ -1031,25 +968,15 @@ Select the five test images having the largest reconstruction errors.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.88\linewidth]{Images/high_error_images.png}
-\caption{The top-5 test samples exhibiting the largest reconstruction error ($e_i$). Top row: Original test images. Bottom row: Model reconstructions.}
+\includegraphics[width=0.48\linewidth]{Images/high_error_images.png}
+\caption{Images having the largest reconstruction errors}
 \end{figure}
 
-\begin{center}
-\begin{tabular}{|c|p{3.5cm}|p{8.5cm}|}
-\hline
-Sample & Structural Characteristics & Reason for High Reconstruction Error\\
-\hline
-1 & Fragmented / broken stroke lines & Discontinuous stroke topology deviates from typical continuous digits, leading to low-pass smoothing across gaps.\\
-2 & Heavy stroke thickness and extreme slant & High pixel density along non-standard angular orientations under-represented in the latent distribution.\\
-3 & Ambiguous digit glyph (hybrid 4/9 or 3/5) & Stroke geometry falls on the decision boundary between classes, causing ambiguous blended decoding.\\
-4 & Extremely faint or thin loop geometry & Low pixel intensity relative to background threshold causes the decoder to attenuate or omit faint edges.\\
-5 & Asymmetrical stroke elongation & Unusually wide or squashed aspect ratio penalizes pixel-wise MSE significantly against mean digit models.\\
-\hline
-\end{tabular}
-\end{center}
 
-\textbf{Analysis:} These outlier samples demonstrate that autoencoders behave as statistical regularizers: they effectively reconstruct canonical patterns while treating rare, idiosyncratic stroke deformations as noise and smoothing them toward the dataset mean.
+\textbf{Inference:} Large values of reconstruction error are found in handwritten images that contain stroke discontinuities, odd slants, faint strokes, or peculiar digit formations.
+These rare patterns pose more difficulties for the autoencoder to be reconstructed correctly.
+The model is able to learn common digit patterns better and would often smooth rare patterns to form common shapes.
+Consequently, reconstruction error can help identify rare patterns of handwriting.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{25. Consolidated Results}
@@ -1070,46 +997,8 @@ VAE & 0.042663 & 0.099256 & 0.500027 & 485,957 & 671 sec\\
 The values must be obtained from the student's own execution.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{26. Required Inferences}
 
-All mandatory inferences have been systematically documented in detail within Section 22 (\textbf{Plot Visualization}) directly beneath their respective figures using the four-part analytical framework (What does the plot show, What trend is observed, Why might the observed trend occur, What conclusion can be drawn).
-
-A consolidated comparative synthesis of the mandatory analytical themes is summarized below:
-
-\begin{enumerate}
-\item \textbf{Effect of Latent Dimension on Reconstruction:}
-Increasing the latent bottleneck capacity ($d_z \in \{2, 8, 16, 32\}$) monotonically improves reconstruction quality (MSE drops from $0.046838$ to $0.018799$; SSIM rises from $0.434463$ to $0.771977$). A severe bottleneck forces excessive loss of high-frequency stroke details, while larger latent vectors preserve sharper geometric edges at the expense of compression efficiency.
-
-\item \textbf{Difference between Fully Connected and Convolutional Reconstruction:}
-Convolutional autoencoders significantly outperform fully connected autoencoders in visual fidelity (CAE achieves $\text{SSIM} = 0.973643$ vs. $\text{SSIM} = 0.728950$ for FC-AE; MSE is nearly $10\times$ lower) while utilizing $64.7\%$ fewer parameters ($74,497$ vs. $211,040$). Preserving 2D spatial locality and translation equivariance avoids the severe edge blurring caused by 1D vector flattening.
-
-\item \textbf{Effect of Gaussian Noise Level:}
-Reconstruction degradation scales non-linearly with input noise standard deviation ($\sigma \in \{0.1, 0.2, 0.3\}$). While the network demonstrates strong resilience at $\sigma \le 0.2$ ($\text{SSIM} \ge 0.94$), severe corruption at $\sigma = 0.3$ causes SSIM to drop to $0.872354$ as noise artifacts begin to mask digit stroke boundaries.
-
-\item \textbf{Ability of Denoising AE to Recover Image Structure:}
-By learning an orthogonal projection from the corrupted off-manifold space back onto the clean data manifold, the Denoising CAE suppresses background noise and reconnects fragmented strokes, achieving clean reconstructions ($\text{MSE} = 0.004679$, $\text{SSIM} = 0.944660$).
-
-\item \textbf{Characteristics of the VAE Latent Distribution:}
-Regularized by the Kullback-Leibler divergence $D_{KL}(q_\phi(z|x) \parallel \mathcal{N}(0, I))$, the VAE latent distribution is smooth, continuous, and centered at the origin without isolated clusters or unbounded voids.
-
-\item \textbf{Structure of the 2D VAE Latent Space:}
-Digits form distinct semantic clusters in the 2D plane ($z_1, z_2$) in an unsupervised manner. Morphologically similar digits (e.g., 3, 5, 8) lie adjacent with gentle boundary transitions, enabling smooth class morphing.
-
-\item \textbf{Quality and Diversity of Generated Samples:}
-Sampling random latent coordinates from the prior $z \sim \mathcal{N}(0, I)$ produces diverse, structurally plausible synthetic handwritten digits spanning multiple classes, validating that the decoder maps prior density to the true data manifold.
-
-\item \textbf{Smoothness of Latent-Space Interpolation:}
-Linear interpolation along geodesics $z(\alpha) = (1-\alpha)z_A + \alpha z_B$ yields seamless continuous morphing without artifacts, proving the absence of ``holes'' in the learned manifold.
-
-\item \textbf{Relationship between Reconstruction Error and Visual Quality:}
-Lower MSE and higher SSIM correlate directly with crisp edge boundaries, high contrast, and absence of visual blur. SSIM serves as a more perceptually consistent metric than MSE for evaluating stroke structure.
-
-\item \textbf{Differences between Deterministic and Probabilistic Latent Representations:}
-Deterministic autoencoders map inputs to fixed point vectors, yielding sharp reconstructions but fractured latent spaces unsuited for generation. VAEs learn continuous probability density distributions $(\mu, \sigma^2)$, trading off marginal reconstruction sharpness for principled generative sampling and interpolation.
-\end{enumerate}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{27. Additional Latent-Dimension Study}
+\section*{26. Additional Latent-Dimension Study}
 
 Repeat the basic autoencoder using:
 
@@ -1134,11 +1023,20 @@ Latent Dimension & MSE & SSIM & Parameters\\
 
 \textbf{Plot 10: Latent Dimension vs. Reconstruction MSE}
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\linewidth]{Images/latent_dimension_vs_mse.png}
+\caption{Latent dimension vs. Reconstruction MSE for basic autoencoder}
+\end{figure}
+
+
+\textbf{Inference:}
+
 Students should explain the trade-off between compression and reconstruction
 quality.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{28. Discussion Questions}
+\section*{27. Discussion Questions}
 
 \begin{enumerate}
 \item \textbf{What is an autoencoder?}\\[1.5mm]
@@ -1268,7 +1166,7 @@ Because the latent space is continuous and dense, almost every latent vector dra
 \end{enumerate}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{29. Additional Exercises}
+\section*{28. Additional Exercises}
 
 \begin{enumerate}
 \item Train the convolutional autoencoder with latent dimensions of 4, 8, 16
@@ -1287,7 +1185,7 @@ representations.
 \end{enumerate}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{30. Expected Outcome}
+\section*{29. Expected Outcome}
 
 At the end of the experiment, students should be able to demonstrate the
 complete image-representation and reconstruction pipeline:
@@ -1341,7 +1239,7 @@ analysis. Numerical performance values must be obtained from the student's
 own execution.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{31. References}
+\section*{30. References}
 
 \begin{enumerate}
 \item Ian Goodfellow, Yoshua Bengio and Aaron Courville,
