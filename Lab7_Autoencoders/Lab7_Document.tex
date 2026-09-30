@@ -7,6 +7,7 @@
 \usepackage{array}
 \usepackage{float}
 \usepackage{hyperref}
+\usepackage{bookmark}
 \usepackage{enumitem}
 \usepackage{xcolor}
 \usepackage{tikz}
@@ -500,11 +501,6 @@ Display:
 \textbf{Inference:} Through convolution, it is easier for the model to maintain proximity of adjacent pixels and their features, such as edges and curves. Through the CAE, it can be observed that the digits in the image are better and clearer compared to fully connected auto encoder.
 
 
-\textbf{Required inference:}
-
-Discuss how preserving spatial locality through convolution affects image
-reconstruction.
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{12. Denoising Autoencoder}
 
@@ -591,7 +587,7 @@ For at least 10 images, display:
 
 \textbf{Inference:} It is clear from this that the denoising autoencoder is successful in eliminating noise but also retaining the necessary features in the digits. The Denoising CAE reduces the noise and connects the disconnected strokes by mapping the noisy inputs back onto the clean data manifold. From the image above, it is evident that the denoised images resemble the clean images with smoother and connected strokes.
 
-\vspace{5mm}
+\clearpage
 
 \textbf{Plot 5: Noise Level vs. Reconstruction Quality}
 
@@ -607,8 +603,7 @@ MSE,\quad MAE,\quad SSIM.
 \caption{Comparison of MSE of Denoising autoencoder for different noise levels}
 \end{figure}
 
-\textbf{Inference:}
-
+\textbf{Inference:} As the value of the noise standard deviation increases from $\sigma = 0.1$ to $0.3$, the reconstruction MSE also increases. The slope becomes much steeper after $\sigma = 0.2$. The reason, for this is the nature of the mean squared error. The mean squared error punishes pixel deviations very harshly. The mean squared error punishes pixel deviations very harshly.
 \vspace{5mm}
 
 \begin{figure}[H]
@@ -617,8 +612,7 @@ MSE,\quad MAE,\quad SSIM.
 \caption{Comparison of MAE of Denoising autoencoder for different noise levels}
 \end{figure}
 
-\textbf{Inference:}
-
+\textbf{Inference:} The Mean Absolute Error rises steadily from 0.018101 at $\sigma = 0.1$ to 0.029014 at $\sigma = 0.3$. Because MAE measures residual errors uniformly across all pixels without squaring this steady upward trend confirms a direct and consistent degradation, in pixel-level fidelity and background noise suppression as input corruption grows.
 \vspace{5mm}
 
 \begin{figure}[H]
@@ -627,7 +621,9 @@ MSE,\quad MAE,\quad SSIM.
 \caption{Comparison of SSIM of Denoising autoencoder for different noise levels}
 \end{figure}
 
-\textbf{Inference:}
+\textbf{Inference:} The Structural Similarity Index remains high at noise levels with 0.959378 at $\sigma = 0.1$ and 0.944897, at $\sigma = 0.2$. When the noise rises to $\sigma = 0.3$ The Structural Similarity Index drops noticeably to 0.872354. This shows that convolutional denoising filters keep structures intact when the corruption is mild. However heavy noise really hurts structural coherence, contrast and edge definition.
+
+\vspace{5mm}
 
 Report:
 
@@ -643,7 +639,7 @@ Noise Level & MSE & MAE & SSIM\\
 \end{tabular}
 \end{center}
 
-\textbf{Required inference:}
+\textbf{Inference:}
 
 The higher the noise level, the greater the MSE and MAE become while the SSIM decreases, which shows that the reconstruction quality is getting worse and worse.
 The model still retains the main structure of the original image and achieves good denoising even in the case of higher corruption.
@@ -797,6 +793,8 @@ A compact architecture is:
 Since the latent dimension is two, students can visualize the encoded test
 images in a two-dimensional plane.
 
+\vspace{5mm}
+
 \textbf{Plot 6: VAE Latent Space}
 
 \begin{itemize}
@@ -811,10 +809,10 @@ during training.
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.72\linewidth]{Images/vae_latent_space.png}
-\caption{Two-dimensional latent space ($z_1$ vs. $z_2$) of the Variational Autoencoder, color-coded by MNIST test set ground-truth digit labels (0--9).}
+\caption{VAE Latent space}
 \end{figure}
 
-\textbf{Inference:} It is clear from the 2D scatter plot that the latent space for the VAE model is compact, smooth, centered around the origin and consists of distinct clusters for digit classes without any form of label guidance. The uniquely structured digits (''1'', ''0'', ''7'') are located in distant areas, while visually similar digits (''3'', ''5'', ''8'', ''9'') have overlapping clusters. The clustering pattern is a result of the KL divergence constraint which imposes an approximation of $\mathcal{N}(0, I)$ for all the posterior distributions of the encoder network, thus not allowing isolated clusters and creating continuous, hollow-free manifold.
+\textbf{Inference:} It is clear from the 2D scatter plot that the latent space for the VAE model is compact, smooth, centered around the origin and consists of distinct clusters for digit classes without any form of label guidance. The uniquely structured digits (1, 0, 7) are located in distant areas, while visually similar digits (3, 5, 8, 9) have overlapping clusters. The clustering pattern is a result of the KL divergence constraint which imposes an approximation of $\mathcal{N}(0, I)$ for all the posterior distributions of the encoder network, thus not allowing isolated clusters and creating continuous, hollow-free manifold.
 
 
 \clearpage
@@ -881,12 +879,12 @@ Display the decoded images in sequence.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.72\linewidth]{Images/vae_latent_space.png}
+\includegraphics[width=1\linewidth]{Images/vae_interpolation.png}
 \caption{Latent space interpolation of the images of digits given by Variational Autoencoder}
 \end{figure}
 
-\textbf{Inference:} 
-
+\textbf{Inference:} The decoded trajectory across $\alpha \in [0 1]$ shows an continuous change from digit 7 to intermediate shapes that look like 9, 8 and 3 and finally ends at digit 2. There are no corrupted parts in the transition. This clean flow proves that the VAEs Gaussian prior and KL divergence regularization help create a dense and continuous latent manifold. There are no gaps or sudden jumps, in the latent space. The entire path stays connected and well-behaved
+\clearpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{21. Reconstruction Comparison Across Models}
@@ -959,7 +957,6 @@ Plot a histogram of $e_i$ over the test set.
 High reconstruction error images typically depict unique handwriting patterns, such as broken characters, highly skewed characters, and unclear digits.
 This is due to the fact that the autoencoder picks up common patterns more easily than unique ones.
 
-\clearpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{24. Required High-Error Image Analysis}
@@ -1030,10 +1027,8 @@ Latent Dimension & MSE & SSIM & Parameters\\
 \end{figure}
 
 
-\textbf{Inference:}
+\textbf{Inference:} Changing the latent dimension from $d_z = 2$ to $d_z = 32$ makes the reconstruction MSE fall sharply from 0.046838 to 0.018799. The biggest drop happens between $d_z = 2$ and $d_z = 8$. When the bottleneck is very small, with $d_z = 2$ the latent dimension cannot keep the variations in digit strokes. When the latent dimension is larger the latent dimension gives room to rebuild the fine structural details accurately. This shows the tradeoff: more compression means less reconstruction quality and less compression means better reconstruction.
 
-Students should explain the trade-off between compression and reconstruction
-quality.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{27. Discussion Questions}
