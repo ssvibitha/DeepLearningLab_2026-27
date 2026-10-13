@@ -1,0 +1,3282 @@
+\documentclass[10pt]{article}
+
+% ============================================================
+% PACKAGES
+% ============================================================
+
+\usepackage[a4paper,margin=0.65in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\usetikzlibrary{
+positioning,
+arrows.meta,
+shapes.geometric,
+fit,
+calc
+}
+
+% ============================================================
+% FORMATTING
+% ============================================================
+
+\setlist{nosep,leftmargin=*}
+\renewcommand{\arraystretch}{1.2}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2pt}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=blue,
+    citecolor=blue
+}
+
+% ============================================================
+% TIKZ STYLES
+% ============================================================
+
+\tikzset{
+block/.style={
+draw,
+rounded corners,
+minimum width=1.55cm,
+minimum height=0.60cm,
+align=center,
+fill=blue!10,
+font=\scriptsize
+},
+attn/.style={
+draw,
+rounded corners,
+minimum width=1.55cm,
+minimum height=0.60cm,
+align=center,
+fill=green!12,
+font=\scriptsize
+},
+arrow/.style={
+-{Latex[length=2mm]},
+thin
+}
+}
+
+% ============================================================
+% DOCUMENT
+% ============================================================
+
+\begin{document}
+
+% ============================================================
+% TITLE
+% ============================================================
+
+\begin{center}
+
+{\large\textbf{Shiv Nadar University Chennai}}\\[2mm]
+
+{\normalsize\textbf{CS3807 -- Deep Learning Laboratory}}\\[2mm]
+
+{\large\textbf{Experiments 8, 9}}\\[1mm]
+
+{\normalsize
+\textbf{
+Effect of Attention Type and Attention Position\\
+in a Pretrained ResNet50
+}}
+
+\end{center}
+
+\vspace{3mm}
+
+% ============================================================
+% COURSE DETAILS
+% ============================================================
+
+\begin{center}
+\begin{tabular}{|p{3.5cm}|p{8.7cm}|p{2.1cm}|}
+\hline
+\textbf{Degree \& Branch}
+&
+B.Tech Artificial Intelligence \& Data Science
+&
+Semester V
+\\
+\hline
+
+\textbf{Subject Code \& Name}
+&
+CS3807 -- Deep Learning Laboratory
+&
+AY: 2026--27
+\\
+\hline
+\end{tabular}
+\end{center}
+
+% ============================================================
+\section*{1. Objective}
+% ============================================================
+
+The objective of this experiment is to understand how different attention
+mechanisms modify a pretrained convolutional neural network and how the
+\textbf{position at which attention is inserted} influences image
+classification performance.
+
+A single pretrained architecture,
+
+\[
+\boxed{\text{ResNet50 pretrained on ImageNet}}
+\]
+
+is used throughout the experiment.
+
+Students will investigate:
+
+\begin{itemize}
+
+\item channel attention;
+
+\item spatial attention;
+
+\item sequential channel--spatial attention;
+
+\item lightweight self-attention;
+
+\item different positions for inserting attention within ResNet50;
+
+\item single-stage and multi-stage attention;
+
+\item attention ordering;
+
+\item additional established attention mechanisms; and
+
+\item qualitative interpretation using internal attention maps and Grad-CAM.
+
+\end{itemize}
+
+The experiment emphasizes that the effectiveness of attention depends not
+only on the attention mechanism itself, but also on the characteristics of
+the feature representation on which it operates.
+
+% ============================================================
+\section*{2. Learning Outcomes}
+% ============================================================
+
+After completing this experiment, students will be able to:
+
+\begin{enumerate}
+
+\item explain the stage-wise architecture of a pretrained ResNet50;
+
+\item distinguish early, intermediate, and late convolutional features;
+
+\item explain the motivation behind attention mechanisms;
+
+\item implement channel attention;
+
+\item implement spatial attention;
+
+\item implement sequential channel--spatial attention;
+
+\item implement a lightweight self-attention mechanism;
+
+\item insert an attention module at different stages of a pretrained network;
+
+\item analyze the influence of attention position;
+
+\item compare different attention mechanisms under a controlled experimental
+protocol;
+
+\item analyze classification accuracy and class-wise performance;
+
+\item visualize internal attention maps;
+
+\item generate Grad-CAM explanations;
+
+\item distinguish an internal attention map from a post-hoc explanation map;
+
+\item analyze accuracy--complexity trade-offs; and
+
+\item perform controlled ablation studies.
+
+\end{enumerate}
+
+% ============================================================
+\section*{3. Dataset}
+% ============================================================
+
+\textbf{Recommended Dataset: TensorFlow Flowers (\texttt{tf\_flowers})}
+
+The TensorFlow Flowers dataset contains natural RGB flower images belonging
+to five classes:
+
+\begin{center}
+\texttt{daisy},
+\quad
+\texttt{dandelion},
+\quad
+\texttt{roses},
+\quad
+\texttt{sunflowers},
+\quad
+\texttt{tulips}.
+\end{center}
+
+The images contain variations in:
+
+\begin{itemize}
+
+\item scale;
+
+\item viewpoint;
+
+\item illumination;
+
+\item background clutter;
+
+\item flower size;
+
+\item color;
+
+\item texture; and
+
+\item object location.
+
+\end{itemize}
+
+These variations make the dataset suitable for studying the behavior of
+attention mechanisms.
+
+% ============================================================
+\subsection*{3.1 Image Preprocessing}
+% ============================================================
+
+Resize every input image to
+
+\[
+224\times224\times3.
+\]
+
+The image should be preprocessed using the preprocessing procedure expected
+by the ImageNet-pretrained ResNet50.
+
+Suitable data augmentation may include:
+
+\begin{itemize}
+
+\item random horizontal flipping;
+
+\item small rotations;
+
+\item random zoom;
+
+\item random translation; and
+
+\item mild contrast variation.
+
+\end{itemize}
+
+The same augmentation strategy must be maintained for all model comparisons.
+
+% ============================================================
+\subsection*{3.2 Dataset Split}
+% ============================================================
+
+Use the same training, validation, and testing split for every experiment:
+
+\[
+\boxed{
+70\% : 15\% : 15\%
+}
+\]
+
+for
+
+\[
+\text{Training : Validation : Testing}.
+\]
+
+The exact same samples should be retained in each subset for all ablation
+experiments.
+
+This is necessary to ensure that differences in performance are caused by
+changes in the model rather than changes in the dataset split.
+
+% ============================================================
+\section*{4. Pretrained Architecture: ResNet50}
+% ============================================================
+
+ResNet50 pretrained using ImageNet is used as the
+\textbf{only backbone architecture} in this experiment.
+
+For an input image
+
+\[
+I\in\mathbb{R}^{224\times224\times3},
+\]
+
+the major ResNet50 stages produce approximately the following feature
+dimensions:
+
+\begin{center}
+
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{ResNet50 Stage}
+&
+\textbf{Spatial Resolution}
+&
+\textbf{Channels}
+\\
+\hline
+
+Stem + MaxPool
+&
+$56\times56$
+&
+64
+\\
+\hline
+
+conv2\_x
+&
+$56\times56$
+&
+256
+\\
+\hline
+
+conv3\_x
+&
+$28\times28$
+&
+512
+\\
+\hline
+
+conv4\_x
+&
+$14\times14$
+&
+1024
+\\
+\hline
+
+conv5\_x
+&
+$7\times7$
+&
+2048
+\\
+\hline
+
+\end{tabular}
+
+\end{center}
+
+As the network becomes deeper:
+
+\[
+\boxed{
+\text{Spatial Resolution}\downarrow
+}
+\]
+
+while
+
+\[
+\boxed{
+\text{Feature Channels}\uparrow
+}
+\]
+
+and the representation generally progresses from low-level visual
+information toward higher-level semantic information.
+
+% ============================================================
+\section*{5. Understanding ResNet50 Feature Hierarchy}
+% ============================================================
+
+The approximate interpretation of different stages is:
+
+\begin{itemize}
+
+\item \textbf{Early features:}
+edges, colors, orientations, boundaries, and simple textures.
+
+\item \textbf{Intermediate features:}
+local patterns, repeated structures, flower parts, petal arrangements, and
+shape information.
+
+\item \textbf{Late features:}
+high-level object structures and class-discriminative semantic information.
+
+\end{itemize}
+
+Therefore, the same attention mechanism may produce different behavior when
+inserted at different locations.
+
+% ============================================================
+\section*{6. Why Attention Position Matters}
+% ============================================================
+
+Attention is not independent of the features on which it operates.
+
+Suppose an attention module receives
+
+\[
+F\in\mathbb{R}^{H\times W\times C}.
+\]
+
+The values of
+
+\[
+H,\qquad W,\qquad C
+\]
+
+and the semantic meaning of the feature tensor change significantly with
+network depth.
+
+Therefore:
+
+\begin{itemize}
+
+\item \textbf{early-stage attention} operates on high-resolution,
+low-level visual information;
+
+\item \textbf{middle-stage attention} operates on intermediate features
+containing both spatial and semantic information; and
+
+\item \textbf{late-stage attention} operates on low-resolution,
+high-level semantic representations.
+
+\end{itemize}
+
+Thus, students should investigate both:
+
+\[
+\boxed{\text{Which attention mechanism should be used?}}
+\]
+
+and
+
+\[
+\boxed{\text{Where should the attention mechanism be inserted?}}
+\]
+
+% ============================================================
+\section*{7. Candidate Attention Positions}
+% ============================================================
+
+Define four candidate attention positions in ResNet50.
+
+\[
+P_1:
+\text{ after conv2\_x},
+\]
+
+\[
+P_2:
+\text{ after conv3\_x},
+\]
+
+\[
+P_3:
+\text{ after conv4\_x},
+\]
+
+\[
+P_4:
+\text{ after conv5\_x}.
+\]
+
+The corresponding feature dimensions are:
+
+\begin{center}
+
+\begin{tabular}{|c|c|c|c|}
+\hline
+
+\textbf{Position}
+&
+\textbf{Location}
+&
+\textbf{Resolution}
+&
+\textbf{Channels}
+\\
+\hline
+
+$P_1$
+&
+After conv2\_x
+&
+$56\times56$
+&
+256
+\\
+\hline
+
+$P_2$
+&
+After conv3\_x
+&
+$28\times28$
+&
+512
+\\
+\hline
+
+$P_3$
+&
+After conv4\_x
+&
+$14\times14$
+&
+1024
+\\
+\hline
+
+$P_4$
+&
+After conv5\_x
+&
+$7\times7$
+&
+2048
+\\
+\hline
+
+\end{tabular}
+
+\end{center}
+
+For the principal laboratory exercise, students should concentrate on
+
+\[
+\boxed{
+P_2,\quad P_3,\quad P_4
+}
+\]
+
+because $P_1$ contains comparatively high-resolution features and may
+substantially increase the computational cost of some attention mechanisms.
+
+% ============================================================
+\section*{8. Baseline Model}
+% ============================================================
+
+The baseline is the pretrained ResNet50 without any additional attention
+mechanism.
+
+\begin{center}
+
+\begin{tikzpicture}[node distance=5mm]
+
+\node[block] (a)
+{Input\\$224\times224\times3$};
+
+\node[block,right=of a] (b)
+{ResNet50\\Pretrained};
+
+\node[block,right=of b] (c)
+{Global Average\\Pooling};
+
+\node[block,right=of c] (d)
+{Dropout};
+
+\node[block,right=of d] (e)
+{Dense\\5 Classes};
+
+\foreach \x/\y in {a/b,b/c,c/d,d/e}
+\draw[arrow] (\x)--(\y);
+
+\end{tikzpicture}
+
+\end{center}
+
+The baseline establishes the reference performance against which the
+attention-based models are compared.
+
+% ============================================================
+\section*{9. Channel Attention}
+% ============================================================
+
+Consider a feature tensor
+
+\[
+F\in\mathbb{R}^{H\times W\times C}.
+\]
+
+Channel attention determines the relative importance of different feature
+channels.
+
+Global average pooling is first used to generate a channel descriptor:
+
+\[
+z_c
+=
+\frac{1}{HW}
+\sum_{i=1}^{H}
+\sum_{j=1}^{W}
+F(i,j,c).
+\]
+
+Thus,
+
+\[
+z\in\mathbb{R}^{C}.
+\]
+
+The channel descriptor is transformed using two learnable transformations:
+
+\[
+M_c(F)
+=
+\sigma
+\left(
+W_2
+\delta
+\left(
+W_1z
+\right)
+\right),
+\]
+
+where:
+
+\begin{itemize}
+
+\item $\delta(\cdot)$ denotes a nonlinear activation such as ReLU;
+
+\item $\sigma(\cdot)$ denotes the sigmoid activation;
+
+\item $W_1$ reduces the channel representation; and
+
+\item $W_2$ restores the channel dimension.
+
+\end{itemize}
+
+The refined feature tensor is:
+
+\[
+F_c
+=
+F\odot M_c(F).
+\]
+
+Channel attention attempts to answer:
+
+\[
+\boxed{\text{Which feature channels are important?}}
+\]
+
+A reduction ratio of
+
+\[
+r=16
+\]
+
+may be used as the default setting throughout the laboratory experiment.
+
+The reduction ratio need not be treated as a separate mandatory ablation.
+
+% ============================================================
+\section*{10. Spatial Attention}
+% ============================================================
+
+Spatial attention determines the spatial regions that should receive greater
+importance.
+
+For the input feature tensor
+
+\[
+F\in\mathbb{R}^{H\times W\times C},
+\]
+
+compute average pooling across channels:
+
+\[
+F_{\mathrm{avg}}
+=
+\operatorname{Mean}_{c}(F),
+\]
+
+and maximum pooling across channels:
+
+\[
+F_{\mathrm{max}}
+=
+\operatorname{Max}_{c}(F).
+\]
+
+Both tensors have dimensions
+
+\[
+H\times W\times1.
+\]
+
+Concatenate them:
+
+\[
+F_s
+=
+[
+F_{\mathrm{avg}}
+\Vert
+F_{\mathrm{max}}
+].
+\]
+
+The spatial attention map is then computed as
+
+\[
+M_s(F)
+=
+\sigma
+\left(
+\operatorname{Conv}_{7\times7}(F_s)
+\right).
+\]
+
+Therefore,
+
+\[
+M_s(F)
+\in
+\mathbb{R}^{H\times W\times1}.
+\]
+
+The spatially refined feature is
+
+\[
+F_s'
+=
+F\odot M_s(F).
+\]
+
+Spatial attention answers:
+
+\[
+\boxed{\text{Which spatial locations are important?}}
+\]
+
+% ============================================================
+\section*{11. Sequential Channel--Spatial Attention}
+% ============================================================
+
+Channel and spatial attention can be sequentially applied.
+
+First,
+
+\[
+F_c
+=
+M_c(F)\odot F.
+\]
+
+Then,
+
+\[
+F_{cs}
+=
+M_s(F_c)\odot F_c.
+\]
+
+The overall structure becomes:
+
+\[
+\boxed{
+F
+\rightarrow
+\text{Channel Attention}
+\rightarrow
+\text{Spatial Attention}
+\rightarrow
+F_{cs}
+}
+\]
+
+This arrangement first determines
+
+\[
+\text{``what is important''}
+\]
+
+and then determines
+
+\[
+\text{``where it is important.''}
+\]
+
+A simplified diagram is shown below.
+
+\begin{center}
+
+\begin{tikzpicture}[node distance=7mm]
+
+\node[block] (a)
+{Feature\\Tensor};
+
+\node[attn,right=of a] (b)
+{Channel\\Attention};
+
+\node[attn,right=of b] (c)
+{Spatial\\Attention};
+
+\node[block,right=of c] (d)
+{Refined\\Features};
+
+\draw[arrow] (a)--(b);
+\draw[arrow] (b)--(c);
+\draw[arrow] (c)--(d);
+
+\end{tikzpicture}
+
+\end{center}
+
+% ============================================================
+\section*{12. Self-Attention}
+% ============================================================
+
+Self-attention allows spatial locations to interact directly with other
+spatial locations.
+
+For
+
+\[
+F\in\mathbb{R}^{H\times W\times C},
+\]
+
+flatten the spatial dimensions:
+
+\[
+X\in\mathbb{R}^{N\times C},
+\]
+
+where
+
+\[
+N=HW.
+\]
+
+Generate the query, key, and value matrices:
+
+\[
+Q=XW_Q,
+\]
+
+\[
+K=XW_K,
+\]
+
+and
+
+\[
+V=XW_V.
+\]
+
+The attention matrix is
+
+\[
+A
+=
+\operatorname{softmax}
+\left(
+\frac{QK^T}{\sqrt{d}}
+\right),
+\]
+
+where $d$ is the dimension of the query/key representation.
+
+The attended output is
+
+\[
+Y=AV.
+\]
+
+After reshaping the output back to the original spatial structure, a residual
+formulation may be used:
+
+\[
+F_{\mathrm{SA}}
+=
+F
++
+\gamma
+\operatorname{reshape}(Y),
+\]
+
+where $\gamma$ is a learnable scaling parameter.
+
+Self-attention attempts to answer:
+
+\[
+\boxed{
+\text{Which spatial features are related to other spatial features?}
+}
+\]
+
+Since the attention matrix has dimension approximately
+
+\[
+N\times N,
+\]
+
+its computational requirements increase rapidly as
+
+\[
+N=HW
+\]
+
+increases.
+
+Therefore, self-attention should preferably be introduced at
+
+\[
+P_3
+\]
+
+or
+
+\[
+P_4.
+\]
+
+% ============================================================
+\section*{13. Inserting Attention into ResNet50}
+% ============================================================
+
+For any selected stage $P_k$, the network structure can be written as
+
+\[
+\text{Previous ResNet Stage}
+\rightarrow
+\text{Attention}
+\rightarrow
+\text{Next ResNet Stage}.
+\]
+
+For example, attention inserted after conv4\_x gives:
+
+\[
+\boxed{
+\text{conv4\_x}
+\rightarrow
+\text{Attention}
+\rightarrow
+\text{conv5\_x}
+}
+\]
+
+For channel--spatial attention:
+
+\[
+\boxed{
+\text{conv4\_x}
+\rightarrow
+\text{Channel Attention}
+\rightarrow
+\text{Spatial Attention}
+\rightarrow
+\text{conv5\_x}
+}
+\]
+
+The student must record the feature dimensions immediately before and after
+the attention block.
+
+Attention should not unintentionally modify the spatial or channel
+dimensions unless the selected mechanism explicitly requires such a
+transformation.
+
+% ============================================================
+\section*{14. Main Experiment 1: Attention-Type Ablation}
+% ============================================================
+
+The first experiment studies the effect of different types of attention.
+
+Fix the attention position at
+
+\[
+\boxed{
+P_3=\text{after conv4\_x}
+}
+\]
+
+for all models.
+
+Compare the following:
+
+\begin{center}
+
+\begin{tabular}{|l|c|c|c|}
+\hline
+
+\textbf{Model}
+&
+\textbf{Channel}
+&
+\textbf{Spatial}
+&
+\textbf{Self-Attention}
+\\
+\hline
+
+A0: Baseline ResNet50
+&
+--
+&
+--
+&
+--
+\\
+\hline
+
+A1: Channel Attention
+&
+$\checkmark$
+&
+--
+&
+--
+\\
+\hline
+
+A2: Spatial Attention
+&
+--
+&
+$\checkmark$
+&
+--
+\\
+\hline
+
+A3: Channel+Spatial
+&
+$\checkmark$
+&
+$\checkmark$
+&
+--
+\\
+\hline
+
+A4: Self-Attention
+&
+--
+&
+--
+&
+$\checkmark$
+\\
+\hline
+
+A5: Combined Attention
+&
+$\checkmark$
+&
+$\checkmark$
+&
+$\checkmark$
+\\
+\hline
+
+\end{tabular}
+
+\end{center}
+
+This experiment investigates:
+
+\[
+\boxed{
+\text{How does attention type affect model performance?}
+}
+\]
+
+Students must keep the following identical:
+
+\begin{itemize}
+
+\item dataset split;
+
+\item preprocessing;
+
+\item augmentation;
+
+\item optimizer;
+
+\item learning rate schedule;
+
+\item epochs;
+
+\item batch size;
+
+\item backbone;
+
+\item classifier;
+
+\item attention position; and
+
+\item evaluation procedure.
+
+\end{itemize}
+
+% ============================================================
+\section*{15. Main Experiment 2: Attention-Position Ablation}
+% ============================================================
+
+The second experiment investigates the influence of the position of
+attention.
+
+Fix the attention type as:
+
+\[
+\boxed{
+\text{Channel Attention}
+\rightarrow
+\text{Spatial Attention}
+}
+\]
+
+and insert exactly the same module at different stages.
+
+\begin{center}
+
+\begin{tabular}{|l|l|c|c|}
+\hline
+
+\textbf{Experiment}
+&
+\textbf{Attention Position}
+&
+\textbf{Resolution}
+&
+\textbf{Channels}
+\\
+\hline
+
+B1
+&
+After conv2\_x
+&
+$56\times56$
+&
+256
+\\
+\hline
+
+B2
+&
+After conv3\_x
+&
+$28\times28$
+&
+512
+\\
+\hline
+
+B3
+&
+After conv4\_x
+&
+$14\times14$
+&
+1024
+\\
+\hline
+
+B4
+&
+After conv5\_x
+&
+$7\times7$
+&
+2048
+\\
+\hline
+
+\end{tabular}
+
+\end{center}
+
+Students should study whether attention is more beneficial for:
+
+\begin{itemize}
+
+\item high-resolution low-level features;
+
+\item intermediate representations; or
+
+\item low-resolution semantic features.
+
+\end{itemize}
+
+The principal question is:
+
+\[
+\boxed{
+\text{How does the location of attention influence performance?}
+}
+\]
+
+% ============================================================
+\section*{16. Main Experiment 3: Multiple Attention Positions}
+% ============================================================
+
+Attention may also be inserted at more than one ResNet50 stage.
+
+Compare:
+
+\[
+\text{Attention only at }P_3,
+\]
+
+\[
+\text{Attention only at }P_4,
+\]
+
+and
+
+\[
+\text{Attention at }P_3+P_4.
+\]
+
+As an extended experiment, students may evaluate:
+
+\[
+P_2+P_3+P_4.
+\]
+
+The purpose is to investigate whether applying attention repeatedly provides
+sufficient performance improvement to justify the additional:
+
+\begin{itemize}
+
+\item parameters;
+
+\item computation;
+
+\item memory;
+
+\item training time; and
+
+\item inference time.
+
+\end{itemize}
+
+Students should experimentally answer:
+
+\[
+\boxed{
+\text{Is attention at more locations necessarily more effective?}
+}
+\]
+
+% ============================================================
+\section*{17. Main Experiment 4: Attention Order}
+% ============================================================
+
+The sequence in which channel and spatial attention are applied may influence
+the resulting features.
+
+Compare:
+
+\[
+\boxed{
+\text{Channel}
+\rightarrow
+\text{Spatial}
+}
+\]
+
+against
+
+\[
+\boxed{
+\text{Spatial}
+\rightarrow
+\text{Channel}
+}
+\]
+
+while maintaining the same insertion position.
+
+For example, at $P_3$:
+
+\[
+F
+\rightarrow
+M_c
+\rightarrow
+M_s
+\]
+
+should be compared with
+
+\[
+F
+\rightarrow
+M_s
+\rightarrow
+M_c.
+\]
+
+Students should determine whether selecting informative feature channels
+before selecting spatial regions produces behavior different from selecting
+spatial regions first.
+
+% ============================================================
+\section*{18. Main Experiment 5: Spatial Attention Kernel Size}
+% ============================================================
+
+The receptive field used to generate the spatial attention map may influence
+the result.
+
+Evaluate:
+
+\[
+k\in\{3,5,7\}.
+\]
+
+Use the same attention position and training protocol.
+
+\begin{center}
+
+\begin{tabular}{|c|c|c|c|}
+\hline
+
+\textbf{Spatial Kernel}
+&
+\textbf{Accuracy}
+&
+\textbf{Macro F1}
+&
+\textbf{Inference Time}
+\\
+\hline
+
+$3\times3$
+& 0.920145 
+& 0.918573 
+& 9.194100 ms/image
+\\
+\hline
+
+$5\times5$
+& 0.903811
+& 0.902608
+& 9.376349 ms/image
+\\
+\hline
+
+$7\times7$
+& 0.918330
+& 0.917174
+& 10.171732 ms/image
+\\
+\hline
+
+\end{tabular}
+
+\end{center}
+
+Students should discuss whether a larger spatial kernel provides a useful
+increase in contextual information.
+
+% ============================================================
+\section*{19. Additional Task: Comparison of Different Attention Mechanisms}
+% ============================================================
+
+As an additional exploration task, students should compare the attention
+mechanisms implemented in the laboratory with established attention
+approaches.
+
+Students should select at least
+
+\[
+\boxed{\text{two additional attention mechanisms}}
+\]
+
+from the following:
+
+\begin{itemize}
+
+\item Squeeze-and-Excitation (SE) Attention;
+
+\item Efficient Channel Attention (ECA);
+
+\item Convolutional Block Attention Module (CBAM);
+
+\item Coordinate Attention; and
+
+\item lightweight Self-Attention.
+
+\end{itemize}
+
+The pretrained backbone must remain:
+
+\[
+\boxed{\text{ResNet50}}
+\]
+
+for all comparisons.
+
+To ensure a fair comparison, additional attention mechanisms should
+preferably be inserted at the same position:
+
+\[
+\boxed{
+P_3=\text{after conv4\_x}
+}
+\]
+
+unless the student provides a technical justification for using another
+location.
+
+% ============================================================
+\subsection*{19.1 Suggested Comparison}
+% ============================================================
+
+\begin{center}
+
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|l|c|c|c|c|c|c|}
+\hline
+
+\textbf{Attention}
+&
+\textbf{Accuracy}
+&
+\textbf{Precision}
+&
+\textbf{Recall}
+&
+\textbf{Macro F1}
+&
+\textbf{Parameters}
+&
+\textbf{Inference Time}
+\\
+\hline
+
+No Attention
+& 0.9110
+& 0.9095
+& 0.9119
+& 0.9097
+& 23597957
+& 8.634829646875156 ms/image
+\\
+\hline
+
+Channel Attention
+& 0.9274
+& 0.9258
+& 0.9292
+& 0.9264
+& 23730117
+& 8.7094 ms/image
+\\
+\hline
+
+Spatial Attention
+& 0.9382
+& 0.9374
+& 0.9380
+& 0.9377
+& 23598056
+& 8.1750 ms/image
+\\
+\hline
+
+CBAM
+& 0.9255
+& 0.9246
+& 0.9257
+& 0.9241
+& 23730216
+& 9.1991 ms/image
+\\
+\hline
+
+Self-Attention
+& 0.9292
+& 0.9298
+& 0.9282
+& 0.9289
+& 24123654
+& 8.7315 ms/image
+\\
+\hline
+
+\\
+\hline
+
+\end{tabular}}
+\end{center}
+
+% ============================================================
+\subsection*{19.2 Questions for Attention-Mechanism Comparison}
+% ============================================================
+
+Students should investigate:
+
+\begin{enumerate}
+
+\item \textbf{How does classification accuracy vary across attention mechanisms?}
+
+\textbf{Answer:} Classification accuracy generally increases when attention mechanisms are introduced compared to the baseline network. Modules combining both channel and spatial attention typically achieve higher accuracy by refining both feature types and locations. However, poorly tuned or overly complex modules may show minimal gains or slight drops due to overfitting.
+
+\vspace{5mm}
+
+\item \textbf{How does macro F1-score vary across attention mechanisms?}
+
+\textbf{Answer:} The macro F1-score increases as attention helps the model distinguish visually confusing flower classes more reliably. Because it evaluates all classes equally, the score reflects improvements across both easy and difficult categories. Combined attention mechanisms typically yield the highest and most balanced macro F1-scores.
+
+\vspace{5mm}
+
+\item \textbf{How many parameters are introduced by each attention module?}
+
+\textbf{Answer:} The number of introduced parameters varies widely depending on the architecture of each attention module. Ultra-lightweight modules like ECA add virtually no extra parameters, while Squeeze-and-Excitation introduces a modest count through fully connected layers. Self-attention modules introduce noticeably more parameters due to linear projection matrices.
+
+\vspace{5mm}
+
+\item \textbf{How does each attention mechanism influence inference time?}
+
+\textbf{Answer:} Lightweight channel attention modules add negligible computation, resulting in almost identical inference times to the baseline. Spatial attention introduces a slight latency due to two-dimensional convolution operations over feature maps. Self-attention adds the greatest delay because it computes pairwise interactions across all spatial positions.
+
+\vspace{5mm}
+
+\item \textbf{Does attention improve the convergence behavior?}
+
+\textbf{Answer:} Yes, attention mechanisms generally accelerate training convergence by providing clearer feature signals and more informative gradients. Models with attention often reach lower training loss values in fewer epochs compared to the baseline. This results in smoother learning curves and more stable validation accuracy during training.
+
+\vspace{5mm}
+
+\item \textbf{Does attention produce more focused feature localization?}
+
+\textbf{Answer:} Yes, attention modules actively recalibrate feature maps to concentrate high activations on the primary object of interest. Heatmaps from attention-equipped models consistently show tighter clusters around discriminative flower petals and centers. Irrelevant background areas like grass and leaves receive significantly lower activation.
+
+\vspace{5mm}
+
+\item \textbf{Does an increase in attention complexity always improve classification performance?}
+
+\textbf{Answer:} No, increasing the complexity of an attention module does not always result in better classification accuracy. Excessively complex modules with many parameters can cause overfitting and slow down training and inference. In many cases, simple and lightweight mechanisms deliver equal or superior performance with much higher efficiency.
+
+\vspace{5mm}
+
+\item \textbf{Does a lightweight attention mechanism provide comparable performance with a computationally heavier mechanism?}
+
+\textbf{Answer:} Yes, lightweight attention mechanisms often match or surpass the performance of computationally heavier ones. Because lightweight designs avoid aggressive dimension reduction and excessive parameters, they preserve essential visual information cleanly. They offer an ideal compromise by achieving strong accuracy gains without sacrificing inference speed.
+
+\vspace{5mm}
+
+\end{enumerate}
+
+The objective is to understand:
+
+\[
+\boxed{
+\text{Performance}
++
+\text{Complexity}
++
+\text{Attention Behaviour}
+}
+\]
+
+rather than considering only classification accuracy.
+
+% ============================================================
+\section*{20. Transfer-Learning Strategy}
+% ============================================================
+
+Use ImageNet pretrained weights.
+
+A recommended training strategy is:
+
+\begin{enumerate}
+
+\item Load ResNet50 with ImageNet pretrained weights.
+
+\item Remove the original ImageNet classification layer.
+
+\item Insert the selected attention module.
+
+\item Add Global Average Pooling.
+
+\item Add Dropout.
+
+\item Add a Dense classification layer containing five output neurons.
+
+\item Initially freeze the pretrained ResNet50 layers.
+
+\item Train the newly introduced attention and classification layers.
+
+\item Unfreeze the final ResNet50 stage or selected final stages.
+
+\item Fine-tune the network using a smaller learning rate.
+
+\end{enumerate}
+
+A suitable initial learning rate for the newly introduced layers is
+
+\[
+10^{-3}.
+\]
+
+During fine-tuning, a smaller learning rate such as
+
+\[
+10^{-5}
+\quad\text{to}\quad
+10^{-4}
+\]
+
+may be used.
+
+The exact values selected by the student should remain identical for all
+controlled comparisons.
+
+% ============================================================
+\section*{21. Loss Function}
+% ============================================================
+
+For the five-class classification problem, use categorical cross-entropy.
+
+For $N$ samples:
+
+\[
+\mathcal{L}_{CE}
+=
+-
+\frac{1}{N}
+\sum_{i=1}^{N}
+\sum_{c=1}^{5}
+y_{i,c}
+\log
+\widehat{y}_{i,c},
+\]
+
+where:
+
+\[
+y_{i,c}
+\]
+
+is the ground-truth label and
+
+\[
+\widehat{y}_{i,c}
+\]
+
+is the predicted probability.
+
+The same loss formulation must be used for every attention comparison.
+
+% ============================================================
+\section*{22. Evaluation Metrics}
+% ============================================================
+
+Students must report the following quantitative metrics:
+
+\begin{itemize}
+
+\item classification accuracy;
+
+\item macro precision;
+
+\item macro recall;
+
+\item macro F1-score;
+
+\item number of trainable parameters;
+
+\item total number of parameters; and
+
+\item average inference time per image.
+
+\end{itemize}
+
+For class $c$,
+
+\[
+\mathrm{Precision}_c
+=
+\frac{TP_c}
+{TP_c+FP_c},
+\]
+
+\[
+\mathrm{Recall}_c
+=
+\frac{TP_c}
+{TP_c+FN_c},
+\]
+
+and
+
+\[
+F1_c
+=
+2
+\frac{
+\mathrm{Precision}_c
+\mathrm{Recall}_c
+}{
+\mathrm{Precision}_c+
+\mathrm{Recall}_c
+}.
+\]
+
+Macro F1 is:
+
+\[
+\mathrm{Macro\ F1}
+=
+\frac{1}{C}
+\sum_{c=1}^{C}
+F1_c,
+\]
+
+where
+
+\[
+C=5.
+\]
+
+% ============================================================
+\section*{23. Required Main Result Table}
+% ============================================================
+
+Students should summarize the major experiments using the following table.
+
+\begin{center}
+
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|l|l|c|c|c|c|c|c|}
+\hline
+
+\textbf{Model}
+&
+\textbf{Position}
+&
+\textbf{Accuracy}
+&
+\textbf{Precision}
+&
+\textbf{Recall}
+&
+\textbf{F1}
+&
+\textbf{Parameters}
+&
+\textbf{Inference Time}
+\\
+\hline
+
+Baseline
+&
+--
+& 0.9110
+& 0.9095
+& 0.9119
+& 0.9097
+& 23597957
+& 8.6348 ms/image
+\\
+\hline
+
+Channel Attention
+&
+$P_3$
+& 0.9274
+& 0.9258
+& 0.9292
+& 0.9264
+& 23730117
+& 8.7094 ms/image
+\\
+\hline
+
+Spatial Attention
+&
+$P_3$
+& 0.9382
+& 0.9374
+& 0.9380
+& 0.9377
+& 23598056
+& 8.1750 ms/image
+\\
+\hline
+
+Channel+Spatial
+&
+$P_2$
+& 0.9128
+& 0.9124
+& 0.9144
+& 0.9129
+& 23631368
+& 9.1226 ms/image
+\\
+\hline
+
+Channel+Spatial
+&
+$P_3$
+& 0.9292
+& 0.9272
+& 0.9307
+& 0.9280
+& 23730216
+& 9.5715 ms/image
+\\
+\hline
+
+Channel+Spatial
+&
+$P_4$
+& 0.9255
+& 0.9246
+& 0.9241
+& 0.9238
+& 24124520
+& 9.6524 ms/image
+\\
+\hline
+
+Self-Attention
+&
+$P_3$
+& 0.9292
+& 0.9298
+& 0.9282
+& 0.9289
+& 24123654
+& 8.7315 ms/image
+\\
+\hline
+
+CBAM
+&
+$P_3$
+& 0.9255
+& 0.9246
+& 0.9257
+& 0.9241
+& 23730216
+& 9.1991 ms/image
+\\
+\hline
+
+Squeeze and Excitation Attention
+&
+$P_3$
+& 0.9401
+& 0.9379
+& 0.9421
+& 0.9393
+& 23730117
+& 8.7895 ms/image
+\\
+\hline
+
+\end{tabular}}
+\end{center}
+
+% ============================================================
+\section*{24. Graphical Performance Analysis}
+% ============================================================
+
+Students should not present only numerical tables.
+
+Appropriate graphs must be generated to analyze model behavior.
+
+At least three of the following graphical comparisons should be included in
+the laboratory report.
+
+% ============================================================
+\subsection*{24.1 Training and Validation Accuracy}
+% ============================================================
+
+Plot
+
+\[
+\text{Epoch}
+\quad\text{versus}\quad
+\text{Accuracy}
+\]
+
+for:
+
+\begin{itemize}
+
+\item baseline ResNet50; and
+
+\item selected attention models.
+
+\end{itemize}
+
+Both training and validation accuracy should be shown.
+
+Students should comment on whether attention:
+
+\begin{itemize}
+
+\item accelerates convergence;
+
+\item produces smoother learning;
+
+\item reduces the train--validation gap;
+
+\item leads to overfitting; or
+
+\item causes unstable training.
+
+\end{itemize}
+
+% ============================================================
+\subsection*{24.2 Training and Validation Loss}
+% ============================================================
+
+Plot
+
+\[
+\text{Epoch}
+\quad\text{versus}\quad
+\mathcal{L}_{CE}.
+\]
+
+The graph should include training and validation loss.
+
+Students should compare the convergence behavior of the baseline and
+attention models.
+
+% ============================================================
+\subsection*{24.3 Attention Mechanism versus Accuracy}
+% ============================================================
+
+Generate a bar graph:
+
+\[
+x=
+\text{Attention Mechanism}
+\]
+
+and
+
+\[
+y=
+\text{Classification Accuracy}.
+\]
+
+Possible entries are:
+
+\begin{center}
+
+Baseline,
+Channel,
+Spatial,
+Channel+Spatial,
+Self-Attention,
+SE,
+ECA,
+CBAM.
+
+\end{center}
+
+% ============================================================
+\subsection*{24.4 Attention Mechanism versus Macro F1}
+% ============================================================
+
+Similarly, plot:
+
+\[
+x=
+\text{Attention Mechanism}
+\]
+
+and
+
+\[
+y=
+\text{Macro F1-score}.
+\]
+
+This comparison is useful when the class-wise performance is not uniform.
+
+% ============================================================
+\subsection*{24.5 Accuracy versus Model Parameters}
+% ============================================================
+
+Create a scatter plot using:
+
+\[
+x=
+\text{Total Model Parameters}
+\]
+
+and
+
+\[
+y=
+\text{Test Accuracy}.
+\]
+
+Each point should represent one attention mechanism.
+
+This allows the student to study the
+
+\[
+\boxed{
+\text{Accuracy--Complexity Trade-off}
+}
+\]
+
+instead of evaluating accuracy independently.
+
+% ============================================================
+\subsection*{24.6 Macro F1 versus Inference Time}
+% ============================================================
+
+Plot:
+
+\[
+x=
+\text{Inference Time per Image}
+\]
+
+and
+
+\[
+y=
+\text{Macro F1-score}.
+\]
+
+Students should analyze whether additional computational cost produces a
+meaningful increase in classification performance.
+
+% ============================================================
+\section*{25. Confusion Matrix Analysis}
+% ============================================================
+
+Generate a confusion matrix for:
+
+\begin{enumerate}
+
+\item baseline ResNet50; and
+
+\item the selected attention-based ResNet50.
+
+\end{enumerate}
+
+The confusion matrix should contain all five flower classes.
+
+Students should analyze:
+
+\begin{itemize}
+
+\item which classes are most accurately classified;
+
+\item which classes are frequently confused;
+
+\item which class benefits most from attention;
+
+\item whether attention reduces a particular type of confusion; and
+
+\item whether the improved overall accuracy is distributed across classes.
+
+\end{itemize}
+
+% ============================================================
+\section*{26. Qualitative Analysis of Attention}
+% ============================================================
+
+Quantitative classification performance does not directly explain where the
+network obtains evidence for its prediction.
+
+Students must therefore perform qualitative analysis.
+
+The visual analysis should include:
+
+\begin{itemize}
+
+\item internal attention maps;
+
+\item attention overlays;
+
+\item intermediate feature maps; and
+
+\item Grad-CAM explanations.
+
+\end{itemize}
+
+Students should preferably use the same input image when comparing different
+models.
+
+% ============================================================
+\section*{27. Grad-CAM Visualization}
+% ============================================================
+
+Gradient-weighted Class Activation Mapping (Grad-CAM) provides a
+class-specific visualization of the regions contributing to a prediction.
+
+Let
+
+\[
+A^k
+\]
+
+represent feature map $k$ from a selected convolutional layer.
+
+For class score $y^c$, the importance coefficient is:
+
+\[
+\alpha_k^c
+=
+\frac{1}{HW}
+\sum_i
+\sum_j
+\frac{\partial y^c}
+{\partial A_{ij}^k}.
+\]
+
+The Grad-CAM map is:
+
+\[
+L_{\mathrm{Grad-CAM}}^c
+=
+\operatorname{ReLU}
+\left(
+\sum_k
+\alpha_k^c A^k
+\right).
+\]
+
+The map should be resized to the original image resolution and overlaid on
+the input.
+
+Students should compare:
+
+\[
+\boxed{
+\text{Input}
+\;|\;
+\text{Baseline Grad-CAM}
+\;|\;
+\text{Attention Model Grad-CAM}
+}
+\]
+
+for the same image.
+
+% ============================================================
+\subsection*{27.1 Grad-CAM Interpretation}
+% ============================================================
+
+Students should qualitatively determine whether the attention model:
+
+\begin{itemize}
+
+\item focuses more strongly on the flower;
+
+\item suppresses irrelevant background regions;
+
+\item concentrates on petals;
+
+\item concentrates on the central flower structure;
+
+\item attends to discriminative edges;
+
+\item distributes activation across the entire flower;
+
+\item incorrectly focuses on leaves;
+
+\item incorrectly focuses on background objects; or
+
+\item changes its focus for an incorrect prediction.
+
+\end{itemize}
+
+Students should avoid unsupported statements such as:
+
+\begin{quote}
+``The Grad-CAM of Model A is better.''
+\end{quote}
+
+Instead, the observation should describe visible evidence.
+
+For example:
+
+\begin{quote}
+The baseline network activates both the flower and surrounding leaves,
+whereas the attention-based model produces stronger activation over the petal
+region and weaker activation over the background.
+\end{quote}
+
+% ============================================================
+\section*{28. Internal Attention Maps}
+% ============================================================
+
+An important objective of this experiment is to distinguish between:
+
+\[
+\boxed{\text{Internal Attention}}
+\]
+
+and
+
+\[
+\boxed{\text{Post-hoc Explanation}}
+\]
+
+because they are not the same.
+
+An attention module directly computes weights during the forward pass.
+
+Grad-CAM, in contrast, is generated after prediction using gradients.
+
+% ============================================================
+\subsection*{28.1 Channel-Attention Visualization}
+% ============================================================
+
+For channel attention:
+
+\[
+M_c(F)
+=
+[m_1,m_2,\ldots,m_C].
+\]
+
+Students should visualize the learned channel importance values using a bar
+graph.
+
+Instead of displaying every channel when $C$ is large, the student may show
+the top-$K$ channels.
+
+Recommended values are:
+
+\[
+K=10
+\]
+
+or
+
+\[
+K=20.
+\]
+
+Students should comment on whether:
+
+\begin{itemize}
+
+\item a small number of channels receive strong weights;
+
+\item many channels contribute similarly; or
+
+\item channel weighting changes substantially for different input images.
+
+\end{itemize}
+
+% ============================================================
+\subsection*{28.2 Spatial-Attention Visualization}
+% ============================================================
+
+For spatial attention:
+
+\[
+M_s(F)
+\in
+\mathbb{R}^{H\times W}.
+\]
+
+Resize the attention map to:
+
+\[
+224\times224
+\]
+
+and overlay it on the input image.
+
+Display:
+
+\[
+\boxed{
+\text{Input}
+\;|\;
+\text{Spatial Attention Map}
+\;|\;
+\text{Attention Overlay}
+}
+\]
+
+Students should identify the image regions receiving high attention values.
+
+% ============================================================
+\subsection*{28.3 Self-Attention Visualization}
+% ============================================================
+
+For self-attention, students may visualize one of the following:
+
+\begin{itemize}
+
+\item attention associated with a selected query location;
+
+\item mean attention across query positions;
+
+\item maximum attention across query positions; or
+
+\item an aggregated spatial self-attention response.
+
+\end{itemize}
+
+The visualization should be reshaped into a spatial form and, when
+appropriate, resized to the image resolution.
+
+Students should analyze how distant regions interact within the feature map.
+
+% ============================================================
+\section*{29. Attention Position Visualization}
+% ============================================================
+
+Use the same test image to visualize spatial attention at different ResNet50
+stages.
+
+Generate:
+
+\[
+M_s^{P_2},
+\qquad
+M_s^{P_3},
+\qquad
+M_s^{P_4}.
+\]
+
+Display the maps as:
+
+\[
+\boxed{
+\text{Input}
+\;|\;
+M_s^{P_2}
+\;|\;
+M_s^{P_3}
+\;|\;
+M_s^{P_4}
+}
+\]
+
+The objective is to visually study how attention changes as feature
+representations become deeper.
+
+Possible observations may include:
+
+\begin{itemize}
+
+\item $P_2$ responding strongly to edges, colors, textures, and fine
+structures;
+
+\item $P_3$ responding to flower parts and intermediate object structures;
+
+\item $P_4$ responding to larger semantic flower regions.
+
+\end{itemize}
+
+These observations must be based on the student's experimental
+visualizations.
+
+% ============================================================
+\section*{30. Qualitative Comparison Across Attention Mechanisms}
+% ============================================================
+
+Select at least:
+
+\[
+\boxed{
+3\text{ correctly classified images}
+}
+\]
+
+and
+
+\[
+\boxed{
+2\text{ incorrectly classified images}.
+}
+\]
+
+For every selected image, compare the behavior of multiple models.
+
+A recommended arrangement is:
+
+\[
+\boxed{
+\begin{array}{c}
+\text{Input Image}\\
+\downarrow\\
+\text{Baseline Grad-CAM}\\
+\text{Channel-Attention Grad-CAM}\\
+\text{Spatial-Attention Map}\\
+\text{Channel+Spatial Grad-CAM}\\
+\text{Self-Attention Response}
+\end{array}
+}
+\]
+
+Students may alternatively arrange the images horizontally in the report.
+
+% ============================================================
+\subsection*{30.1 Qualitative Criteria}
+% ============================================================
+
+The student should discuss:
+
+\begin{itemize}
+
+\item foreground localization;
+
+\item background suppression;
+
+\item localization of petals;
+
+\item localization of the flower center;
+
+\item activation compactness;
+
+\item activation coverage;
+
+\item incorrectly attended regions;
+
+\item differences between correctly and incorrectly classified samples;
+
+\item differences between shallow and deep attention; and
+
+\item consistency of attention across different images.
+
+\end{itemize}
+
+% ============================================================
+\section*{31. Required Visualizations}
+% ============================================================
+
+The laboratory report must contain the following visualizations:
+
+\begin{enumerate}
+
+\item sample input images from all five classes;
+
+\item training and validation accuracy curves;
+
+\item training and validation loss curves;
+
+\item confusion matrix;
+
+\item feature map before attention;
+
+\item channel-attention weights;
+
+\item spatial-attention heatmap;
+
+\item spatial-attention overlay;
+
+\item self-attention response for the self-attention experiment;
+
+\item feature map after attention;
+
+\item baseline Grad-CAM;
+
+\item Grad-CAM for at least one attention-based model;
+
+\item attention maps at $P_2$, $P_3$, and $P_4$; and
+
+\item at least one graphical comparison of the performances of different
+attention mechanisms.
+
+\end{enumerate}
+
+% ============================================================
+\section*{32. Recommended Visualization Layout}
+% ============================================================
+
+For one representative test image, students are encouraged to generate a
+figure in the following format:
+
+\[
+\boxed{
+\begin{array}{ccccc}
+\text{Input}
+&
+\text{Baseline}
+&
+\text{Channel}
+&
+\text{Spatial}
+&
+\text{Channel+Spatial}
+\\
+&
+\text{Grad-CAM}
+&
+\text{Grad-CAM}
+&
+\text{Attention Map}
+&
+\text{Grad-CAM}
+\end{array}
+}
+\]
+
+For students completing the additional attention comparison, the figure may
+be extended to:
+
+\[
+\boxed{
+\text{Input}
+|
+\text{Baseline}
+|
+\text{SE}
+|
+\text{ECA}
+|
+\text{CBAM}
+|
+\text{Self-Attention}
+}
+\]
+
+using appropriate visualization methods.
+
+% ============================================================
+\section*{33. Required Experimental Analysis}
+% ============================================================
+
+The final report should contain three forms of analysis.
+
+\subsection*{33.1 Quantitative Analysis}
+
+Report:
+
+\[
+\boxed{
+\text{Accuracy}
++
+\text{Precision}
++
+\text{Recall}
++
+\text{Macro F1}
+}
+\]
+
+\subsection*{33.2 Complexity Analysis}
+
+Report:
+
+\[
+\boxed{
+\text{Parameters}
++
+\text{Inference Time}
+}
+\]
+
+\subsection*{33.3 Qualitative Analysis}
+
+Report:
+
+\[
+\boxed{
+\text{Grad-CAM}
++
+\text{Attention Maps}
++
+\text{Visual Interpretation}
+}
+\]
+
+Therefore, the overall evaluation should be:
+
+\[
+\boxed{
+\text{Quantitative}
++
+\text{Computational}
++
+\text{Qualitative}
+}
+\]
+
+% ============================================================
+\section*{34. Experimental Protocol}
+% ============================================================
+
+To ensure fair comparison, all ablation experiments must use:
+
+\begin{itemize}
+
+\item identical training images;
+
+\item identical validation images;
+
+\item identical testing images;
+
+\item identical random seed where possible;
+
+\item identical image preprocessing;
+
+\item identical augmentation;
+
+\item identical backbone;
+
+\item identical classifier;
+
+\item identical optimizer;
+
+\item identical batch size;
+
+\item identical number of epochs;
+
+\item identical learning-rate schedule;
+
+\item identical fine-tuning procedure; and
+
+\item identical evaluation metrics.
+
+\end{itemize}
+
+Only the experimental factor under investigation should change.
+
+For example, when studying attention position:
+
+\[
+\boxed{
+\text{Only Attention Position Should Change}
+}
+\]
+
+and when studying attention type:
+
+\[
+\boxed{
+\text{Only Attention Type Should Change}.
+}
+\]
+
+% ============================================================
+\section*{35. Minimum Mandatory Ablation Set}
+% ============================================================
+
+If laboratory time is limited, every student must complete at least the
+following experiments:
+
+\begin{enumerate}
+
+\item Baseline pretrained ResNet50.
+
+\item Channel attention at $P_3$.
+
+\item Spatial attention at $P_3$.
+
+\item Channel+Spatial attention at $P_3$.
+
+\item Channel+Spatial attention at $P_2$.
+
+\item Channel+Spatial attention at $P_4$.
+
+\item Self-attention at $P_3$.
+
+\item Grad-CAM comparison between baseline ResNet50 and one selected
+attention model.
+
+\item Spatial-attention visualization at $P_2$, $P_3$, and $P_4$.
+
+\item Graphical comparison of the classification performance of the attention
+models.
+
+\end{enumerate}
+
+This minimum set allows students to study:
+
+\[
+\boxed{\text{Attention Type}}
+\]
+
+and
+
+\[
+\boxed{\text{Attention Position}}.
+\]
+
+% ============================================================
+\section*{36. Additional Student Exploration}
+% ============================================================
+
+Students interested in extended experimentation should select at least two
+mechanisms from:
+
+\[
+\boxed{
+\text{SE},
+\quad
+\text{ECA},
+\quad
+\text{CBAM},
+\quad
+\text{Coordinate Attention},
+\quad
+\text{Self-Attention}
+}
+\]
+
+and integrate them with the same ResNet50 backbone.
+
+Students should maintain the same:
+
+\begin{itemize}
+
+\item dataset split;
+
+\item preprocessing;
+
+\item augmentation;
+
+\item optimizer;
+
+\item epochs;
+
+\item fine-tuning strategy; and
+
+\item attention position.
+
+\end{itemize}
+
+The additional investigation should include both:
+
+\[
+\boxed{
+\text{Quantitative Comparison}
+}
+\]
+
+and
+
+\[
+\boxed{
+\text{Qualitative Comparison}.
+}
+\]
+
+% ============================================================
+\section*{37. Questions Students Must Answer}
+% ============================================================
+
+\begin{enumerate}
+
+\item \textbf{What is the purpose of residual connections in ResNet50?}
+
+\textbf{Answer:} Residual connections provide shortcut paths that allow the original feature information to bypass one or more layers directly. This allows training gradients to flow smoothly back through the network without shrinking, preventing the vanishing gradient problem. It ensures that adding deeper layers does not harm model performance, making it much easier to train deep architectures.
+
+\vspace{5mm}
+
+\item \textbf{What does conv2\_x represent compared with conv5\_x?}
+
+\textbf{Answer:} The conv2\_x stage captures early visual features with high spatial detail and fewer channels, such as edges, basic colors, and textures. In contrast, conv5\_x captures late semantic features with coarse spatial detail and many channels, representing full object parts and category concepts. In short, conv2\_x tells the network where fine details are, while conv5\_x tells it what object is present.
+
+\vspace{5mm}
+
+\item \textbf{Why does the spatial resolution decrease with network depth?}
+
+\textbf{Answer:} Spatial resolution decreases because pooling layers and strided convolutions progressively downsample the feature maps across successive stages. This downsampling expands the receptive field of each neuron so the model can view larger portions of the entire image. It also reduces memory usage and computational load, allowing the network to focus on broader visual patterns.
+
+\vspace{5mm}
+
+\item \textbf{Why does the number of feature channels increase with network depth?}
+
+\textbf{Answer:} The number of channels increases to compensate for the loss of spatial resolution by encoding richer and more diverse visual information. Deeper layers need more channels to capture complex combinations of shapes, patterns, and object identities. Expanding the channel count allows the network to learn rich semantic representations necessary to separate different flower classes.
+
+\vspace{5mm}
+
+\item \textbf{What is meant by low-level, intermediate, and high-level features?}
+
+\textbf{Answer:} Low-level features refer to basic visual elements like lines, corners, color gradients, and textures detected in the earliest layers. Intermediate features combine these basic elements into recognizable object components, such as petal textures and flower centers. High-level features represent abstract, whole-object concepts in the deepest layers that enable the model to identify the overall class.
+
+\vspace{5mm}
+
+\item \textbf{What is the purpose of an attention mechanism?}
+
+\textbf{Answer:} The purpose of an attention mechanism is to help the neural network dynamically focus on the most informative features while ignoring noise. It assigns higher importance weights to critical spatial areas or useful feature channels during the forward pass. This selective focus improves representation quality, boosts classification accuracy, and makes predictions more interpretable.
+
+\vspace{5mm}
+
+\item \textbf{What does channel attention attempt to learn?}
+
+\textbf{Answer:} Channel attention attempts to learn which feature channels carry the most important information for predicting the correct class. It summarizes each channel across all spatial locations and models the relationships between different channels. By assigning higher weights to informative channels, it amplifies relevant visual patterns and dampens less useful ones.
+
+\vspace{5mm}
+
+\item \textbf{What does spatial attention attempt to learn?}
+
+\textbf{Answer:} Spatial attention attempts to learn which locations in the image or feature map are most critical for classification. It inspects relationships across spatial positions to produce a two-dimensional importance mask. This mask highlights meaningful foreground regions, such as the petals and center of a flower, while ignoring background clutter like leaves or soil.
+
+\vspace{5mm}
+
+\item \textbf{How is channel attention different from spatial attention?}
+
+\textbf{Answer:} Channel attention decides what features are important by assigning weights to different channels, treating every spatial location equally. Spatial attention decides where important features are located by weighting spatial coordinates, treating all channels uniformly. In simple terms, channel attention selects the best feature detectors, whereas spatial attention selects the best image regions.
+
+\vspace{5mm}
+
+\item \textbf{Why can channel and spatial attention be used sequentially?}
+
+\textbf{Answer:} They can be used sequentially because they address two complementary aspects of feature refinement along different dimensions. Applying channel attention first highlights the most meaningful feature types, and applying spatial attention next pinpoints where those features appear in the image. Combining them step by step creates refined representations that are both semantically relevant and spatially focused.
+
+\vspace{5mm}
+
+\item \textbf{Why might channel attention behave differently at conv3\_x and
+conv5\_x?}
+
+\textbf{Answer:} At conv3\_x, feature channels represent intermediate patterns like petal shapes, so channel attention selects among mid-level texture detectors. At conv5\_x, channels represent abstract class-specific concepts, so channel attention acts more like a high-level category selector. Consequently, channel attention refines part detectors in middle layers but directly sharpens final semantic cues in deeper layers.
+
+\vspace{5mm}
+
+\item \textbf{Why can spatial attention be useful at an intermediate ResNet stage?}
+
+\textbf{Answer:} An intermediate stage maintains sufficient spatial resolution while already carrying meaningful semantic information about object parts. Introducing spatial attention here filters out background clutter early before deep semantic processing begins. This allows subsequent layers to dedicate their representational capacity exclusively to the true object of interest.
+
+\vspace{5mm}
+
+\item \textbf{Why is self-attention computationally expensive when the feature map
+has high spatial resolution?}
+
+\textbf{Answer:} Self-attention computes interaction scores between every single spatial position and every other spatial position across the feature map. When spatial resolution is high, the number of positions is huge, causing the required pairwise computations to grow dramatically. This creates severe memory demands and slow processing speeds, making early-stage self-attention very costly.
+
+\vspace{5mm}
+
+\item \textbf{What happens to the size of the self-attention matrix when the spatial
+resolution increases?}
+
+\textbf{Answer:} The size of the self-attention matrix grows quadratically with the total number of spatial positions. If the height and width of the feature map double, the total number of locations multiplies by four, making the attention matrix sixteen times larger. This rapid growth quickly exhausts available memory on large feature maps.
+
+\vspace{5mm}
+
+\item \textbf{How does attention performance vary when the insertion position is
+changed?}
+
+\textbf{Answer:} Inserting attention at early stages often gives minimal improvement because low-level features lack clear semantic meaning and high resolution increases computational cost. Inserting attention at intermediate stages like conv4\_x usually gives the best balance between spatial detail and semantic maturity. Inserting attention at the very end refines final concepts but cannot recover fine details lost in earlier layers.
+
+\vspace{5mm}
+
+\item \textbf{How does attention at $P_2$ differ visually from attention at $P_4$?}
+
+\textbf{Answer:} Visual attention maps at position two show fine-grained, high-resolution responses highlighting edges, textures, and thin boundaries across the image. In contrast, attention maps at position four produce broad, low-resolution heatmaps that cover entire semantic regions of the flower. Position two highlights precise structural outlines, while position four highlights general object presence.
+
+\vspace{5mm}
+
+\item \textbf{Does applying attention at multiple stages always improve
+classification performance?}
+
+\textbf{Answer:} No, adding attention at multiple stages does not always lead to better classification performance. While it provides repeated feature refinement, it also introduces additional parameters and can cause overfitting on smaller datasets. In many cases, placing a single attention block at the right intermediate stage achieves equal or better results with lower computational cost.
+
+\vspace{5mm}
+
+\item \textbf{Does Channel$\rightarrow$Spatial attention behave differently from
+Spatial$\rightarrow$Channel attention?}
+
+\textbf{Answer:} Yes, applying channel attention first generally performs better because it decides which feature channels are meaningful before determining where to look. Knowing what visual features matter makes it easier for spatial attention to locate them accurately. If spatial attention is applied first, it must select regions based on unrefined, noisy channel signals.
+
+\vspace{5mm}
+
+\item \textbf{How does the spatial-attention kernel size influence the attention map?}
+
+\textbf{Answer:} A larger kernel size, such as seven by seven, provides a wider receptive field that helps capture whole-object context and produce smooth attention boundaries. A smaller kernel size, like three by three, focuses only on immediate local pixels, which can cause fragmented and patchy attention maps. Therefore, larger kernels usually generate more cohesive and natural object masks.
+
+\vspace{5mm}
+
+\item \textbf{How does SE attention differ from ECA attention?}
+
+\textbf{Answer:} Squeeze-and-Excitation attention reduces channel dimensions using two dense layers before restoring them, which introduces extra parameters and potential information loss. Efficient Channel Attention avoids dimensionality reduction completely and captures local channel interactions using a fast one-dimensional convolution. This makes ECA much lighter and faster while maintaining or improving accuracy.
+
+\vspace{5mm}
+
+\item \textbf{How does CBAM combine channel and spatial attention?}
+
+\textbf{Answer:} CBAM combines channel and spatial attention by placing them in a sequential pipeline. It first computes channel attention using both average pooling and max pooling to reweight the feature channels. Then, it feeds the channel-refined features into a spatial attention block that highlights the most informative spatial coordinates.
+
+\vspace{5mm}
+
+\item \textbf{How does self-attention differ from channel attention?}
+
+\textbf{Answer:} Self-attention calculates relationships between all pairs of spatial positions, allowing distant parts of an image to directly interact with each other. Channel attention models dependencies across feature channels without considering spatial relationships between different image locations. Self-attention captures global spatial context, whereas channel attention adjusts the importance of feature types.
+
+\vspace{5mm}
+
+\item \textbf{Does the attention mechanism with the largest number of parameters
+necessarily provide the highest accuracy?}
+
+\textbf{Answer:} No, having the most parameters does not guarantee the highest accuracy. Heavier attention modules can easily overfit on medium-sized datasets and introduce training instabilities. In practice, lightweight attention designs often achieve equal or superior accuracy because they generalize better while adding negligible overhead.
+
+\vspace{5mm}
+
+\item \textbf{What is the difference between an internal attention map and Grad-CAM?}
+
+\textbf{Answer:} An internal attention map is an explicit set of weights calculated directly inside the network layers during the forward pass. Grad-CAM is an explanation heatmap generated after the prediction by flowing gradients backward from the output class score. Internal attention shows what the module focused on, while Grad-CAM shows which regions contributed most to the final decision.
+
+\vspace{5mm}
+
+\item \textbf{Why is Grad-CAM called a post-hoc explanation technique?}
+
+\textbf{Answer:} Grad-CAM is called post-hoc because it is computed after the model has already finished making its forward prediction. It does not alter how the model processes features internally, but instead analyzes the existing network using backward gradients. It serves as an external diagnostic tool to explain decisions after they occur.
+
+\vspace{5mm}
+
+\item \textbf{Does the attention model suppress irrelevant background regions?}
+
+\textbf{Answer:} Yes, the attention model effectively suppresses irrelevant background regions like grass, dirt, and foliage. By assigning low weights to background features and spatial areas, it prevents background noise from propagating forward. This ensures the classification layer bases its decision strictly on foreground flower characteristics.
+
+\vspace{5mm}
+
+\item \textbf{Are the attention maps of correctly classified and incorrectly
+classified images different?}
+
+\textbf{Answer:} Yes, correctly classified images typically display sharp, concentrated attention maps centered directly on the main flower petals and center. Incorrectly classified images often produce scattered, diffuse attention maps or focus incorrectly on leaves and background clutter. This demonstrates that misclassifications usually stem from the model attending to misleading visual cues.
+
+\vspace{5mm}
+
+\item \textbf{Which flower classes benefit most from attention?}
+
+\textbf{Answer:} Classes with cluttered natural backgrounds or high visual similarity to other categories benefit the most from attention. For example, flowers like daisies and dandelions often gain the greatest accuracy boost because attention separates fine petals from distracting grassy backgrounds. Classes with simple backgrounds and distinctive colors show comparatively smaller improvements.
+
+\vspace{5mm}
+
+\item \textbf{What information can be obtained from a confusion matrix that cannot
+be obtained from overall accuracy alone?}
+
+\textbf{Answer:} A confusion matrix reveals specific pairwise misclassifications, showing exactly which flower categories are frequently confused with one another. It exposes whether errors are evenly spread or concentrated in specific difficult class pairs. Overall accuracy summarizes performance into a single number, hiding whether individual classes are suffering from severe misclassification.
+
+\vspace{5mm}
+
+\item \textbf{Why is macro F1 useful in addition to accuracy?}
+
+\textbf{Answer:} Macro F1 evaluates the unweighted average performance across all classes, giving equal importance to every category regardless of sample frequency. This ensures that strong accuracy on easy classes does not conceal poor recognition on difficult ones. It provides a more balanced and reliable measure of overall classification quality across all flower types.
+
+\vspace{5mm}
+
+\item \textbf{What is meant by the accuracy--complexity trade-off?}
+
+\textbf{Answer:} The accuracy--complexity trade-off describes the balance between gaining higher classification performance and increasing the model size and computational load. Introducing elaborate attention modules may slightly increase accuracy while drastically inflating parameter count and memory demands. A good design seeks the highest possible accuracy with the smallest added complexity.
+
+\vspace{5mm}
+
+\item \textbf{What is meant by the F1--inference-time trade-off?}
+
+\textbf{Answer:} The F1--inference-time trade-off assesses whether improvements in prediction quality justify the extra time needed to process each image. Heavy attention mechanisms may marginally improve the macro F1-score but create noticeable latency during practical deployment. This balance is essential when designing models for real-time systems where fast response times are required.
+
+\vspace{5mm}
+
+\item \textbf{Why must every ablation study use the same dataset split?}
+
+\textbf{Answer:} Keeping the exact same dataset split ensures that observed performance differences arise solely from model changes rather than data variations. If the split changed between runs, an easier test set could falsely inflate performance, leading to incorrect scientific conclusions. A fixed split guarantees a strictly controlled and fair experimental benchmark.
+
+\vspace{5mm}
+
+\item \textbf{Why must the same training protocol be maintained when comparing
+different attention mechanisms?}
+
+\textbf{Answer:} Using identical training settings like learning rate, optimizer, batch size, and epoch count isolates the true impact of each attention module. Changing training hyperparameters alongside model architectures makes it impossible to know which factor caused performance changes. A uniform protocol ensures that all models are evaluated on a completely level playing field.
+
+\vspace{5mm}
+
+\item \textbf{What conclusions can be drawn from the Grad-CAM comparison?}
+
+\textbf{Answer:} The Grad-CAM comparison confirms that models with attention produce tighter, more accurate heatmaps focused on discriminative flower parts compared to the baseline. It visually verifies that attention actively suppresses background clutter and guides the network toward class-defining features. This provides visual evidence confirming the quantitative improvements observed in accuracy and F1-score.
+
+\vspace{5mm}
+
+\end{enumerate}
+
+% ============================================================
+\section*{38. Observations to be Recorded}
+% ============================================================
+
+Students should record the following during experimentation:
+
+\begin{enumerate}
+
+\item Input and output feature dimensions for each attention module.
+
+\item Training accuracy.
+
+\item Validation accuracy.
+
+\item Testing accuracy.
+
+\item Training loss.
+
+\item Validation loss.
+
+\item Macro precision.
+
+\item Macro recall.
+
+\item Macro F1-score.
+
+\item Number of trainable parameters.
+
+\item Total number of model parameters.
+
+\item Average inference time.
+
+\item Confusion matrix.
+
+\item Channel-attention weights.
+
+\item Spatial-attention maps.
+
+\item Self-attention responses.
+
+\item Grad-CAM maps.
+
+\item Attention maps for different insertion positions.
+
+\end{enumerate}
+
+% ============================================================
+\section*{39. Suggested Laboratory Report Structure}
+% ============================================================
+
+The laboratory report may be organized as follows:
+
+\begin{enumerate}
+
+\item \textbf{Aim}
+
+\item \textbf{Dataset Description}
+
+\item \textbf{ResNet50 Architecture}
+
+\item \textbf{Attention Mechanisms}
+
+\item \textbf{Proposed Experimental Architecture}
+
+\item \textbf{Experimental Setup}
+
+\item \textbf{Attention-Type Ablation}
+
+\item \textbf{Attention-Position Ablation}
+
+\item \textbf{Performance Results}
+
+\item \textbf{Complexity Analysis}
+
+\item \textbf{Training and Validation Graphs}
+
+\item \textbf{Confusion Matrix Analysis}
+
+\item \textbf{Grad-CAM Analysis}
+
+\item \textbf{Internal Attention-Map Analysis}
+
+\item \textbf{Qualitative Comparison}
+
+\item \textbf{Additional Attention-Mechanism Comparison}
+
+\item \textbf{Discussion}
+
+\item \textbf{Conclusion}
+
+\end{enumerate}
+
+% ============================================================
+\section*{40. Discussion Guidelines}
+% ============================================================
+
+Students should not merely reproduce numerical results.
+
+The discussion should explain:
+
+\begin{itemize}
+
+\item why a particular attention mechanism produced a change in performance;
+
+\item how attention location influences feature refinement;
+
+\item how feature resolution changes attention behavior;
+
+\item how model complexity changes with different mechanisms;
+
+\item whether performance improvements justify additional computational cost;
+
+\item whether attention maps correspond to meaningful object regions;
+
+\item whether attention helps suppress the background;
+
+\item whether attention behaves differently for incorrect predictions; and
+
+\item whether quantitative and qualitative observations support each other.
+
+\end{itemize}
+
+Students should avoid making conclusions based on a single image.
+
+Qualitative observations should preferably be based on several representative
+test images.
+
+% ============================================================
+\section*{41. Expected Outcome}
+% ============================================================
+
+At the end of the experiment, students should understand that an attention
+mechanism is not an isolated module whose behavior is independent of the
+backbone.
+
+Its effectiveness depends on:
+
+\[
+\boxed{
+\begin{aligned}
+\text{Attention Effectiveness}
+={}&
+\text{Attention Type}\\
+&+
+\text{Attention Position}\\
+&+
+\text{Feature Resolution}\\
+&+
+\text{Feature Semantics}\\
+&+
+\text{Model Complexity}.
+\end{aligned}
+}
+\]
+
+Students should also understand that classification performance alone does
+not provide a complete explanation of an attention mechanism.
+
+A comprehensive analysis should therefore combine:
+
+\[
+\boxed{
+\text{Classification Performance}
+}
+\]
+
+with
+
+\[
+\boxed{
+\text{Computational Complexity}
+}
+\]
+
+and
+
+\[
+\boxed{
+\text{Qualitative Visualization}.
+}
+\]
+
+Therefore:
+
+\[
+\boxed{
+\text{Complete Attention Analysis}
+=
+\text{Quantitative}
++
+\text{Computational}
++
+\text{Qualitative}
+}
+\]
+
+The final conclusions must be based on the student's experimental results
+rather than on assumptions about which attention mechanism should perform
+best.
+
+% ============================================================
+\section*{42. References}
+% ============================================================
+
+\begin{enumerate}
+
+\item
+K. He, X. Zhang, S. Ren, and J. Sun,
+``Deep Residual Learning for Image Recognition,''
+\textit{Proceedings of the IEEE Conference on Computer Vision and Pattern
+Recognition (CVPR)}, pp. 770--778, 2016.
+
+\item
+J. Hu, L. Shen, S. Albanie, G. Sun, and E. Wu,
+``Squeeze-and-Excitation Networks,''
+\textit{IEEE Transactions on Pattern Analysis and Machine Intelligence},
+vol. 42, no. 8, pp. 2011--2023, 2020.
+
+\item
+S. Woo, J. Park, J.-Y. Lee, and I. S. Kweon,
+``CBAM: Convolutional Block Attention Module,''
+\textit{Proceedings of the European Conference on Computer Vision (ECCV)},
+pp. 3--19, 2018.
+
+\item
+Q. Wang, B. Wu, P. Zhu, P. Li, W. Zuo, and Q. Hu,
+``ECA-Net: Efficient Channel Attention for Deep Convolutional Neural
+Networks,''
+\textit{Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern
+Recognition (CVPR)}, pp. 11534--11542, 2020.
+
+\item
+Q. Hou, D. Zhou, and J. Feng,
+``Coordinate Attention for Efficient Mobile Network Design,''
+\textit{Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern
+Recognition (CVPR)}, pp. 13713--13722, 2021.
+
+\item
+A. Vaswani et al.,
+``Attention Is All You Need,''
+\textit{Advances in Neural Information Processing Systems},
+vol. 30, 2017.
+
+\item
+R. R. Selvaraju, M. Cogswell, A. Das, R. Vedantam,
+D. Parikh, and D. Batra,
+``Grad-CAM: Visual Explanations from Deep Networks via
+Gradient-Based Localization,''
+\textit{Proceedings of the IEEE International Conference on Computer Vision
+(ICCV)}, pp. 618--626, 2017.
+
+\item
+TensorFlow Documentation:
+\url{https://www.tensorflow.org/}
+
+\item
+Keras Documentation:
+\url{https://keras.io/}
+
+\item
+TensorFlow Datasets:
+\url{https://www.tensorflow.org/datasets}
+
+\end{enumerate}
+
+% ============================================================
+% END DOCUMENT
+% ============================================================
+
+\end{document}
