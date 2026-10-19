@@ -2832,221 +2832,221 @@ Application of spatial attention using $5 \times 5$ convolution kernel at stage 
 
 \item \textbf{What is the purpose of residual connections in ResNet50?}
 
-\textbf{Answer:} Residual connections provide shortcut paths that allow the original feature information to bypass one or more layers directly. This allows training gradients to flow smoothly back through the network without shrinking, preventing the vanishing gradient problem. It ensures that adding deeper layers does not harm model performance, making it much easier to train deep architectures.
+\textbf{Answer:} Residual connections offer shortcuts, which help the original feature information go through one or several layers without any interference. This way, training signals can easily propagate through the layers without being decreased, avoiding the vanishing gradient problem. The inclusion of residual connections guarantees that adding new layers will not decrease model performance and makes deep architectures easy to train.
 
 \vspace{5mm}
 
 \item \textbf{What does conv2\_x represent compared with conv5\_x?}
 
-\textbf{Answer:} The conv2\_x stage captures early visual features with high spatial detail and fewer channels, such as edges, basic colors, and textures. In contrast, conv5\_x captures late semantic features with coarse spatial detail and many channels, representing full object parts and category concepts. In short, conv2\_x tells the network where fine details are, while conv5\_x tells it what object is present.
+\textbf{Answer:} Conv2\_x is the stage of early vision features with detailed spatial dimensions and few channels. It detects edges, colors, and textures. On the other hand, conv5\_x is the stage of late semantic features with low-resolution spatial dimensions and many channels, which detect full object parts and classes. To summarize, conv2\_x shows the network where the fine-grained information is, while conv5\_x shows it what object is depicted.
 
 \vspace{5mm}
 
 \item \textbf{Why does the spatial resolution decrease with network depth?}
 
-\textbf{Answer:} Spatial resolution decreases because pooling layers and strided convolutions progressively downsample the feature maps across successive stages. This downsampling expands the receptive field of each neuron so the model can view larger portions of the entire image. It also reduces memory usage and computational load, allowing the network to focus on broader visual patterns.
+\textbf{Answer:} The spatial dimensions decrease due to pooling layers and strided convolutions, which make down-sampling of feature maps from one stage to another possible. It increases the receptive field of neurons, meaning that they can see bigger areas of an image as a whole.
 
 \vspace{5mm}
 
 \item \textbf{Why does the number of feature channels increase with network depth?}
 
-\textbf{Answer:} The number of channels increases to compensate for the loss of spatial resolution by encoding richer and more diverse visual information. Deeper layers need more channels to capture complex combinations of shapes, patterns, and object identities. Expanding the channel count allows the network to learn rich semantic representations necessary to separate different flower classes.
+\textbf{Answer:} More channels are used to compensate for the lack of spatial resolution through encoding rich and varied visual information. The deeper the layers, the greater the number of channels required to encode complex combinations of shapes, patterns, and objects identities. Through increasing the channel size, the network learns rich semantic representations required to discriminate between different flower classes.
 
 \vspace{5mm}
 
 \item \textbf{What is meant by low-level, intermediate, and high-level features?}
 
-\textbf{Answer:} Low-level features refer to basic visual elements like lines, corners, color gradients, and textures detected in the earliest layers. Intermediate features combine these basic elements into recognizable object components, such as petal textures and flower centers. High-level features represent abstract, whole-object concepts in the deepest layers that enable the model to identify the overall class.
+\textbf{Answer:} Low-level features are primitive visual features like edges, corners, colors, textures, etc., detected in early layers of the network. Intermediate features correspond to combinations of low-level features, which allow recognizing components of the objects, e.g., petal texture or flower center. Finally, high-level features correspond to abstract representations of the whole object in deep layers of the model.
 
 \vspace{5mm}
 
 \item \textbf{What is the purpose of an attention mechanism?}
 
-\textbf{Answer:} The purpose of an attention mechanism is to help the neural network dynamically focus on the most informative features while ignoring noise. It assigns higher importance weights to critical spatial areas or useful feature channels during the forward pass. This selective focus improves representation quality, boosts classification accuracy, and makes predictions more interpretable.
+\textbf{Answer:} The idea behind using attention is to allow the neural network to concentrate on informative features while ignoring useless noisy ones. Attention mechanism sets higher importance weight for specific spatial locations or feature channels during the forward pass of the network.
 
 \vspace{5mm}
 
 \item \textbf{What does channel attention attempt to learn?}
 
-\textbf{Answer:} Channel attention attempts to learn which feature channels carry the most important information for predicting the correct class. It summarizes each channel across all spatial locations and models the relationships between different channels. By assigning higher weights to informative channels, it amplifies relevant visual patterns and dampens less useful ones.
+\textbf{Answer:} Channel attention is the technique of trying to understand which channel feature carries most of the information required to determine the correct class. The technique summarizes the entire channel for all spatial locations and then captures the interrelationships between channels. Through the weighting of the informative channels, it magnifies informative visual cues and minimizes uninformative ones.
 
 \vspace{5mm}
 
 \item \textbf{What does spatial attention attempt to learn?}
 
-\textbf{Answer:} Spatial attention attempts to learn which locations in the image or feature map are most critical for classification. It inspects relationships across spatial positions to produce a two-dimensional importance mask. This mask highlights meaningful foreground regions, such as the petals and center of a flower, while ignoring background clutter like leaves or soil.
+\textbf{Answer:} Spatial attention tries to understand the important spatial locations on an image or feature map for classification. It studies the interrelationship at all spatial locations to generate a two-dimensional importance map, which highlights the meaningful foreground objects, such as the petals and core of the flower, ignoring background regions, including leaves or soil.
 
 \vspace{5mm}
 
 \item \textbf{How is channel attention different from spatial attention?}
 
-\textbf{Answer:} Channel attention decides what features are important by assigning weights to different channels, treating every spatial location equally. Spatial attention decides where important features are located by weighting spatial coordinates, treating all channels uniformly. In simple terms, channel attention selects the best feature detectors, whereas spatial attention selects the best image regions.
+\textbf{Answer:} Channel attention determines what is important through assigning weights to different channels but treats all spatial locations the same way. On the other hand, spatial attention determines the important locations through weighting of the spatial locations but treats all channels the same way. To put it simply, channel attention chooses the best feature detectors, whereas spatial attention chooses the best image locations.
 
 \vspace{5mm}
 
 \item \textbf{Why can channel and spatial attention be used sequentially?}
 
-\textbf{Answer:} They can be used sequentially because they address two complementary aspects of feature refinement along different dimensions. Applying channel attention first highlights the most meaningful feature types, and applying spatial attention next pinpoints where those features appear in the image. Combining them step by step creates refined representations that are both semantically relevant and spatially focused.
+\textbf{Answer:} They can be applied sequentially, since what they address are two complementary aspects of feature refinement along different dimensions. First, by applying channel attention, we highlight the most semantically relevant feature types, and second, by applying spatial attention, we pinpoint the region within which these features are present. By combining them step-by-step, a joint representation which incorporates both is formed.
 
 \vspace{5mm}
 
 \item \textbf{Why might channel attention behave differently at conv3\_x and
 conv5\_x?}
 
-\textbf{Answer:} At conv3\_x, feature channels represent intermediate patterns like petal shapes, so channel attention selects among mid-level texture detectors. At conv5\_x, channels represent abstract class-specific concepts, so channel attention acts more like a high-level category selector. Consequently, channel attention refines part detectors in middle layers but directly sharpens final semantic cues in deeper layers.
+\textbf{Answer:} As channels at \texttt{conv3\_x} encode intermediate pattern types, such as petal-shaped patterns, applying channel attention at this layer focuses on the most relevant types of mid-level texture detectors. On the other hand, since channels at \texttt{conv5\_x} encode abstract class specific concepts, attention over channels acts more like a selector of high-level category specific detectors. Hence, while channel attention in middle layers refines part detectors, it directly sharpens cues to the actual semantic class in deeper layers.
 
 \vspace{5mm}
 
 \item \textbf{Why can spatial attention be useful at an intermediate ResNet stage?}
 
-\textbf{Answer:} An intermediate stage maintains sufficient spatial resolution while already carrying meaningful semantic information about object parts. Introducing spatial attention here filters out background clutter early before deep semantic processing begins. This allows subsequent layers to dedicate their representational capacity exclusively to the true object of interest.
+\textbf{Answer:} An intermediate feature map still contains sufficient spatial resolution to encode relevant semantic information about the object parts. Hence, introducing spatial attention is a good opportunity to filter out the irrelevant contextual information before deeper semantic processing starts. This way, later layers can commit their representational capacity to the actual object of interest.
 
 \vspace{5mm}
 
 \item \textbf{Why is self-attention computationally expensive when the feature map
 has high spatial resolution?}
 
-\textbf{Answer:} Self-attention computes interaction scores between every single spatial position and every other spatial position across the feature map. When spatial resolution is high, the number of positions is huge, causing the required pairwise computations to grow dramatically. This creates severe memory demands and slow processing speeds, making early-stage self-attention very costly.
+\textbf{Answer:} Spatial self-attention calculates the interaction scores for each pair of any spatial location with any other spatial location from the feature map. When the spatial resolution becomes high, then the number of locations becomes extremely large, resulting in the increase in the computational cost for all the pairwise interactions being performed.
 
 \vspace{5mm}
 
 \item \textbf{What happens to the size of the self-attention matrix when the spatial
 resolution increases?}
 
-\textbf{Answer:} The size of the self-attention matrix grows quadratically with the total number of spatial positions. If the height and width of the feature map double, the total number of locations multiplies by four, making the attention matrix sixteen times larger. This rapid growth quickly exhausts available memory on large feature maps.
+\textbf{Answer:} The size of the attention matrix increases exponentially with an increase in the total number of spatial locations. Doubling the spatial resolution will lead to a four-fold increase in the total number of locations and thus the attention matrix will be 16 times larger than before. This increase happens rapidly and the memory soon gets exhausted.
 
 \vspace{5mm}
 
 \item \textbf{How does attention performance vary when the insertion position is
 changed?}
 
-\textbf{Answer:} Inserting attention at early stages often gives minimal improvement because low-level features lack clear semantic meaning and high resolution increases computational cost. Inserting attention at intermediate stages like conv4\_x usually gives the best balance between spatial detail and semantic maturity. Inserting attention at the very end refines final concepts but cannot recover fine details lost in earlier layers.
+\textbf{Answer:} Attention inserted at an early stage does not provide much benefit since low-level features do not have semantic meanings while high resolution leads to high computation cost. Attention inserted at a later stage provides good trade-offs between semantic information and spatial information. Attention inserted at the late stage improves the concepts, but not the details that were lost at an early stage.
 
 \vspace{5mm}
 
 \item \textbf{How does attention at $P_2$ differ visually from attention at $P_4$?}
 
-\textbf{Answer:} Visual attention maps at position two show fine-grained, high-resolution responses highlighting edges, textures, and thin boundaries across the image. In contrast, attention maps at position four produce broad, low-resolution heatmaps that cover entire semantic regions of the flower. Position two highlights precise structural outlines, while position four highlights general object presence.
+\textbf{Answer:} The visual attention maps at position two demonstrate high-resolution responses, highlighting the image’s edges, textures, and fine lines. In contrast, the attention maps at position four visualize low-resolution regions, covering entire semantic objects in the flower. The model at position two focuses on an image’s fine details, while the one at position four visualizes entire objects.
 
 \vspace{5mm}
 
 \item \textbf{Does applying attention at multiple stages always improve
 classification performance?}
 
-\textbf{Answer:} No, adding attention at multiple stages does not always lead to better classification performance. While it provides repeated feature refinement, it also introduces additional parameters and can cause overfitting on smaller datasets. In many cases, placing a single attention block at the right intermediate stage achieves equal or better results with lower computational cost.
+\textbf{Answer:} No, the attention module added at multiple stages does not necessarily improve the classification results. While the multiple attention blocks refine features repeatedly, they add extra parameters and can overfit on the few training samples. In most cases, adding a single attention block at a particular position improves the results with fewer parameters.
 
 \vspace{5mm}
 
 \item \textbf{Does Channel$\rightarrow$Spatial attention behave differently from
 Spatial$\rightarrow$Channel attention?}
 
-\textbf{Answer:} Yes, applying channel attention first generally performs better because it decides which feature channels are meaningful before determining where to look. Knowing what visual features matter makes it easier for spatial attention to locate them accurately. If spatial attention is applied first, it must select regions based on unrefined, noisy channel signals.
+\textbf{Answer:} Yes, I think, implementing channel attention first improves the overall performance. This is because the channel attention determines which features are important, and, therefore, the spatial attention knows where to pay attention. On the other hand, if the spatial attention is implemented first, it will have to determine which channels to emphasize blindly.
 
 \vspace{5mm}
 
 \item \textbf{How does the spatial-attention kernel size influence the attention map?}
 
-\textbf{Answer:} A larger kernel size, such as seven by seven, provides a wider receptive field that helps capture whole-object context and produce smooth attention boundaries. A smaller kernel size, like three by three, focuses only on immediate local pixels, which can cause fragmented and patchy attention maps. Therefore, larger kernels usually generate more cohesive and natural object masks.
+\textbf{Answer:} Using a bigger kernel, like seven by seven, can improve results because it covers a broader region, picking up global information and creating a soft attention mask. On the other hand, a three by three kernel covers only a small part of the image, and, therefore, the attention mask would be fragmented. As a result, a bigger kernel size is expected to visualize more relevant information in the image, thus producing better results.
 
 \vspace{5mm}
 
 \item \textbf{How does SE attention differ from ECA attention?}
 
-\textbf{Answer:} Squeeze-and-Excitation attention reduces channel dimensions using two dense layers before restoring them, which introduces extra parameters and potential information loss. Efficient Channel Attention avoids dimensionality reduction completely and captures local channel interactions using a fast one-dimensional convolution. This makes ECA much lighter and faster while maintaining or improving accuracy.
+\textbf{Answer:} The Squeeze-and-Excitation attention compresses channel dimensions using two dense layers and then restores them, thus leading to the addition of extra parameters and possible loss of some information. In contrast, Efficient Channel Attention does not involve any dimensionality reduction and uses one-dimensional convolution to capture the interaction of channels locally. Thus, ECA is much more efficient and accurate than the Squeeze-and-Excitation attention.
 
 \vspace{5mm}
 
 \item \textbf{How does CBAM combine channel and spatial attention?}
 
-\textbf{Answer:} CBAM combines channel and spatial attention by placing them in a sequential pipeline. It first computes channel attention using both average pooling and max pooling to reweight the feature channels. Then, it feeds the channel-refined features into a spatial attention block that highlights the most informative spatial coordinates.
+\textbf{Answer:} The CBAM attention network applies both channel and spatial attention through the usage of sequential connection of both attentions. It first performs channel attention through average and max pooling in order to re-weight feature channels. Afterward, it passes channel attention results to spatial attention, which emphasizes the most important spatial coordinates.
 
 \vspace{5mm}
 
 \item \textbf{How does self-attention differ from channel attention?}
 
-\textbf{Answer:} Self-attention calculates relationships between all pairs of spatial positions, allowing distant parts of an image to directly interact with each other. Channel attention models dependencies across feature channels without considering spatial relationships between different image locations. Self-attention captures global spatial context, whereas channel attention adjusts the importance of feature types.
+\textbf{Answer:} In self-attention, all pairs of spatial positions are calculated in order to establish the relationships between the distant image pixels. Thus, the self-attention mechanism makes distant areas of an image able to communicate with each other. Channel attention establishes the relations between channels but does not take into account the relation between spatial points.
 
 \vspace{5mm}
 
 \item \textbf{Does the attention mechanism with the largest number of parameters
 necessarily provide the highest accuracy?}
 
-\textbf{Answer:} No, having the most parameters does not guarantee the highest accuracy. Heavier attention modules can easily overfit on medium-sized datasets and introduce training instabilities. In practice, lightweight attention designs often achieve equal or superior accuracy because they generalize better while adding negligible overhead.
+\textbf{Answer:} No, the largest number of parameters does not necessarily deliver the highest accuracy. Heavier attention modules may easily overfit medium-sized datasets, and introduce instabilities in training. In practice, lighter attention designs often match or exceed the accuracy, by generalizing better, while incurring only a negligible overhead.
 
 \vspace{5mm}
 
 \item \textbf{What is the difference between an internal attention map and Grad-CAM?}
 
-\textbf{Answer:} An internal attention map is an explicit set of weights calculated directly inside the network layers during the forward pass. Grad-CAM is an explanation heatmap generated after the prediction by flowing gradients backward from the output class score. Internal attention shows what the module focused on, while Grad-CAM shows which regions contributed most to the final decision.
+\textbf{Answer:} An internal attention map is an explicit set of weights calculated inside the network layers during the forward pass, while Grad-CAM is an explanation heatmap generated post-hoc, by flowing the gradients backwards from the output class score through the network.
 
 \vspace{5mm}
 
 \item \textbf{Why is Grad-CAM called a post-hoc explanation technique?}
 
-\textbf{Answer:} Grad-CAM is called post-hoc because it is computed after the model has already finished making its forward prediction. It does not alter how the model processes features internally, but instead analyzes the existing network using backward gradients. It serves as an external diagnostic tool to explain decisions after they occur.
+\textbf{Answer:} Grad-CAM is called post-hoc because it is computed after the model has already completed its forward prediction. It does not change the internal processing of the model’s features, but rather analyzes the existing weights by performing gradient descent in the reverse direction. Thus, Grad-CAM can be considered as an external diagnostic tool that evaluates the model decisions after they have been made.
 
 \vspace{5mm}
 
 \item \textbf{Does the attention model suppress irrelevant background regions?}
 
-\textbf{Answer:} Yes, the attention model effectively suppresses irrelevant background regions like grass, dirt, and foliage. By assigning low weights to background features and spatial areas, it prevents background noise from propagating forward. This ensures the classification layer bases its decision strictly on foreground flower characteristics.
+\textbf{Answer:} Yes, the attention model is effective in suppressing the irrelevant background regions such as grass, dirt, and leaves, by reducing their weights. Similarly, it removes the background spatial locations, preventing their features from being used downstream in the classification process.
 
 \vspace{5mm}
 
 \item \textbf{Are the attention maps of correctly classified and incorrectly
 classified images different?}
 
-\textbf{Answer:} Yes, correctly classified images typically display sharp, concentrated attention maps centered directly on the main flower petals and center. Incorrectly classified images often produce scattered, diffuse attention maps or focus incorrectly on leaves and background clutter. This demonstrates that misclassifications usually stem from the model attending to misleading visual cues.
+\textbf{Answer:} Yes, properly classified images have attention maps that are sharp and concentrated in the region right on the center of the flower petals. Misclassified images, on the other hand, will generally exhibit dispersed or scattered attention maps and sometimes misfocus on the leaves and other elements in the image. This is proof that misclassification is due to the network being misled by its attention.
 
 \vspace{5mm}
 
 \item \textbf{Which flower classes benefit most from attention?}
 
-\textbf{Answer:} Classes with cluttered natural backgrounds or high visual similarity to other categories benefit the most from attention. For example, flowers like daisies and dandelions often gain the greatest accuracy boost because attention separates fine petals from distracting grassy backgrounds. Classes with simple backgrounds and distinctive colors show comparatively smaller improvements.
+\textbf{Answer:}  Classes with natural cluttered backgrounds and having high similarity with other classes will benefit the most from attention. Examples are classes like flowers such as daisy and dandelion whose accuracy benefits the most from attention since this mechanism distinguishes fine petals from cluttered grassy backgrounds. Classes with simple backgrounds and unique colors benefit much less.
 
 \vspace{5mm}
 
 \item \textbf{What information can be obtained from a confusion matrix that cannot
 be obtained from overall accuracy alone?}
 
-\textbf{Answer:} A confusion matrix reveals specific pairwise misclassifications, showing exactly which flower categories are frequently confused with one another. It exposes whether errors are evenly spread or concentrated in specific difficult class pairs. Overall accuracy summarizes performance into a single number, hiding whether individual classes are suffering from severe misclassification.
+\textbf{Answer:} A confusion matrix will show exactly which classes of flower the model often confuses with one another. It will be evident which class pairs are hard for the model to distinguish. Accuracy gives a summary score of overall performance while ignoring which particular classes are having misclassification problems.
 
 \vspace{5mm}
 
 \item \textbf{Why is macro F1 useful in addition to accuracy?}
 
-\textbf{Answer:} Macro F1 evaluates the unweighted average performance across all classes, giving equal importance to every category regardless of sample frequency. This ensures that strong accuracy on easy classes does not conceal poor recognition on difficult ones. It provides a more balanced and reliable measure of overall classification quality across all flower types.
+\textbf{Answer:} Macro F1 evaluates the unweighted average of the performance of all the classes. This way, each class is equally important, and the high performance of the model on the frequent classes does not “hide” its low performance on the rare classes. It should give a more honest estimation of how well the model classifies different types of flowers.
 
 \vspace{5mm}
 
 \item \textbf{What is meant by the accuracy--complexity trade-off?}
 
-\textbf{Answer:} The accuracy--complexity trade-off describes the balance between gaining higher classification performance and increasing the model size and computational load. Introducing elaborate attention modules may slightly increase accuracy while drastically inflating parameter count and memory demands. A good design seeks the highest possible accuracy with the smallest added complexity.
+\textbf{Answer:} The accuracy–-complexity trade-off refers to how much model performance improves (i.e., accuracy increases) with adding complexity (more parameters) to the model. In other words, it is a ratio of how much accuracy increases and complexity grows when one adjusts the hyperparameters during training. A good model should have the best accuracy–complexity ratio, theoretically providing the best possible accuracy with the minimal required complexity.
 
 \vspace{5mm}
 
 \item \textbf{What is meant by the F1--inference-time trade-off?}
 
-\textbf{Answer:} The F1--inference-time trade-off assesses whether improvements in prediction quality justify the extra time needed to process each image. Heavy attention mechanisms may marginally improve the macro F1-score but create noticeable latency during practical deployment. This balance is essential when designing models for real-time systems where fast response times are required.
+\textbf{Answer:} The F1–inference-time trade-off is similar to the accuracy–complexity trade-off but concerns the amount of time needed to make predictions with the model. Essentially, it is a ratio of how much F1 increases and inference time grows with added complexity. A good model should have the best F1–inference-time trade-off, theoretically providing the best possible F1 with the lowest possible inference time.
 
 \vspace{5mm}
 
 \item \textbf{Why must every ablation study use the same dataset split?}
 
-\textbf{Answer:} Keeping the exact same dataset split ensures that observed performance differences arise solely from model changes rather than data variations. If the split changed between runs, an easier test set could falsely inflate performance, leading to incorrect scientific conclusions. A fixed split guarantees a strictly controlled and fair experimental benchmark.
+\textbf{Answer:} Using the same dataset split allows for consistent results. Otherwise, if one randomly generates splits for the dataset, there is a possibility of getting a relatively “easy” split, resulting in higher than average accuracy and performance. By using the same split, one gets the unbiased estimate of the model’s performance.
 
 \vspace{5mm}
 
 \item \textbf{Why must the same training protocol be maintained when comparing
 different attention mechanisms?}
 
-\textbf{Answer:} Using identical training settings like learning rate, optimizer, batch size, and epoch count isolates the true impact of each attention module. Changing training hyperparameters alongside model architectures makes it impossible to know which factor caused performance changes. A uniform protocol ensures that all models are evaluated on a completely level playing field.
+\textbf{Answer:} Training identical parameters such as learning rate, optimization function, batch size, and epochs helps us get the true impact of each attention module because otherwise we will not be able to distinguish the effects of either changing training parameters or changing the model architecture. In addition, this approach is necessary for us to test our models on a truly equal footing.
 
 \vspace{5mm}
 
 \item \textbf{What conclusions can be drawn from the Grad-CAM comparison?}
 
-\textbf{Answer:} The Grad-CAM comparison confirms that models with attention produce tighter, more accurate heatmaps focused on discriminative flower parts compared to the baseline. It visually verifies that attention actively suppresses background clutter and guides the network toward class-defining features. This provides visual evidence confirming the quantitative improvements observed in accuracy and F1-score.
+\textbf{Answer:} Comparing Grad-CAM maps allows us to confirm visually the fact that attention modules indeed make heatmaps tighter, allowing us to see discriminative parts of flowers better than the baseline model does. In addition, this fact proves visually that the attention module helps suppress background noise.
 
 \vspace{5mm}
 
