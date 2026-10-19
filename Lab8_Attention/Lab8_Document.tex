@@ -1536,50 +1536,51 @@ Students should investigate:
 
 \item \textbf{How does classification accuracy vary across attention mechanisms?}
 
-\textbf{Answer:} Classification accuracy generally increases when attention mechanisms are introduced compared to the baseline network. Modules combining both channel and spatial attention typically achieve higher accuracy by refining both feature types and locations. However, poorly tuned or overly complex modules may show minimal gains or slight drops due to overfitting.
+\textbf{Answer:} Classification accuracy is usually improved if attention mechanisms are used against the baseline network. Combination of both channel and spatial attention modules usually leads to greater accuracy, because both types of features are refined. However, some attention mechanisms that are poorly tuned or too complex may provide little improvement or even degrade accuracy due to overfitting.
 
 \vspace{5mm}
 
 \item \textbf{How does macro F1-score vary across attention mechanisms?}
 
-\textbf{Answer:} The macro F1-score increases as attention helps the model distinguish visually confusing flower classes more reliably. Because it evaluates all classes equally, the score reflects improvements across both easy and difficult categories. Combined attention mechanisms typically yield the highest and most balanced macro F1-scores.
+\textbf{Answer:}  Macro F1-score becomes higher as attention helps the model to differentiate visually similar flower classes. Since macro F1-score considers equally all classes, it reflects improvements made in both easy and hard categories. Combined attention mechanisms usually provide the highest and balanced macro F1-scores.
 
 \vspace{5mm}
 
 \item \textbf{How many parameters are introduced by each attention module?}
 
-\textbf{Answer:} The number of introduced parameters varies widely depending on the architecture of each attention module. Ultra-lightweight modules like ECA add virtually no extra parameters, while Squeeze-and-Excitation introduces a modest count through fully connected layers. Self-attention modules introduce noticeably more parameters due to linear projection matrices.
+\textbf{Answer:} Introduced parameters depend on the design of the attention module. Ultra-lightweight mechanisms like ECA require zero additional parameters. Squeeze-and-Excitation requires a small number of parameters as the fully-connected layers. Self-attention modules introduce much parameters because of linear projection matrices.
 
 \vspace{5mm}
 
 \item \textbf{How does each attention mechanism influence inference time?}
 
-\textbf{Answer:} Lightweight channel attention modules add negligible computation, resulting in almost identical inference times to the baseline. Spatial attention introduces a slight latency due to two-dimensional convolution operations over feature maps. Self-attention adds the greatest delay because it computes pairwise interactions across all spatial positions.
+\textbf{Answer:} Light channel attention mechanisms contribute insignificantly to computation, which leads to almost the same inference times as the baseline. Spatial attention increases latency slightly due to the two-dimensional convolution operations over feature maps. Self-attention brings additional latency because of the calculations of pairwise interaction across all spatial locations.
 
 \vspace{5mm}
 
 \item \textbf{Does attention improve the convergence behavior?}
 
-\textbf{Answer:} Yes, attention mechanisms generally accelerate training convergence by providing clearer feature signals and more informative gradients. Models with attention often reach lower training loss values in fewer epochs compared to the baseline. This results in smoother learning curves and more stable validation accuracy during training.
+\textbf{Answer:} Yes, attention mechanisms tend to enhance the convergence behavior due to clearer feature
+signals and gradients. Models with attention achieve significantly lower training losses in a lesser number of epochs than the baseline model. The result is smoother learning curves and more stable validation accuracies.
 
 \vspace{5mm}
 
 \item \textbf{Does attention produce more focused feature localization?}
 
-\textbf{Answer:} Yes, attention modules actively recalibrate feature maps to concentrate high activations on the primary object of interest. Heatmaps from attention-equipped models consistently show tighter clusters around discriminative flower petals and centers. Irrelevant background areas like grass and leaves receive significantly lower activation.
+\textbf{Answer:} Yes, attention mechanisms actively adjust feature maps to focus high activations on the target object. Heatmaps for attention mechanisms tend to demonstrate more concentrated clusters around discriminating flower petals and centers. Feature maps for irrelevant background regions like grass or leaves get significantly fewer activations than other mechanisms.
 
 \vspace{5mm}
 
 \item \textbf{Does an increase in attention complexity always improve classification performance?}
 
-\textbf{Answer:} No, increasing the complexity of an attention module does not always result in better classification accuracy. Excessively complex modules with many parameters can cause overfitting and slow down training and inference. In many cases, simple and lightweight mechanisms deliver equal or superior performance with much higher efficiency.
+\textbf{Answer:} No, an increase in the complexity of an attention module does not lead to an increase in classification accuracy. Very complex models having numerous parameters might lead to overfitting, thus making training and inference slow. Often, simpler and more efficient mechanisms perform as good or even better compared to complicated ones.
 
 \vspace{5mm}
 
 \item \textbf{Does a lightweight attention mechanism provide comparable performance with a computationally heavier mechanism?}
 
-\textbf{Answer:} Yes, lightweight attention mechanisms often match or surpass the performance of computationally heavier ones. Because lightweight designs avoid aggressive dimension reduction and excessive parameters, they preserve essential visual information cleanly. They offer an ideal compromise by achieving strong accuracy gains without sacrificing inference speed.
-
+\textbf{Answer:}  Yes, often the performance of a lightweight mechanism is on par or exceeds the performance of a computationally more intensive one. The reason for this lies in the fact that the lightweight mechanism does not employ extreme dimensionality reduction or very complex architecture, which allows preserving visual information well enough.
+ 
 \vspace{5mm}
 
 \end{enumerate}
@@ -2398,99 +2399,29 @@ structures;
 These observations must be based on the student's experimental
 visualizations.
 
-% ============================================================
-\section*{30. Qualitative Comparison Across Attention Mechanisms}
-% ============================================================
 
-Select at least:
-
-\[
-\boxed{
-3\text{ correctly classified images}
-}
-\]
-
-and
-
-\[
-\boxed{
-2\text{ incorrectly classified images}.
-}
-\]
-
-For every selected image, compare the behavior of multiple models.
-
-A recommended arrangement is:
-
-\[
-\boxed{
-\begin{array}{c}
-\text{Input Image}\\
-\downarrow\\
-\text{Baseline Grad-CAM}\\
-\text{Channel-Attention Grad-CAM}\\
-\text{Spatial-Attention Map}\\
-\text{Channel+Spatial Grad-CAM}\\
-\text{Self-Attention Response}
-\end{array}
-}
-\]
-
-Students may alternatively arrange the images horizontally in the report.
 
 % ============================================================
-\subsection*{30.1 Qualitative Criteria}
+\section*{30. Plots and Inference}
 % ============================================================
-
-The student should discuss:
-
-\begin{itemize}
-
-\item foreground localization;
-
-\item background suppression;
-
-\item localization of petals;
-
-\item localization of the flower center;
-
-\item activation compactness;
-
-\item activation coverage;
-
-\item incorrectly attended regions;
-
-\item differences between correctly and incorrectly classified samples;
-
-\item differences between shallow and deep attention; and
-
-\item consistency of attention across different images.
-
-\end{itemize}
-
-% ============================================================
-\section*{31. Plots and Inference}
-% ============================================================
-
-This section presents the comprehensive empirical results, training trajectories, test confusion matrices, stage-wise ablation comparisons, and qualitative feature/saliency visualizations generated using the ImageNet-pretrained ResNet50 backbone on the TensorFlow Flowers benchmark dataset. For each visualization, detailed descriptions, figure captions, and analytical inferences are provided.
 
 % ------------------------------------------------------------
-\subsection*{31.1 Dataset Sample Images}
+\subsection*{30.1 Dataset Sample Images}
 % ------------------------------------------------------------
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{Images/use/sample_images.png}
-\caption{Representative sample images from the five classes of the TensorFlow Flowers benchmark dataset: \texttt{daisy}, \texttt{dandelion}, \texttt{roses}, \texttt{sunflowers}, and \texttt{tulips}.}
+\caption{Sample images from the TensorFlow Flower dataset}
 \label{fig:sample_images}
 \end{figure}
 
-\textbf{Inference:} The benchmark exhibits significant visual heterogeneity across all five flower categories, characterized by variations in scale, lighting, camera viewpoint, and natural background clutter such as foliage, soil, and garden fixtures. Classes like daisy and dandelion share similar radial petal arrangements, while roses and tulips possess close chromatic profiles and layered petal densities. These challenging intra-class variations make selective attention crucial to isolate foreground floral structures from background noise.
+\textbf{Inference:} This dataset shows notable heterogeneity in visual appearance across the five flower classes with respect to scale differences, lighting conditions, camera view angles, and natural background clutter such as leaves, soil, and garden elements. Flower species such as daisy and dandelion have similar petal structure radially symmetric; roses and tulips, on the other hand, have similar chromatic properties and densely packed petals. This difficult class variation calls for the use of selective attention to extract the flower objects from background clutter.
 
 \vspace{3mm}
 
 % ------------------------------------------------------------
-\subsection*{31.2 Baseline ResNet50: Accuracy, Loss, and Confusion Matrix}
+\subsection*{30.2 Baseline ResNet50: Accuracy, Loss, and Confusion Matrix}
 % ------------------------------------------------------------
 
 \begin{figure}[H]
@@ -2517,12 +2448,12 @@ This section presents the comprehensive empirical results, training trajectories
 \label{fig:baseline_group}
 \end{figure}
 
-\textbf{Inference:} The baseline ResNet50 exhibits rapid and stable convergence, achieving a final validation accuracy of approximately 91.5\% with closely tracked training accuracy that confirms minimal overfitting. The cross-entropy loss smoothly descends from 0.85 to 0.25, indicating well-behaved gradient updates from the ImageNet initialization. The test confusion matrix demonstrates high classification fidelity for daisies (125 correct) and dandelions (92 correct), while the primary failure mode occurs between roses and tulips (11 roses misclassified as tulips) due to overlapping coloration and morphological complexity.
+\textbf{Inference:} The ResNet50 baseline shows quick and stable convergence with final validation accuracy reaching about 91.5\% and training accuracy showing low overfitting with almost identical values. Cross entropy loss decreases gradually from 0.85 to 0.25, demonstrating good gradient updates from ImageNet initialization. Confusion matrix in test set shows good accuracy of daisy (125 correct) and dandelion (92 correct). Misclassification is mostly found between roses and tulips (11 roses are classified as tulips) owing to similar coloration and morphology.
 
 \vspace{3mm}
 
 % ------------------------------------------------------------
-\subsection*{31.3 Channel Attention at $P_3$ (conv4\_x): Accuracy, Loss, and Confusion Matrix}
+\subsection*{30.3 Channel Attention at $P_3$ (conv4\_x): Accuracy, Loss, and Confusion Matrix}
 % ------------------------------------------------------------
 
 \begin{figure}[H]
@@ -2549,12 +2480,12 @@ This section presents the comprehensive empirical results, training trajectories
 \label{fig:channel_group}
 \end{figure}
 
-\textbf{Inference:} Inserting channel attention at stage $P_3$ dynamically recalibrates channel-wise feature responses, boosting validation accuracy to approximately 92.4\% and accelerating loss minimization down to 0.22. By modeling global inter-channel dependencies via squeeze-and-excitation pooling, the network amplifies discriminative feature detectors while dampening background-sensitive channels. Consequently, test confusion between visually adjacent classes like roses and tulips is notably reduced, demonstrating that channel recalibration strengthens category-specific semantic separation.
+\textbf{Inference:}  Inclusion of channel attention at stage $P_3$ dynamically recalibrates the response of channel-wise features, thus achieving the validation accuracy of about 92.4\% and speeding up loss minimization to 0.22. By learning interdependencies among channels through squeeze-and-excitation pooling, the network enhances discriminative feature detectors and suppresses background features. As a result, test misclassification of neighboring categories such as roses and tulips is significantly reduced, which means that channel recalibration improves category-specific semantic separation.
 
 \vspace{3mm}
 
 % ------------------------------------------------------------
-\subsection*{31.4 Spatial Attention ($k=5$) at $P_3$ (conv4\_x): Accuracy, Loss, and Confusion Matrix}
+\subsection*{30.4 Spatial Attention ($k=5$) at $P_3$ (conv4\_x): Accuracy, Loss, and Confusion Matrix}
 % ------------------------------------------------------------
 
 \begin{figure}[H]
@@ -2581,12 +2512,13 @@ This section presents the comprehensive empirical results, training trajectories
 \label{fig:spatial_group}
 \end{figure}
 
-\textbf{Inference:} Integrating spatial attention with a $5\times 5$ convolution kernel at stage $P_3$ yields solid convergence with validation accuracy reaching ~91.8\% and cross-entropy loss settling at 0.24. The spatial attention module pools channel statistics to synthesize a two-dimensional saliency mask that directs subsequent convolutional filters toward high-contrast flower heads. The confusion matrix confirms enhanced precision on sunflowers and daisies, proving that intermediate spatial masking effectively suppresses ambient background artifacts like grass and sky.
+\textbf{Inference:} 
+Application of spatial attention using $5 \times 5$ convolution kernel at stage $P_3$ results in good convergence with validation accuracy achieving ~91.8\% and the cross-entropy loss of 0.24. The spatial attention layer calculates statistics of channels to generate a two-dimensional saliency map for guiding further convolution filters toward contrastive flower heads. According to the confusion matrix, accuracy on sunflowers and daisies has been enhanced by this method, thus demonstrating that intermediate spatial masking helps filter out irrelevant background features such as grass and sky.
 
 \vspace{3mm}
 
 % ------------------------------------------------------------
-\subsection*{31.5 Squeeze-and-Excitation (SE) Attention at $P_3$: Accuracy, Loss, and Confusion Matrix}
+\subsection*{30.5 Squeeze-and-Excitation (SE) Attention at $P_3$: Accuracy, Loss, and Confusion Matrix}
 % ------------------------------------------------------------
 
 \begin{figure}[H]
@@ -2613,12 +2545,12 @@ This section presents the comprehensive empirical results, training trajectories
 \label{fig:se_group}
 \end{figure}
 
-\textbf{Inference:} The dedicated Squeeze-and-Excitation block at $P_3$ achieves strong generalization with validation accuracy reaching ~92.6\% and a smooth loss decay with virtually no gap between training and validation trajectories. The two-stage multi-layer perceptron bottleneck provides non-linear channel dependencies that regularize feature representations without adding substantial parameter overhead. The resulting confusion matrix shows high true-positive counts across all five categories, confirming that channel recalibration promotes sharp, class-discriminative feature representations.
+\textbf{Inference:} The specialized Squeeze-and-Excitation block at $P_3$ results in good generalization performance with ~92.6\% validation accuracy and loss decay with essentially zero gap between the training and validation curves. Two-stage multi-layer perceptron bottleneck provides non-linear channel dependencies as regularization for the feature representations without any extra parameters overhead. The obtained confusion matrix confirms many true positives on all five classes, showing that channel recalibration results in clear and discriminating feature representations.
 
 \vspace{3mm}
 
 % ------------------------------------------------------------
-\subsection*{31.6 Channel+Spatial Attention at $P_2$ (conv2\_x): Accuracy, Loss, and Confusion Matrix}
+\subsection*{30.6 Channel+Spatial Attention at $P_2$ (conv2\_x): Accuracy, Loss, and Confusion Matrix}
 % ------------------------------------------------------------
 
 \begin{figure}[H]
@@ -2645,12 +2577,12 @@ This section presents the comprehensive empirical results, training trajectories
 \label{fig:cs_p2_group}
 \end{figure}
 
-\textbf{Inference:} Introducing sequential Channel+Spatial attention early at stage $P_2$ provides disciplined low-level feature refinement, attaining 91.2\% test accuracy with smooth loss convergence. However, because features at $P_2$ retain high spatial resolution ($56\times 56$) with primitive edge/texture semantics, the attention mechanisms lack sufficient high-level semantic context to maximize discriminative power. The confusion matrix indicates reasonable separation, but class confusion remains slightly higher than with intermediate $P_3$ placement, underscoring that attention is most beneficial where semantic abstractions begin to form.
+\textbf{Inference:} Adding of sequential Channel+Spatial attention at an early stage of $P_2$ provides good control of low-level feature refinement, achieving 91.2\% test accuracy and smooth convergence of the loss curve. However, due to the high spatial resolution of features at $P_2$ ($56 \times 56$) with simple edge/texture semantics, the attention blocks do not have enough of high-level semantics to utilize their full potential. From the confusion matrix it can be seen that there is relatively good separation of the classes, however class confusion is somewhat higher compared to intermediate stage $P_3$.
 
 \vspace{3mm}
 
 % ------------------------------------------------------------
-\subsection*{31.7 Multi-Stage Channel+Spatial Attention ($P_2+P_3+P_4$): Accuracy, Loss, and Confusion Matrix}
+\subsection*{30.7 Multi-Stage Channel+Spatial Attention ($P_2+P_3+P_4$): Accuracy, Loss, and Confusion Matrix}
 % ------------------------------------------------------------
 
 \begin{figure}[H]
@@ -2677,12 +2609,12 @@ This section presents the comprehensive empirical results, training trajectories
 \label{fig:multi_p234_group}
 \end{figure}
 
-\textbf{Inference:} Simultaneously inserting attention blocks across stages $P_2$, $P_3$, and $P_4$ results in a modest test accuracy of 88.9\%, which is notably lower than single-stage insertion at $P_3$ (92.4\%). The loss curves reveal premature validation plateauing, indicating that cascading multiple attention modules on a moderate-sized dataset increases parameter complexity and heightens vulnerability to overfitting. The confusion matrix shows broader off-diagonal error dispersion across classes, empirically verifying that targeted attention at a single critical stage outperforms redundant multi-stage insertion.
+\textbf{Inference:} Inserting attention blocks during stages $P_2$, $P_3$, and $P_4$ at once leads to slightly worse test accuracy (88.9\%) and, in contrast to single-stage attention insertion at stage $P_3$, this approach demonstrates much lower results (92.4\%). Based on loss curves, one can notice early validation plateauing; hence, cascade insertion of attention modules increases parameter number and, consequently, makes a network more vulnerable to overfitting on a moderate-size training set. Confusion matrix demonstrates higher off-diagonal errors' dispersion that proves empirically the superiority of targeted attention insertion at a single important stage.
 
 \vspace{3mm}
 
 % ------------------------------------------------------------
-\subsection*{31.8 Comparative Confusion Matrix Analysis: Baseline vs. Channel$\rightarrow$Spatial Attention}
+\subsection*{30.8 Comparative Confusion Matrix Analysis: Baseline vs. Channel$\rightarrow$Spatial Attention}
 % ------------------------------------------------------------
 
 \begin{figure}[H]
@@ -2692,12 +2624,12 @@ This section presents the comprehensive empirical results, training trajectories
 \label{fig:f10_cm}
 \end{figure}
 
-\textbf{Inference:} The comparative analysis illustrates that while both models achieve comparable overall classification performance, their class-specific confusion distributions differ noticeably. The difference matrix reveals that Channel$\rightarrow$Spatial attention improves classification on dandelions (+1) and sunflowers (+1) by suppressing background confusion with green leaves. Conversely, a minor trade-off occurs in rose-to-tulip classification (+5 errors), indicating that spatial-channel refinement reshapes class decision boundaries in favor of distinct contour definition.
+\textbf{Inference:} From the comparative analysis, one may see that although the results of both models are comparable in terms of overall classification accuracy, the distribution of class-specific confusion is different. As one can see from the difference matrix, channel-spatial attention leads to better classification of dandelions (+1) and sunflowers (+1) since attention mechanism reduces confusion with green leaves of other classes. However, a small disadvantage appears when roses are classified as tulips (+5 errors).
 
 \vspace{3mm}
 
 % ------------------------------------------------------------
-\subsection*{31.9 Effect of Attention Insertion Position on Performance ($P_2$ vs. $P_3$ vs. $P_4$)}
+\subsection*{30.9 Effect of Attention Insertion Position on Performance ($P_2$ vs. $P_3$ vs. $P_4$)}
 % ------------------------------------------------------------
 
 \begin{figure}[H]
@@ -2717,12 +2649,12 @@ This section presents the comprehensive empirical results, training trajectories
 \label{fig:position_perf}
 \end{figure}
 
-\textbf{Inference:} Stage $P_3$ (conv4\_x) achieves the peak performance across both test accuracy (93.1\%) and macro F1-score (0.928), consistently outperforming $P_2$ (91.2\%) and $P_4$ (92.5\%). Stage $P_3$ provides an optimal equilibrium between spatial resolution ($14\times 14$) and semantic depth (1024 channels), enabling spatial masks and channel weights to capture coherent object parts. In contrast, $P_2$ operates on low-level visual primitives with high computational overhead, while $P_4$ suffers from a coarse $7\times 7$ grid that limits fine spatial localization.
+\textbf{Inference:} Stage $P_3$ (conv4\_x) yields the maximum performance with respect to both test accuracy (93.1\%) and macro F1-score (0.928), outperforming stage $P_2$ (91.2\%) and $P_4$ (92.5\%). Stage $P_3$ strikes a balance between spatial resolution ($14\times 14$) and semantics (1024 channels) such that spatial masks and channel weights can recognize coherent object parts. However, stage $P_2$ deals with primitive features with a huge amount of computation, whereas stage $P_4$ suffers from a coarse spatial resolution ($7 \times 7$).
 
 \vspace{3mm}
 
 % ------------------------------------------------------------
-\subsection*{31.10 Effect of Attention Ordering: Channel$\rightarrow$Spatial vs. Spatial$\rightarrow$Channel}
+\subsection*{30.10 Effect of Attention Ordering: Channel$\rightarrow$Spatial vs. Spatial$\rightarrow$Channel}
 % ------------------------------------------------------------
 
 \begin{figure}[H]
@@ -2732,12 +2664,12 @@ This section presents the comprehensive empirical results, training trajectories
 \label{fig:ordering_perf}
 \end{figure}
 
-\textbf{Inference:} Sequential Channel$\rightarrow$Spatial attention achieves superior classification accuracy (93.1\%) compared to Spatial$\rightarrow$Channel ordering (90.7\%). Applying channel attention first prioritizes the most meaningful feature channels (answering ``what'' to focus on), providing a calibrated feature landscape for subsequent spatial localization (answering ``where'' to look). Conversely, applying spatial attention first forces the module to generate spatial masks from noisy, unweighted channel representations, degrading spatial precision and overall accuracy.
+\textbf{Inference:} Sequential Channel$\rightarrow$Spatial attention leads to higher classification accuracy (93.1\%) than Sequential Spatial$\rightarrow$Channel attention (90.7\%). Channel attention performed first helps the model recognize meaningful feature channels (i.e., answering what to focus on) before spatial localization (i.e., answering where to attend). On the contrary, if spatial attention is applied first, it means the module tries to localize based on noisy and unweighted feature channels.
 
 \vspace{3mm}
 
 % ------------------------------------------------------------
-\subsection*{31.11 Single-Stage vs. Multi-Stage Attention Configuration Comparison}
+\subsection*{30.11 Single-Stage vs. Multi-Stage Attention Configuration Comparison}
 % ------------------------------------------------------------
 
 \begin{figure}[H]
@@ -2747,12 +2679,12 @@ This section presents the comprehensive empirical results, training trajectories
 \label{fig:multistage_perf}
 \end{figure}
 
-\textbf{Inference:} Single-stage attention at $P_3$ achieves the highest overall accuracy (93.1\%), whereas combining multiple attention stages leads to monotonic performance decline ($P_3+P_4$ achieves 89.8\% and $P_2+P_3+P_4$ drops to 88.9\%). Stacking attention modules across successive stages introduces redundant non-linearities and increases parameter count without providing orthogonal feature recalibration. This confirms that strategic single-stage attention at the intermediate representational bottleneck is both more accurate and computationally efficient than multi-stage insertion.
+\textbf{Inference:} The single-stage attention at $P_3$ level shows the best accuracy overall (93.1\%), while the use of multiple attention stages results in monotonic decrease in performance (accuracy of $P_3+P_4$ is 89.8\% and $P_2+P_3+P_4$ only 88.9\%). Adding more attention modules stage-wise adds redundant non-linear transformations and increases the number of parameters, while not offering additional orthogonal feature recalibration. Thus, the use of strategic single-stage attention proves to be more accurate and less costly than multi-stage attention.
 
 \vspace{3mm}
 
 % ------------------------------------------------------------
-\subsection*{31.12 Internal Feature Map Refinement Before and After Channel$\rightarrow$Spatial Attention}
+\subsection*{30.12 Internal Feature Map Refinement Before and After Channel$\rightarrow$Spatial Attention}
 % ------------------------------------------------------------
 
 \begin{figure}[H]
@@ -2773,12 +2705,12 @@ This section presents the comprehensive empirical results, training trajectories
 \label{fig:f12_featmaps}
 \end{figure}
 
-\textbf{Inference:} Prior to attention, intermediate feature maps exhibit diffuse activation energy dispersed over both foreground petals and surrounding background clutter. After sequential Channel$\rightarrow$Spatial attention, background responses are systematically suppressed (spatial mask values drop to 0.78--0.86 in background regions), while central flower structures are preserved and accentuated. Examining individual channels demonstrates that discriminative floral feature detectors receive intensified responses while non-informative background channels are effectively silenced.
+\textbf{Inference:} Before applying attention, the intermediate feature maps show activation energy spread across both the petals and the background clutter. Following the Sequential Channel$\rightarrow$Spatial attention process, the background is suppressed (background areas in spatial masks achieve values between 0.78 and 0.86), while the central structures are retained and highlighted. The analysis of the channels separately proves that discriminating features of flowers have their activations increased, while the rest of the channels are suppressed.
 
 \vspace{3mm}
 
 % ------------------------------------------------------------
-\subsection*{31.13 Channel-Attention Weight Distribution and Ranking at Stage $P_3$}
+\subsection*{30.13 Channel-Attention Weight Distribution and Ranking at Stage $P_3$}
 % ------------------------------------------------------------
 
 \begin{figure}[H]
@@ -2788,27 +2720,27 @@ This section presents the comprehensive empirical results, training trajectories
 \label{fig:f13_weights}
 \end{figure}
 
-\textbf{Inference:} The channel weight histogram displays a right-skewed unimodal distribution centered between 0.85 and 0.95, indicating that the sigmoid excitation maintains representational throughput while down-scaling approximately 15\% of less discriminative channels. The top-20 channel weights exhibit remarkably low standard deviations across test samples, confirming consistent identification of critical class-indicative feature detectors. The steep descent in the lowest-ranked channel weights demonstrates effective suppression of noisy, non-transferable feature channels.
+\textbf{Inference:}The histogram of the channel weights presents a unimodal right-skewed distribution around the range of 0.85 to 0.95, meaning that the sigmoid excitation preserves representational capacity and reduces the number of discriminatively weak channels by approximately 15\%. The weights of the top-20 channels have extremely small standard deviations among different test cases, suggesting successful selection of class-discriminative feature detectors. The sharp drop in the lower channel weights reveals efficient filtering of irrelevant feature channels.
 
 \vspace{3mm}
 
 % ------------------------------------------------------------
-\subsection*{31.14 Spatial Attention Heatmaps and Overlay Visualizations Across Flower Classes}
+\subsection*{30.14 Spatial Attention Heatmaps and Overlay Visualizations Across Flower Classes}
 % ------------------------------------------------------------
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.82\textwidth]{Images/use/F14_spatial_attention_map_overlay.pdf}
+\includegraphics[width=0.7\textwidth]{Images/use/F14_spatial_attention_map_overlay.pdf}
 \caption{Spatial attention heatmaps $M_s \in [0.89, 0.97]$ and corresponding RGB overlays generated by model A2 at $P_3$ ($14\times 14$, $k=7$) across all five flower categories.}
 \label{fig:f14_spatial}
 \end{figure}
 
-\textbf{Inference:} Across all five flower categories, the spatial attention maps consistently generate concentrated high-weight regions (peak value $\approx 0.97$) strictly coincident with foreground flower heads. The learned spatial filter creates smooth transition boundaries that effectively mask peripheral clutter (e.g., sky, foliage, and garden fixtures) while preserving full petal morphology. This class-agnostic foreground localization confirms that the $7\times 7$ spatial receptive field effectively abstracts object boundaries from mid-level convolutional features.
+\textbf{Inference:}The spatial attention maps consistently present focused regions with high values (peak $\approx 0.97$) corresponding only to the flower heads in all flower types. The learned spatial filter provides seamless transition borders that help hide irrelevant areas such as the sky, leaves, and other elements in the garden while maintaining the whole shape of the petals. The class-independent foreground detection verifies the efficiency of $7\times 7$ spatial receptive field in extracting object borders from mid-level convolutions.
 
 \vspace{3mm}
 
 % ------------------------------------------------------------
-\subsection*{31.15 Spatial Attention Progression Across ResNet50 Stages ($P_1$ through $P_4$)}
+\subsection*{30.15 Spatial Attention Progression Across ResNet50 Stages ($P_1$ through $P_4$)}
 % ------------------------------------------------------------
 
 \begin{figure}[H]
@@ -2818,12 +2750,12 @@ This section presents the comprehensive empirical results, training trajectories
 \label{fig:f15_stages}
 \end{figure}
 
-\textbf{Inference:} At early stage $P_1$, attention maps are high-resolution but highly fragmented and textured, responding to fine edges and color gradients rather than holistic object semantics. As features propagate through $P_2$ to $P_3$, attention maps consolidate into dense, semantically meaningful masks enclosing primary flower structures. At late stage $P_4$, spatial downsampling to $7\times 7$ results in coarse, blocky heatmaps that lack boundary delineation, confirming that $P_3$ represents the sweet spot for spatial attention.
+\textbf{Inference:} In early stage $P_1$, the attention maps have high resolution but very fragmented and textured, reacting to fine edges and color changes rather than holistic semantic object understanding. Attention maps gradually become dense and semantic masks with a focus on the primary structure of flowers as features are propagated from $P_2$ to $P_3$. Attention maps become more coarse and blocky with no clear boundaries in the late stage $P_4$ due to $7 \times 7$ spatial downsampling, which proves $P_3$ being the ideal stage for spatial attention.
 
 \vspace{3mm}
 
 % ------------------------------------------------------------
-\subsection*{31.16 Lightweight Self-Attention Response and Query-Location Interaction Maps}
+\subsection*{30.16 Lightweight Self-Attention Response and Query-Location Interaction Maps}
 % ------------------------------------------------------------
 
 \begin{figure}[H]
@@ -2833,12 +2765,12 @@ This section presents the comprehensive empirical results, training trajectories
 \label{fig:f17_selfattn}
 \end{figure}
 
-\textbf{Inference:} Self-attention interaction maps reveal that selecting a query point located on a flower petal strongly activates other spatially separated petals on the same flower head, demonstrating long-range contextual binding. In contrast, query locations on background regions produce low-magnitude, uniformly diffuse attention distributions, illustrating that self-attention naturally suppresses irrelevant context. The response norm $\|\gamma A V\|$ isolates sharp object boundaries, showing that non-local pairwise affinity modeling reinforces global object cohesion.
+\textbf{Inference:} The self-attention interaction map indicates that if a query point is selected from a flower petal, other petals in the same flower will be activated by self-attention, which shows the capability of self-attention to bind context over a large distance. On the other hand, the attention distribution of query points chosen from background area will be low intensity and very diffuse, indicating that self-attention is capable of ignoring irrelevant context.
 
 \vspace{3mm}
 
 % ------------------------------------------------------------
-\subsection*{31.17 Qualitative Comparison Across Attention Mechanisms for Correct and Misclassified Samples}
+\subsection*{30.17 Qualitative Comparison Across Attention Mechanisms for Correct and Misclassified Samples}
 % ------------------------------------------------------------
 
 \begin{figure}[H]
@@ -2848,12 +2780,12 @@ This section presents the comprehensive empirical results, training trajectories
 \label{fig:f18_qualitative}
 \end{figure}
 
-\textbf{Inference:} For correctly classified samples (rows 1--3), attention-augmented architectures generate markedly tighter, more concentrated Grad-CAM heatmaps centered on key flower structures compared to the broad baseline activations. On misclassified samples (rows 4--5), the baseline model focuses erroneously on misleading background cues (e.g., bright yellow foliage), whereas Channel+Spatial attention attempts to refocus on central floral discs. Errors correlate primarily with extreme perspective angles and chromatic ambiguity, showing that while attention improves localization, severe visual ambiguity remains challenging.
+\textbf{Inference:} For correctly classified samples (rows 1-3), attention-enhanced architectures yield considerably more tight and concentrated Grad-CAM maps around important flower regions relative to large baseline activations. For misclassified samples (rows 4-5), the baseline model makes an incorrect concentration of attention on irrelevant background signals (such as bright yellow leaves), while Channel+Spatial attention tries to concentrate on central flowers. Incorrect classification is caused mostly by extreme perspective angles and chromatic confusion, proving that although attention helps to localize features, visual ambiguity is still hard to handle.
 
 \vspace{3mm}
 
 % ------------------------------------------------------------
-\subsection*{31.18 Grad-CAM Explanations for Additional Attention Mechanisms}
+\subsection*{30.18 Grad-CAM Explanations for Additional Attention Mechanisms}
 % ------------------------------------------------------------
 
 \begin{figure}[H]
@@ -2863,12 +2795,12 @@ This section presents the comprehensive empirical results, training trajectories
 \label{fig:f19_additional}
 \end{figure}
 
-\textbf{Inference:} All advanced attention architectures produce noticeably more compact and foreground-aligned Grad-CAM heatmaps than the unaugmented ResNet50 baseline. CBAM and Coordinate Attention demonstrate the sharpest boundary containment by synthesizing both channel-wise selection and directional spatial localization. Lightweight mechanisms like ECA achieve localization quality comparable to parameter-heavy models, verifying that efficient 1D channel convolutions provide sufficient discriminative focus without excessive parameter overhead.
+\textbf{Inference:}All complex attention-enhanced architectures yield much more compact and foreground-oriented Grad-CAM maps than ResNet50 baseline without any augmentations. CBAM and Coordinate Attention exhibit the most prominent boundary containment by combining channel-wise attention selection with direction-sensitive spatial attention. Lightweight attention architectures such as ECA are as good at localizing features as heavy parameterized models, demonstrating that channel convolution with only one dimension of feature map yields enough discriminatory attention.
 
 \vspace{3mm}
 
 % ------------------------------------------------------------
-\subsection*{31.19 Direct Grad-CAM Comparison: Baseline ResNet50 vs. Channel$\rightarrow$Spatial Attention}
+\subsection*{30.19 Direct Grad-CAM Comparison: Baseline ResNet50 vs. Channel$\rightarrow$Spatial Attention}
 % ------------------------------------------------------------
 
 \begin{figure}[H]
@@ -2878,285 +2810,22 @@ This section presents the comprehensive empirical results, training trajectories
 \label{fig:f20_gradcam}
 \end{figure}
 
-\textbf{Inference:} Pairwise comparison confirms that the Channel$\rightarrow$Spatial model consistently eliminates extraneous background activations across soil, lawn, and sky regions, concentrating the gradient energy exclusively on floral centers and petals. On ambiguous test cases, the attention model boosts prediction confidence scores (e.g., tulip classification confidence increases from 0.71 to 0.81), indicating sharpened internal representation certainty. This direct visual evidence corroborates the quantitative accuracy improvements, confirming that attention mechanisms effectively suppress background noise and reinforce foreground semantic saliency.
+\textbf{Inference:} The pairwise comparison shows that the Channel$\rightarrow$Spatial approach always removes the activations related to extraneous backgrounds in soil, lawn, and sky areas and leaves only those pertaining to the flowers' centers and petals. In the case of challenging examples, the attention-based approach improves the model's confidence scores for the prediction (for example, the confidence score for predicting tulips rises from 0.71 to 0.81), demonstrating a more certain model representation internally.
 
 \vspace{3mm}
 
-% ============================================================
-\section*{32. Recommended Visualization Layout}
-% ============================================================
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{31. Source Code }
 
-For one representative test image, students are encouraged to generate a
-figure in the following format:
+\noindent\textbf{Source:} Github\\
+\noindent\textbf{Github Repository Link:}
 
-\[
-\boxed{
-\begin{array}{ccccc}
-\text{Input}
-&
-\text{Baseline}
-&
-\text{Channel}
-&
-\text{Spatial}
-&
-\text{Channel+Spatial}
-\\
-&
-\text{Grad-CAM}
-&
-\text{Grad-CAM}
-&
-\text{Attention Map}
-&
-\text{Grad-CAM}
-\end{array}
-}
-\]
+\url{https://github.com/ssvibitha/DeepLearningLab_2026-27/blob/main/Lab8_Attention/DL_Lab8.ipynb}
 
-For students completing the additional attention comparison, the figure may
-be extended to:
-
-\[
-\boxed{
-\text{Input}
-|
-\text{Baseline}
-|
-\text{SE}
-|
-\text{ECA}
-|
-\text{CBAM}
-|
-\text{Self-Attention}
-}
-\]
-
-using appropriate visualization methods.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % ============================================================
-\section*{33. Required Experimental Analysis}
-% ============================================================
-
-The final report should contain three forms of analysis.
-
-\subsection*{33.1 Quantitative Analysis}
-
-Report:
-
-\[
-\boxed{
-\text{Accuracy}
-+
-\text{Precision}
-+
-\text{Recall}
-+
-\text{Macro F1}
-}
-\]
-
-\subsection*{33.2 Complexity Analysis}
-
-Report:
-
-\[
-\boxed{
-\text{Parameters}
-+
-\text{Inference Time}
-}
-\]
-
-\subsection*{33.3 Qualitative Analysis}
-
-Report:
-
-\[
-\boxed{
-\text{Grad-CAM}
-+
-\text{Attention Maps}
-+
-\text{Visual Interpretation}
-}
-\]
-
-Therefore, the overall evaluation should be:
-
-\[
-\boxed{
-\text{Quantitative}
-+
-\text{Computational}
-+
-\text{Qualitative}
-}
-\]
-
-% ============================================================
-\section*{34. Experimental Protocol}
-% ============================================================
-
-To ensure fair comparison, all ablation experiments must use:
-
-\begin{itemize}
-
-\item identical training images;
-
-\item identical validation images;
-
-\item identical testing images;
-
-\item identical random seed where possible;
-
-\item identical image preprocessing;
-
-\item identical augmentation;
-
-\item identical backbone;
-
-\item identical classifier;
-
-\item identical optimizer;
-
-\item identical batch size;
-
-\item identical number of epochs;
-
-\item identical learning-rate schedule;
-
-\item identical fine-tuning procedure; and
-
-\item identical evaluation metrics.
-
-\end{itemize}
-
-Only the experimental factor under investigation should change.
-
-For example, when studying attention position:
-
-\[
-\boxed{
-\text{Only Attention Position Should Change}
-}
-\]
-
-and when studying attention type:
-
-\[
-\boxed{
-\text{Only Attention Type Should Change}.
-}
-\]
-
-% ============================================================
-\section*{35. Minimum Mandatory Ablation Set}
-% ============================================================
-
-If laboratory time is limited, every student must complete at least the
-following experiments:
-
-\begin{enumerate}
-
-\item Baseline pretrained ResNet50.
-
-\item Channel attention at $P_3$.
-
-\item Spatial attention at $P_3$.
-
-\item Channel+Spatial attention at $P_3$.
-
-\item Channel+Spatial attention at $P_2$.
-
-\item Channel+Spatial attention at $P_4$.
-
-\item Self-attention at $P_3$.
-
-\item Grad-CAM comparison between baseline ResNet50 and one selected
-attention model.
-
-\item Spatial-attention visualization at $P_2$, $P_3$, and $P_4$.
-
-\item Graphical comparison of the classification performance of the attention
-models.
-
-\end{enumerate}
-
-This minimum set allows students to study:
-
-\[
-\boxed{\text{Attention Type}}
-\]
-
-and
-
-\[
-\boxed{\text{Attention Position}}.
-\]
-
-% ============================================================
-\section*{36. Additional Student Exploration}
-% ============================================================
-
-Students interested in extended experimentation should select at least two
-mechanisms from:
-
-\[
-\boxed{
-\text{SE},
-\quad
-\text{ECA},
-\quad
-\text{CBAM},
-\quad
-\text{Coordinate Attention},
-\quad
-\text{Self-Attention}
-}
-\]
-
-and integrate them with the same ResNet50 backbone.
-
-Students should maintain the same:
-
-\begin{itemize}
-
-\item dataset split;
-
-\item preprocessing;
-
-\item augmentation;
-
-\item optimizer;
-
-\item epochs;
-
-\item fine-tuning strategy; and
-
-\item attention position.
-
-\end{itemize}
-
-The additional investigation should include both:
-
-\[
-\boxed{
-\text{Quantitative Comparison}
-}
-\]
-
-and
-
-\[
-\boxed{
-\text{Qualitative Comparison}.
-}
-\]
-
-% ============================================================
-\section*{37. Questions Students Must Answer}
+\section*{32. Discussion}
 % ============================================================
 
 \begin{enumerate}
@@ -3383,135 +3052,9 @@ different attention mechanisms?}
 
 \end{enumerate}
 
-% ============================================================
-\section*{38. Observations to be Recorded}
-% ============================================================
-
-Students should record the following during experimentation:
-
-\begin{enumerate}
-
-\item Input and output feature dimensions for each attention module.
-
-\item Training accuracy.
-
-\item Validation accuracy.
-
-\item Testing accuracy.
-
-\item Training loss.
-
-\item Validation loss.
-
-\item Macro precision.
-
-\item Macro recall.
-
-\item Macro F1-score.
-
-\item Number of trainable parameters.
-
-\item Total number of model parameters.
-
-\item Average inference time.
-
-\item Confusion matrix.
-
-\item Channel-attention weights.
-
-\item Spatial-attention maps.
-
-\item Self-attention responses.
-
-\item Grad-CAM maps.
-
-\item Attention maps for different insertion positions.
-
-\end{enumerate}
 
 % ============================================================
-\section*{39. Suggested Laboratory Report Structure}
-% ============================================================
-
-The laboratory report may be organized as follows:
-
-\begin{enumerate}
-
-\item \textbf{Aim}
-
-\item \textbf{Dataset Description}
-
-\item \textbf{ResNet50 Architecture}
-
-\item \textbf{Attention Mechanisms}
-
-\item \textbf{Proposed Experimental Architecture}
-
-\item \textbf{Experimental Setup}
-
-\item \textbf{Attention-Type Ablation}
-
-\item \textbf{Attention-Position Ablation}
-
-\item \textbf{Performance Results}
-
-\item \textbf{Complexity Analysis}
-
-\item \textbf{Training and Validation Graphs}
-
-\item \textbf{Confusion Matrix Analysis}
-
-\item \textbf{Grad-CAM Analysis}
-
-\item \textbf{Internal Attention-Map Analysis}
-
-\item \textbf{Qualitative Comparison}
-
-\item \textbf{Additional Attention-Mechanism Comparison}
-
-\item \textbf{Discussion}
-
-\item \textbf{Conclusion}
-
-\end{enumerate}
-
-% ============================================================
-\section*{40. Discussion Guidelines}
-% ============================================================
-
-Students should not merely reproduce numerical results.
-
-The discussion should explain:
-
-\begin{itemize}
-
-\item why a particular attention mechanism produced a change in performance;
-
-\item how attention location influences feature refinement;
-
-\item how feature resolution changes attention behavior;
-
-\item how model complexity changes with different mechanisms;
-
-\item whether performance improvements justify additional computational cost;
-
-\item whether attention maps correspond to meaningful object regions;
-
-\item whether attention helps suppress the background;
-
-\item whether attention behaves differently for incorrect predictions; and
-
-\item whether quantitative and qualitative observations support each other.
-
-\end{itemize}
-
-Students should avoid making conclusions based on a single image.
-
-Qualitative observations should preferably be based on several representative
-test images.
-
-% ============================================================
-\section*{41. Expected Outcome}
+\section*{33. Expected Outcome}
 % ============================================================
 
 At the end of the experiment, students should understand that an attention
@@ -3584,7 +3127,7 @@ rather than on assumptions about which attention mechanism should perform
 best.
 
 % ============================================================
-\section*{42. References}
+\section*{34. References}
 % ============================================================
 
 \begin{enumerate}
